@@ -49,5 +49,18 @@ site/              ← Astro app (to be scaffolded)
 
 ## Status
 
-Early. Content is being drafted; the Astro site is not yet scaffolded. See
-`docs/SITEMAP.md` for the planned information architecture.
+Drafted and standing. 14 content pages across the four sections, plus a working
+Astro site (`site/`) — wiki-link resolution, prev/next, and Pagefind full-text
+search; `npm run build` and `npm run typecheck` are clean. See `docs/SITEMAP.md`
+for the information architecture and `docs/CANON.md` for the authoring contract.
+
+Not yet settled: hosting (`site`/`base` are placeholders for a GitHub Pages
+project site), and a content schema/validator akin to the instances' `meta_schema`.
+
+```sh
+cd site
+npm install
+npm run dev      # dev server (search needs a build)
+npm run build    # static build + Pagefind index
+npm run preview  # serve the build, search included
+```
