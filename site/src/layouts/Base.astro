@@ -1,0 +1,67 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const nav = [
+  { href: `${base}/pattern`, label: "The Pattern" },
+  { href: `${base}/case`, label: "The Case" },
+  { href: `${base}/instances`, label: "Instances" },
+  { href: `${base}/blog`, label: "Blog" },
+  { href: `${base}/search`, label: "Search" },
+];
+const here = Astro.url.pathname.replace(/\/$/, "");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · The Foundry Pattern</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='13' font-size='13'%3E%E2%9A%92%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <header class="border-b" style="border-color: var(--rule)">
+      <div class="mx-auto max-w-5xl px-5 py-4 flex flex-wrap items-baseline gap-x-6 gap-y-2">
+        <a href={`${base}/`} class="font-bold text-lg no-underline" style="color: var(--ink)">
+          ⚒️ The Foundry Pattern
+        </a>
+        <nav class="flex gap-5 text-sm ml-auto">
+          {nav.map((n) => (
+            <a
+              href={n.href}
+              class="no-underline hover:underline"
+              style={here.startsWith(n.href) ? "color: var(--accent); font-weight:700" : "color: var(--muted)"}
+            >
+              {n.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <main class="mx-auto w-full max-w-5xl px-5 py-10 flex-1">
+      <slot />
+    </main>
+
+    <footer class="border-t mt-12" style="border-color: var(--rule)">
+      <div class="mx-auto max-w-5xl px-5 py-8 text-sm flex flex-col gap-4 sm:flex-row sm:justify-between" style="color: var(--muted)">
+        <p class="max-w-md">
+          The Foundry Pattern — a knowledge base that compiles itself into trustworthy,
+          provenance-stamped skills, behind a gate the authored knowledge can't skip.
+        </p>
+        <div class="flex flex-col gap-1">
+          <span class="font-bold" style="color: var(--ink)">Instances</span>
+          <a href="https://galaxyproject.github.io/foundry/">Galaxy Workflow Foundry ↗</a>
+          <a href="https://github.com/jmchilton/statistical-genomics-foundry">Statistical Genomics Foundry ↗</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

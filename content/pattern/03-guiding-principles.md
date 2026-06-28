@@ -1,0 +1,71 @@
+---
+title: Guiding Principles
+description: The eight design pressures every Foundry obeys, abstracted from the diff between its two instances — culminating in the obligation that doing must hand off to a check it cannot skip.
+section: pattern
+order: 3
+---
+
+# Guiding Principles
+
+A Foundry exists because a class of generated work fails in specific, detectable ways, and because monolithic skills answer those failures with prose caveats that neither compose nor scale. These principles are the design pressure behind the alternative. They are domain-free on purpose: each one holds for any Foundry, and where the two instances honor a principle differently, that difference is the pattern earning its abstraction (see [[anatomy-of-an-instance]]).
+
+A Foundry is not a glossary, a documentation site, or a pile of skills. It is an attempt to make a body of working knowledge durable, inspectable, executable, and externally checkable while the surrounding tooling keeps changing. The principles below explain why the [[the-model|architecture]] is shaped the way it is.
+
+## Source Authority Beats Local Copies
+
+Knowledge stays healthy near the project that owns it. A Foundry should not become a stale mirror of upstream systems; it points to source, quotes only what it must, and syncs through the strongest available mechanism when freshness matters. A Foundry adds value by connecting, explaining, and operationalizing upstream knowledge — not by competing to be its canonical home.
+
+(Instance #1 cites the curated workflow corpus by URL rather than importing it, and lets the CLI remain the source of behavior. Instance #2 pins methods literature and reporting standards by DOI/commit and reads tool behavior from invoking the tool, not from prose it maintains.)
+
+## Reproducibility At Every Layer
+
+Producing knowledge is itself a scientific act. A result is only useful if a maintainer can recover how it was derived, which assumptions it inherited, and which checks were applied. Reproducibility here is broader than rerunning the final artifact: it includes the [[glossary|provenance]] of every derived artifact — which Mold was cast, which model and prompt produced it, which references resolved, which checks ran. The goal is not perfect immutability but *accountable change*: when a Mold, package, or cast changes, the reason and the dependency path should be recoverable.
+
+(This is why casts emit provenance in both instances, and why each treats validation as part of the authoring loop rather than a final cleanup step.)
+
+## Deterministic Tools Do Deterministic Work
+
+LLMs are excellent at interpretation, synthesis, repair, and translation across weakly structured contexts. They are poor replacements for the instruments that establish a result's trustworthiness. A Foundry should spend model context on the work only models can do, and delegate everything else to a tool that does it the same way every time. This keeps agents more reliable and cheaper to run: tool calls are saved for high-value judgment, context is not filled with data a program can query, and hallucinated caveats are replaced by executable checks.
+
+The *soul* of the principle is constant — do not let the model be the only judge of its own work — while the *form* of the deterministic instrument varies. (Instance #1's instrument is schematic: a parser/validator that asks "does this parse?" Instance #2's is empirical: permutation under the null, simulation under known truth, calibration, negative controls — "is this calibrated, does it recover known truth?" One kind of instrument is a CLI; another is an empirical check that must itself be constructed.)
+
+## Doing Never Self-Certifies
+
+This is the principle that *generates the gate* — the headline variable from [[anatomy-of-an-instance]]. Doing must hand off to an external check it cannot skip. An agent that does and blesses its own work in one breath has no gate; certification must wait on a verdict the doer does not control. So a Foundry separates the act from its check: the work proceeds, then stops, and may not terminate in self-certification — it must clear an external referee first.
+
+This is the structural bet elevated to a rule, and it is why the other principles exist. *Knowing is not gating*: a model may mention a caveat, but only a gate makes doing *not finish* until the check clears. Every Foundry realizes this differently, and the realization **is** its gate.
+
+(Instance #1 realizes it as a deterministic CLI — "the rails" — that mechanically rejects malformed structure. Instance #2 realizes it as an empirical referee — itself authored knowledge cast into a skill — running an `analyze → referee → revise` loop, because no parser can decide whether a method is valid. The generalization: a deterministic CLI is one kind of gate; an empirical referee is another. See [[the-two-assets]] — the gate is one of the two non-commodity assets a Foundry sells.)
+
+## Progressive Disclosure Over Context Flooding
+
+Agents — and the humans reading over them — should see the right knowledge at the right time. A Foundry should not flatten every reference, schema, example, and rationale into one prompt just because the information exists. Pipelines disclose the journey; Molds disclose the action; typed references disclose the dependency surface; load policy distinguishes up-front material from on-demand; casting mode decides copied vs. condensed vs. inlined vs. sidecar.
+
+The goal is not minimalism but *navigable depth*: a human browses from journey to Mold to reference, and an agent moves from action to supporting evidence without dragging the whole library into every step. This principle is the connective tissue of the whole loop — it is what keeps the source record rich without forcing every runtime artifact to carry every page.
+
+## Portable Artifacts Over Platform Fashion
+
+The agentic landscape will keep changing. A Foundry should not bind its core knowledge to one agent runtime, editor, model vendor, or orchestration framework. A Mold is a typed reference manifest plus a procedural skeleton — abstract enough to cast into several targets and explicit enough that each target can be audited. Molds are durable source; cast skills are generated targets; a new runtime should require a new cast target or harness, not a rewrite of the knowledge base.
+
+## Actionable Knowledge, Not Passive Notes
+
+A passive knowledge base explains but cannot make an agent act. A standalone skill acts but compresses away the evidence and rationale that make a task maintainable. A Foundry keeps both: the source preserves the rich graph — references, schemas, citations, rationale — while Molds identify which knowledge a concrete task needs and casting condenses it into executable artifacts. This is the central wager: a knowledge base becomes more useful when its structure makes it executable, and a skill becomes more trustworthy when its source stays inspectable.
+
+## Corpus-First, Not Invention-First
+
+A Foundry learns from a real, curated [[glossary|grounding corpus]] before it invents abstractions. Corpus-first does not mean copying the corpus wholesale; it means abstractions are justified by observed examples — pages cite concrete cases, Mold behavior aligns with recurring tasks, new taxonomy appears only after content demands it.
+
+The same discipline governs the prose a Mold references. A reference note starts as a stub — frontmatter, title, primary-source link — and grows paragraph-by-paragraph only when a real case (a cast run, a logged failure, a place an agent guessed) demands it. Pre-written comprehensive notes are an anti-pattern: they read as plausible, sound authoritative, and quietly propagate the author's priors into every downstream cast. A downstream agent cannot tell invented prose from earned prose, so the safe default is to write nothing until contact with the corpus forces it. A Foundry must not become the thing it gates against.
+
+## How The Principles Connect
+
+The principles reinforce each other. Keeping information at its source makes upstream sync possible, but only if derived artifacts record provenance. Provenance is meaningful only if deterministic instruments perform the checks the model should not grade itself on. Those instruments are reusable only when artifacts are portable, which needs an inspectable source of truth, which pushes toward a knowledge base, which becomes actionable through Molds, casts, and Pipelines — all kept grounded by a corpus-first posture.
+
+**Doing Never Self-Certifies** is the spine through all of it: the gate is where provenance, deterministic work, and corpus-first grounding meet, and it is the principle that turns a knowledge base into something trustworthy rather than merely articulate. Progressive disclosure is the connective tissue that holds the loop together. Each layer has a job — upstream owns the facts, the Foundry owns synthesis and casting source, the gate owns the verdict, cast artifacts own execution, harnesses own orchestration — and a Foundry works when those jobs stay separate and the connections between them stay explicit.
+
+## See Also
+
+- [[anatomy-of-an-instance]] — invariant spine vs. the variable gate; the diff that earns the abstraction.
+- [[the-two-assets]] — provenance and the gate, the two things a Foundry sells that restated knowledge cannot.
+- [[the-model]] — KB, Mold, Cast, the structural realization of these principles.
+- [[glossary]] — terms used above.

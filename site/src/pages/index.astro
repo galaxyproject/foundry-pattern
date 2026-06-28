@@ -1,0 +1,56 @@
+---
+import Base from "../layouts/Base.astro";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const doors = [
+  {
+    href: `${base}/pattern`,
+    kicker: "The Pattern",
+    blurb: "The timeless spec. A knowledge base of Molds, cast into frozen artifacts with provenance, behind a gate the authored knowledge can't skip.",
+  },
+  {
+    href: `${base}/case`,
+    kicker: "The Case",
+    blurb: "The argument: skills should be a packaging format, not a source format. Read the flagship — Skills: Package, Not Source.",
+  },
+  {
+    href: `${base}/instances`,
+    kicker: "Instances",
+    blurb: "The pattern, twice. Two Foundries that share a spine and differ on one axis — the gate — which is where the abstraction is earned.",
+  },
+  {
+    href: `${base}/blog`,
+    kicker: "Blog / Lab",
+    blurb: "Evidence and experiments — and anything dated, kept here so the spec never carries a date. Start with Blind Regeneration.",
+  },
+];
+---
+<Base title="The Foundry Pattern" description="A knowledge base that compiles itself into trustworthy, provenance-stamped skills, behind a gate the authored knowledge can't skip.">
+  <section class="max-w-3xl">
+    <p class="kicker">A design pattern for trustworthy agent skills</p>
+    <h1 class="text-4xl sm:text-5xl font-bold mt-2 leading-tight">
+      A skill is a wonderful thing to <em>ship</em>.<br />It is a poor thing to <em>author into</em>.
+    </h1>
+    <p class="mt-6 text-lg" style="color: var(--ink)">
+      The Foundry Pattern pulls those apart. The source of record is an inspectable
+      <strong>knowledge base</strong>, authored to be read by a human. A deterministic
+      <strong>cast</strong> compiles it into frozen skill artifacts that carry
+      <strong>provenance</strong> — and nothing reaches a trusted result except through a
+      <strong>gate</strong> the authored knowledge isn't allowed to skip.
+    </p>
+    <p class="mt-4" style="color: var(--muted)">
+      It is documented in the abstract because it now has two instances, and abstraction
+      earns itself at the diff between them: everything stays the same but the gate.
+    </p>
+  </section>
+
+  <div class="mt-12 grid gap-4 sm:grid-cols-2">
+    {doors.map((d) => (
+      <a href={d.href} class="block rounded-xl border p-6 no-underline transition hover:shadow-md" style="border-color: var(--rule); background:#fff">
+        <p class="kicker">{d.kicker}</p>
+        <p class="mt-2" style="color: var(--ink)">{d.blurb}</p>
+        <span class="mt-3 inline-block text-sm" style="color: var(--accent)">Enter →</span>
+      </a>
+    ))}
+  </div>
+</Base>

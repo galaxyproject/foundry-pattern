@@ -1,0 +1,69 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const docs = await getCollection("docs");
+  return docs.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const SECTION_LABEL: Record<string, string> = {
+  pattern: "The Pattern",
+  case: "The Case",
+  instances: "Instances",
+  blog: "Blog",
+};
+const d = entry.data;
+const sectionLabel = SECTION_LABEL[d.section] ?? d.section;
+const dateStr = d.date
+  ? new Date(d.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  : undefined;
+
+// prev/next within the same section, ordered
+const siblings = (await getCollection("docs", (e) => e.data.section === d.section)).sort(
+  (a, b) => (a.data.order ?? 99) - (b.data.order ?? 99),
+);
+const idx = siblings.findIndex((e) => e.id === entry.id);
+const prev = idx > 0 ? siblings[idx - 1] : undefined;
+const next = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : undefined;
+---
+<Base title={d.title} description={d.description}>
+  <article class="prose prose-lg mx-auto" data-pagefind-body>
+    <p class="kicker not-prose" data-pagefind-ignore>
+      <a href={`${base}/${d.section}`} class="no-underline" style="color: var(--accent)">{sectionLabel}</a>
+      {dateStr && <span style="color: var(--muted)"> · {dateStr}</span>}
+    </p>
+
+    {(d.gate || d.upstream) && (
+      <div class="not-prose mt-4 mb-6 rounded-lg border p-4 text-sm" style="border-color: var(--rule); background:#fff">
+        {d.gate && <div><strong>Gate:</strong> {d.gate}</div>}
+        {d.upstream && (
+          <div class="mt-1"><strong>Upstream:</strong> <a href={d.upstream}>{d.upstream}</a></div>
+        )}
+      </div>
+    )}
+
+    <Content />
+  </article>
+
+  {(prev || next) && (
+    <nav class="not-prose mx-auto mt-12 max-w-3xl grid gap-3 sm:grid-cols-2 text-sm" data-pagefind-ignore>
+      {prev ? (
+        <a href={`${base}/${prev.id}/`} class="rounded-lg border p-3 no-underline" style="border-color: var(--rule); background:#fff">
+          <div style="color: var(--muted)">← Previous</div>
+          <div class="font-bold" style="color: var(--ink)">{prev.data.title}</div>
+        </a>
+      ) : <span />}
+      {next && (
+        <a href={`${base}/${next.id}/`} class="rounded-lg border p-3 no-underline text-right" style="border-color: var(--rule); background:#fff">
+          <div style="color: var(--muted)">Next →</div>
+          <div class="font-bold" style="color: var(--ink)">{next.data.title}</div>
+        </a>
+      )}
+    </nav>
+  )}
+</Base>
