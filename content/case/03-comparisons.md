@@ -70,7 +70,7 @@ monolithic skills were the prior art that *motivated* the Foundry. Their
 *form* does not. The specific responses are responses to specific failure modes
 observed in those skills: decomposition into typed reference manifests, validation
 moved into the inner authoring loop, casting established as the integration
-boundary, and a [[anatomy-of-an-instance|gate]] made the source of truth for correctness rather
+boundary, and an [[anatomy-of-an-instance|external check]] made the source of truth for correctness rather
 than prose caveats. The monolithic skill is not a strawman — it is the thing that
 worked well enough to reveal what was missing.
 
@@ -91,7 +91,7 @@ each artifact; and drift from source becomes mechanically detectable. Runtime
 fetch still has a place — comparing a cast artifact against a live external
 exemplar, say — but it *augments* the compiled grounding; it never *replaces*
 it. The moment runtime retrieval becomes load-bearing for correctness, the two
-non-commodity assets — provenance and an enforced gate — are gone. (Those two
+non-commodity assets — provenance and an enforced check — are gone. (Those two
 assets are the spine of the whole case; see [[the-two-assets]].)
 
 This is also the boundary where a skill *bundle* and a knowledge *base* stop
@@ -100,8 +100,8 @@ A KB is a compile-time asset with provenance: it is what the bundle is cast
 *from*. Same files on disk, opposite roles — and the role determines whether you
 can answer "which claim here is real, and where did it come from?"
 
-How the two current instances realize this same landing — with different gates,
-the same spine — is laid out in the values table at [[related-projects]].
+How the two current instances realize this same landing — with different domain
+extensions on the same substrate — is laid out in the values table at [[related-projects]].
 
 ---
 

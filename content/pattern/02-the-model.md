@@ -7,7 +7,7 @@ order: 2
 
 # The Model
 
-A Foundry is a small machine with four moving parts: a **Knowledge Base** you author, **Molds** that make slices of it executable, a **Cast** step that freezes those slices into distributable artifacts, and **Provenance** that records what each freeze contained. Everything else — pipelines, targets, validation — composes from these. This page defines each part and shows how they fit. Instances appear only as illustration; the parts themselves are domain-free.
+A Foundry is a small machine with four moving parts: a **Knowledge Base** you author, **Molds** that make slices of it executable, a **Cast** step that freezes those slices into distributable artifacts, and **Provenance** that records what each freeze contained. Everything else — composition, targets, validation — composes from these. This page defines each part and shows how they fit. Instances appear only as illustration; the parts themselves are domain-free.
 
 ## Knowledge Base
 
@@ -91,11 +91,11 @@ Three things fall out of that shape:
 - **Transformed references name their author.** When a reference is condensed, `src_hash != dst_hash`, and the record names the model and prompt that produced the destination. Every fragment an LLM touched is marked `llm`; everything else is `deterministic`. Trust is auditable fragment by fragment.
 - **Drift and forensics are one read.** To detect staleness, re-hash the Mold and its sources and compare to the record. To answer "where did this claim come from," follow the fragment to its `src`. Both questions are answered by lineage a bare skill simply does not carry.
 
-## Pipeline and Target
-
-A **Pipeline** is an ordered sequence of Molds composing an end-to-end task. It is both a build artifact (the Molds a harness will orchestrate, in order) and a navigation surface (a journey map over the KB). Pipelines are referenced content, not themselves cast.
+## Target (and composition)
 
 A **Target** is the output format a cast produces — one agent-skill format, a generic skill, a baked-in bundle. Casting is parameterized by target; the same Mold can be cast to several. The KB stays the single source of truth across all of them; each target is one rendering of it.
+
+Molds also **compose**. Where a domain's work is an inherently multi-step journey, an instance orders Molds into an end-to-end task and may orchestrate them with a harness — the [[galaxy-workflow-foundry]] calls such an ordering a *pipeline*. Composition is real and useful, but it is a domain extension, not one of the four core parts: a domain whose actions stand alone needs no such layer. See [[anatomy-of-an-instance]] for the substrate-vs-extension split.
 
 ## How it composes
 
@@ -113,7 +113,7 @@ A **Target** is the output format a cast produces — one agent-skill format, a 
                                         └──────────────────────┘
 ```
 
-Read it left to right: an authored Mold in the KB is cast into an isolated artifact plus a provenance record. Many Molds, ordered, form a pipeline; one Mold can be cast to many targets; the KB on the left never stops being the source.
+Read it left to right: an authored Mold in the KB is cast into an isolated artifact plus a provenance record. One Mold can be cast to many targets; many Molds, where a domain's work is a journey, compose into an ordered sequence; the KB on the left never stops being the source.
 
 ## Compile-time grounding, not runtime retrieval
 
@@ -121,4 +121,4 @@ The surrounding field mostly attaches a knowledge base to an agent and retrieves
 
 ## Where this meets validation
 
-This model is descriptive — it says what a Foundry *is*. What it does not yet name is the check that stands between an authored Mold and a *trusted* artifact: **the gate**. The gate is where this model meets validation, and it is the axis on which the pattern earns its abstraction. For how a single Mold is built, gated, and stamped end to end — the model in motion — continue to [[anatomy-of-an-instance]]. For the values these parts encode, see [[guiding-principles]].
+This model is descriptive — it says what a Foundry *is*. What it does not name is the check that stands between an authored Mold and a *trusted* result. That check is real, but it is **not** part of the four-part substrate: each domain builds the check its notion of "correct" admits — a deterministic validator where output is parseable, a constructed empirical referee where it isn't. The substrate is what every instance shares; the check is one of the things each instance *extends* it with. For how a single Mold is built, checked, and stamped end to end — the model in motion — continue to [[anatomy-of-an-instance]]. For the values these parts encode, see [[guiding-principles]].

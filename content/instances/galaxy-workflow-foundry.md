@@ -1,10 +1,10 @@
 ---
 title: Galaxy Workflow Foundry
-description: Instance #1 — converts papers, Nextflow, and CWL into validated Galaxy workflows behind a deterministic CLI gate.
+description: Instance #1 — converts papers, Nextflow, and CWL into validated Galaxy workflows, checked by a deterministic CLI ("the rails").
 section: instances
 order: 1
 instance_number: 1
-gate: deterministic CLI (gxwf) — "the rails"
+check: deterministic CLI (gxwf) — "the rails"
 upstream: https://galaxyproject.github.io/foundry/
 ---
 
@@ -22,11 +22,11 @@ Convert workflows authored in other systems — papers describing a computationa
 
 Grounded in the **IWC workflow corpus** of curated, working `gxformat2` exemplars. Patterns and Molds are derived from observed structure in that corpus, not invented top-down; every reference traces back to one or more real exemplars, and the same exemplars double as evaluation material for cast skills.
 
-## The gate — a deterministic CLI ("the rails")
+## The check — a deterministic CLI ("the rails")
 
-This instance's gate is **mechanical**: `gxwf` parses and validates `gxformat2` and tool steps inline as each step is authored. The failure modes that defeat hand-written conversion skills — UUID validity, tool-ID and `+galaxyN` revision suffixes, `input_connections` parameter-name mismatches, conditional-selector branches in `tool_state` — are caught deterministically, not papered over with enumerated prose caveats. Fast, cheap, non-self-certifying because the parser is external to the model. These are the rails: the LLM can propose freely, but nothing certifies until the CLI accepts it.
+This instance's external check is **mechanical**: `gxwf` parses and validates `gxformat2` and tool steps inline as each step is authored. The failure modes that defeat hand-written conversion skills — UUID validity, tool-ID and `+galaxyN` revision suffixes, `input_connections` parameter-name mismatches, conditional-selector branches in `tool_state` — are caught deterministically, not papered over with enumerated prose caveats. Fast, cheap, non-self-certifying because the parser is external to the model. These are the rails: the LLM can propose freely, but nothing certifies until the CLI accepts it.
 
-This is the simpler end of [[anatomy-of-an-instance|the gate]]'s range: where a deterministic tool *can* decide validity, the gate is just that tool.
+This is the simpler end of [[anatomy-of-an-instance|the external check]]'s range: where a deterministic tool *can* decide validity, the check is just that tool. (Workflow construction is also where this instance reaches for **pipelines** — ordered Mold sequences for an inherently sequential task; see [[the-diff]].)
 
 ## Targets
 
@@ -38,4 +38,4 @@ The more mature instance. The spine is in place — content types, validator wit
 
 ---
 
-Compare against instance #2 in [[the-diff]] — where the *deterministic CLI* gate generalizes into an *empirical referee*. For the shared shape every instance fills, see [[anatomy-of-an-instance]].
+Compare against instance #2 in [[the-diff]] — where this domain's *deterministic CLI* check gives way to a *constructed empirical referee*, a different domain solving the same role its own way. For the shared substrate beneath both, see [[anatomy-of-an-instance]].

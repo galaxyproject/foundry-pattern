@@ -4,7 +4,7 @@ description: Instance #2 — keeps an LLM doing statistical genomics both produc
 section: instances
 order: 2
 instance_number: 2
-gate: empirical referee loop — "doing never self-certifies"
+check: empirical referee loop — "doing never self-certifies"
 upstream: https://github.com/jmchilton/statistical-genomics-foundry
 ---
 
@@ -24,9 +24,9 @@ Grounded in a deliberately **bipolar corpus**: established-good methods *and* ca
 
 ## The gate — an empirical referee ("doing never self-certifies")
 
-This instance's gate is the pattern's headline generalization. No CLI can decide "is this statistical method valid," so the gate is itself **authored knowledge cast into a skill**: an `analyze → referee → revise` loop. A Family-A protocol may not terminate in self-certification — it must hand off to a Family-B referee whose verdict gates certification (the *gate obligation*). The referee does two things: **critique** (reason about known invalidity patterns — fast, but still model reasoning) and **calibrate** (construct and *run* an empirical check — permutation under the null, simulation-under-truth, calibration). The strong gate requires at least one calibrate pass, because critique is reasoning and reasoning is what failed. The gate becomes a *deliverable*, not infrastructure.
+This instance's external check — which it calls *the gate* — is its defining extension. No CLI can decide "is this statistical method valid," so the gate is itself **authored knowledge cast into a skill**: an `analyze → referee → revise` loop. A Family-A protocol may not terminate in self-certification — it must hand off to a Family-B referee whose verdict gates certification (the *gate obligation*). The referee does two things: **critique** (reason about known invalidity patterns — fast, but still model reasoning) and **calibrate** (construct and *run* an empirical check — permutation under the null, simulation-under-truth, calibration). The strong gate requires at least one calibrate pass, because critique is reasoning and reasoning is what failed. The gate becomes a *deliverable*, not infrastructure.
 
-This is the far end of [[anatomy-of-an-instance|the gate]]'s range: where validity can't be parsed, the gate is a Mold that constructs its own external verdict.
+This is the far end of [[anatomy-of-an-instance|the external check]]'s range: where validity can't be parsed, the check is a Mold that constructs its own external verdict.
 
 ## Targets
 
@@ -38,4 +38,4 @@ Casts to portable skill artifacts, inheriting the Mold → Cast → provenance a
 
 ---
 
-Compare against instance #1 in [[the-diff]] — this instance *is* the variable half of that N=2 diff. For the shared shape every instance fills, see [[anatomy-of-an-instance]].
+Compare against instance #1 in [[the-diff]] — this instance inherits the substrate and brings a different domain's extensions to it. For the shared substrate beneath both, see [[anatomy-of-an-instance]].

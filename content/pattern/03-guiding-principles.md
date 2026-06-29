@@ -1,6 +1,6 @@
 ---
 title: Guiding Principles
-description: The eight design pressures every Foundry obeys, abstracted from the diff between its two instances — culminating in the obligation that doing must hand off to a check it cannot skip.
+description: The seven design pressures every Foundry obeys, abstracted from the diff between its two instances — the discipline a domain inherits before it extends the substrate.
 section: pattern
 order: 3
 ---
@@ -29,19 +29,11 @@ Producing knowledge is itself a scientific act. A result is only useful if a mai
 
 LLMs are excellent at interpretation, synthesis, repair, and translation across weakly structured contexts. They are poor replacements for the instruments that establish a result's trustworthiness. A Foundry should spend model context on the work only models can do, and delegate everything else to a tool that does it the same way every time. This keeps agents more reliable and cheaper to run: tool calls are saved for high-value judgment, context is not filled with data a program can query, and hallucinated caveats are replaced by executable checks.
 
-The *soul* of the principle is constant — do not let the model be the only judge of its own work — while the *form* of the deterministic instrument varies. (Instance #1's instrument is schematic: a parser/validator that asks "does this parse?" Instance #2's is empirical: permutation under the null, simulation under known truth, calibration, negative controls — "is this calibrated, does it recover known truth?" One kind of instrument is a CLI; another is an empirical check that must itself be constructed.)
-
-## Doing Never Self-Certifies
-
-This is the principle that *generates the gate* — the headline variable from [[anatomy-of-an-instance]]. Doing must hand off to an external check it cannot skip. An agent that does and blesses its own work in one breath has no gate; certification must wait on a verdict the doer does not control. So a Foundry separates the act from its check: the work proceeds, then stops, and may not terminate in self-certification — it must clear an external referee first.
-
-This is the structural bet elevated to a rule, and it is why the other principles exist. *Knowing is not gating*: a model may mention a caveat, but only a gate makes doing *not finish* until the check clears. Every Foundry realizes this differently, and the realization **is** its gate.
-
-(Instance #1 realizes it as a deterministic CLI — "the rails" — that mechanically rejects malformed structure. Instance #2 realizes it as an empirical referee — itself authored knowledge cast into a skill — running an `analyze → referee → revise` loop, because no parser can decide whether a method is valid. The generalization: a deterministic CLI is one kind of gate; an empirical referee is another. See [[the-two-assets]] — the gate is one of the two non-commodity assets a Foundry sells.)
+The *soul* of the principle is constant — do not let the model be the only judge of its own work — while the *form* of the deterministic instrument varies. The corollary is enforcement over advisory: a caveat a model *may* mention is not a check; the work must hand off to something external before it counts. (Instance #1's instrument is schematic: a parser/validator that asks "does this parse?" Instance #2's is empirical: permutation under the null, simulation under known truth, calibration, negative controls — "is this calibrated, does it recover known truth?" One kind of instrument is a CLI you call; another is an empirical referee that must itself be constructed. The principle is shared; which instrument a domain builds is one of the things it *extends* the substrate with — see [[anatomy-of-an-instance]].)
 
 ## Progressive Disclosure Over Context Flooding
 
-Agents — and the humans reading over them — should see the right knowledge at the right time. A Foundry should not flatten every reference, schema, example, and rationale into one prompt just because the information exists. Pipelines disclose the journey; Molds disclose the action; typed references disclose the dependency surface; load policy distinguishes up-front material from on-demand; casting mode decides copied vs. condensed vs. inlined vs. sidecar.
+Agents — and the humans reading over them — should see the right knowledge at the right time. A Foundry should not flatten every reference, schema, example, and rationale into one prompt just because the information exists. Molds disclose the action; typed references disclose the dependency surface; load policy distinguishes up-front material from on-demand; casting mode decides copied vs. condensed vs. inlined vs. sidecar; and where a domain composes ordered journeys, those disclose the journey.
 
 The goal is not minimalism but *navigable depth*: a human browses from journey to Mold to reference, and an agent moves from action to supporting evidence without dragging the whole library into every step. This principle is the connective tissue of the whole loop — it is what keeps the source record rich without forcing every runtime artifact to carry every page.
 
@@ -63,13 +55,13 @@ The same discipline governs the prose a Mold references. A reference note starts
 
 ## How The Principles Connect
 
-The principles reinforce each other. Keeping information at its source makes upstream sync possible, but only if derived artifacts record provenance. Provenance is meaningful only if deterministic instruments perform the checks the model should not grade itself on. Those instruments are reusable only when artifacts are portable, which needs an inspectable source of truth, which pushes toward a knowledge base, which becomes actionable through Molds, casts, and Pipelines — all kept grounded by a corpus-first posture.
+The principles reinforce each other. Keeping information at its source makes upstream sync possible, but only if derived artifacts record provenance. Provenance is meaningful only if deterministic instruments perform the checks the model should not grade itself on. Those instruments are reusable only when artifacts are portable, which needs an inspectable source of truth, which pushes toward a knowledge base, which becomes actionable through Molds and casts — all kept grounded by a corpus-first posture.
 
-**Doing Never Self-Certifies** is the spine through all of it: the gate is where provenance, deterministic work, and corpus-first grounding meet, and it is the principle that turns a knowledge base into something trustworthy rather than merely articulate. Progressive disclosure is the connective tissue that holds the loop together. Each layer has a job — upstream owns the facts, the Foundry owns synthesis and casting source, the gate owns the verdict, cast artifacts own execution, harnesses own orchestration — and a Foundry works when those jobs stay separate and the connections between them stay explicit.
+**Actionable Knowledge, Not Passive Notes** is the spine through all of it: it is what turns a knowledge base into something trustworthy rather than merely articulate, and provenance plus the deterministic-tools discipline are what keep "actionable" honest. Progressive disclosure is the connective tissue that holds the loop together. Each layer has a job — upstream owns the facts, the Foundry owns synthesis and casting source, the domain's check owns the verdict, cast artifacts own execution, harnesses own orchestration — and a Foundry works when those jobs stay separate and the connections between them stay explicit. The principles are the invariant discipline; what each domain *builds* on that discipline — its composition, its check — is the pattern being applied.
 
 ## See Also
 
-- [[anatomy-of-an-instance]] — invariant spine vs. the variable gate; the diff that earns the abstraction.
-- [[the-two-assets]] — provenance and the gate, the two things a Foundry sells that restated knowledge cannot.
+- [[anatomy-of-an-instance]] — the shared substrate vs. the extension surface each domain adds.
+- [[the-two-assets]] — provenance, the universal asset, and the enforced checks a domain builds on top.
 - [[the-model]] — KB, Mold, Cast, the structural realization of these principles.
 - [[glossary]] — terms used above.

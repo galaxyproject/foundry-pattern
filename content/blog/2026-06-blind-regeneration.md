@@ -54,7 +54,7 @@ For each, the orchestrator read the original into *its own* context only. A **se
 If restating canonical knowledge is a commodity — and the experiment says it largely is — then the value of a science skill cannot live in the restatement. It has to live in the two things the blind model demonstrably *could not* supply on its own:
 
 - **Provenance** — which specific claim is real, and where it came from. The blind author's indistinguishable-real-from-fake citations are the negative image of this.
-- **The gate** — the enforced empirical check, not an optional caveat. The blind author's spontaneous caveats are the negative image of this: the knowledge was there; the *enforcement* was not.
+- **The enforced check** (here, the referee) — the enforced empirical check, not an optional caveat. The blind author's spontaneous caveats are the negative image of this: the knowledge was there; the *enforcement* was not.
 
 These are the two non-commodity assets the whole argument turns on — see [[the-two-assets]]. The experiment doesn't prove the Foundry Pattern is right; it removes the easiest objection to it ("a frontier model already knows all this, so why bother with a knowledge base and a compile step?") by conceding the objection's premise and showing the premise is beside the point. Yes, the model knows it. Knowing was never the scarce thing.
 

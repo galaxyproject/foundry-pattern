@@ -43,11 +43,11 @@ the installed API rather than retry." Their embedded statistical wisdom is excel
 `Related Skills`) are format-validated. The distinction is **layer, not quality**: in
 bioSkills the skill files *are* the source, hand-authored; in the Foundry Pattern they are
 derived artifacts **cast** from an inspectable abstract source-of-truth, each carrying
-provenance, with a human reader's surface above and an empirical referee beside. A
+provenance, with a human reader's surface above and an external check beside. A
 different layer of the stack — not a better skills list. (We do *not* claim it is
 Claude-only, not-for-humans, or relationship-free; all three were checked and are false.)
 
-**POPPER** — nearest on the empirical-referee / gate axis, and the table's axes don't
+**POPPER** — nearest on the empirical-referee axis, and the table's axes don't
 flatter it precisely *because* its strength is off this map. Concede the strongest thing
 first: POPPER is a **genuine empirical, non-self-certifying referee** with **provable
 Type-I error control** (e-values, Vovk–Wang), using permutation tests and negative
@@ -76,6 +76,6 @@ cluster; if a specific repo is meant, confirm the owner. Any row added later wit
 primary-source check will be marked **unverified** until one is done.
 
 The throughline is the one these neighbors help locate: the two assets no static skill
-file carries — **provenance** and an **enforced gate** — are what make traceable, refereed
-knowledge non-commodity. That argument lives in [[the-two-assets]]; this page only shows
-where the neighbors sit around it.
+file carries — **provenance** and an **enforced check** — are what make traceable,
+check-backed knowledge non-commodity. That argument lives in [[the-two-assets]]; this page
+only shows where the neighbors sit around it.

@@ -89,21 +89,23 @@ to build a moat; at scale it actively pollutes the well everyone drinks from.
 ## The answer: the two non-commodity assets
 
 Both costs have the same root — the artifact carries no separable, verifiable
-claim about its own correctness — and the same answer. Two things a frontier model
-cannot regenerate for you on demand, developed in full at [[the-two-assets]]:
+claim about its own correctness — and the same answer. Two kinds of thing a frontier
+model cannot regenerate for you on demand, developed in full at [[the-two-assets]]:
 
-- **Provenance.** Not "the model probably knew this," but *this specific claim is
-  real, and here is the revision and reference it came from.* Traceability is what
-  separates a refereed fact from a confident guess, for a human reviewer and an
-  agent alike.
-- **The gate.** An *enforced* empirical check standing between authored knowledge
-  and a trusted result — not an optional caveat the model may or may not surface.
-  What the gate *is* varies by instance (a deterministic CLI validator in one
-  Foundry, an empirical referee loop in another), but every Foundry has one.
+- **Provenance** *(the universal asset).* Not "the model probably knew this," but
+  *this specific claim is real, and here is the revision and reference it came from.*
+  Traceability is what separates a verified fact from a confident guess, for a human
+  reviewer and an agent alike — and it rides with *every* cast, in every domain.
+- **An enforced check** *(realized per domain).* An external verdict standing between
+  authored knowledge and a trusted result — not an optional caveat the model may or
+  may not surface. What the check *is* varies by domain (a deterministic CLI validator
+  where correctness is parseable, a constructed empirical referee where it isn't), and
+  the version that is most sharply non-commodity is the one a domain has to *build* —
+  the marquee example being the statistical-genomics referee.
 
 The line to keep: **restating canonical knowledge is a commodity; traceable,
-refereed knowledge is not.** The first depreciates as models improve. The second
-appreciates — every verified claim and every gate that fires is value a larger
+check-backed knowledge is not.** The first depreciates as models improve. The second
+appreciates — every verified claim and every check that fires is value a larger
 model does not hand you for free.
 
 ## Knowing ≠ gating
@@ -120,7 +122,7 @@ means *doing does not terminate* until a referee clears it — the analysis cann
 self-certify and move on; it must hand off, and the verdict is a precondition, not
 a suggestion. Validity knowledge in the weights is necessary and nowhere near
 sufficient. A caveat that surfaces 80% of the time is a caveat that is absent
-exactly when an unlucky run needs it. The gate makes it absent zero percent of the
+exactly when an unlucky run needs it. An enforced check makes it absent zero percent of the
 time. That gap — between mentioning and enforcing — is the empirical backbone of
 the whole argument, and it is where [[2026-06-blind-regeneration]] lands.
 
@@ -128,11 +130,11 @@ the whole argument, and it is where [[2026-06-blind-regeneration]] lands.
 
 Skills are the right *package* and the wrong *source*. Ship them — cast them into
 every runtime you like. But author the knowledge somewhere a human can read it and
-an agent can trace it, gate it with a check that actually fires, and keep the
+an agent can trace it, back it with a check that actually fires, and keep the
 receipt. The artifact layer is a commodity headed toward zero margin; the source
-layer and the gate above it are where the durable value lives.
+layer and the enforced check above it are where the durable value lives.
 
 For where this sits against the rest of the field — runtime retrieval versus
 compile-time grounding, and the neighbors worth crediting — see [[comparisons]].
-For a project-by-project read of who foregrounds a source and who enforces a gate,
+For a project-by-project read of who foregrounds a source and who enforces a check,
 see [[related-projects]].

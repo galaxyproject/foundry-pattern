@@ -1,23 +1,25 @@
 # The Foundry Pattern
 
 An abstract site explaining **the Foundry Pattern** — the design pattern behind a knowledge
-base that compiles itself into trustworthy, frozen skill artifacts with provenance, gated
-by an external check that the authored knowledge never gets to skip.
+base of deep domain knowledge that compiles itself into trustworthy, frozen skill artifacts
+with provenance. A substrate each domain extends, not a template to stamp.
 
 It also makes a case: **agent skills should be a *packaging* format, not a *source*
 format.** The skill is a compile target cast from an inspectable knowledge base; the
 knowledge base — not the skill — is the source of record.
 
 The pattern is documented in the abstract because it now has two concrete instances, and
-abstraction earns itself at the diff between them:
+abstraction earns itself at the diff between them — the **substrate** transfers, while each
+domain brings its own knowledge and the machinery its work demands:
 
 - **Instance #1 — the [Galaxy Workflow Foundry](https://galaxyproject.github.io/foundry/)**:
-  the gate is a deterministic CLI (`gxwf` parses and validates) — *the rails*.
-- **Instance #2 — the Statistical Genomics Foundry**: the gate is an empirical referee
-  loop (`analyze → referee → revise`, *doing never self-certifies*) — *the referee*.
+  extends with *pipelines* (sequential construction) and a deterministic CLI check
+  (`gxwf` parses and validates) — *the rails*.
+- **Instance #2 — the Statistical Genomics Foundry**: extends with an empirical referee
+  check (`analyze → referee → revise`, *doing never self-certifies*) — *the gate*.
 
-Everything else — the knowledge base, Mold → Cast → provenance, the human-readable reading
-surface — is the same. The variable is the gate.
+Everything load-bearing — the knowledge base, Mold → Cast → provenance, the human-readable
+reading surface — is the same substrate. What varies is what each domain extends it with.
 
 ## Layout
 
@@ -30,11 +32,11 @@ content/
     01-story.md            why skills rot — the generalized motivation
     02-the-model.md        KB → Mold → Cast → Provenance, abstractly
     03-guiding-principles.md
-    04-anatomy-of-an-instance.md   invariants vs the variable gate
+    04-anatomy-of-an-instance.md   the substrate vs the extension surface
     05-glossary.md
   case/            ← The Case: the argument
     01-skills-package-not-source.md   ★ flagship
-    02-the-two-assets.md              provenance + the gate
+    02-the-two-assets.md              provenance (universal) + the enforced check
     03-comparisons.md                 compile-time-with-provenance vs runtime
     04-related-projects.md            the values table
   instances/       ← thin profiles + link-out, and the diff that justifies the pattern

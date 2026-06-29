@@ -1,6 +1,6 @@
 ---
 title: "The Diff: What Generalized"
-description: The second instance is the test — what stayed identical between the two Foundries is the pattern; what changed is one parameter, the gate.
+description: The second instance is the test — what stayed identical between the two Foundries is the pattern's substrate; what changed is what each domain builds on top of it.
 section: instances
 order: 3
 ---
@@ -13,11 +13,11 @@ So this page is the evidence. Instance #1 is the [[galaxy-workflow-foundry]] (co
 
 ## What would have falsified the pattern
 
-Set the bar before reading the result. If standing up instance #2 had meant rewriting the source-of-truth model, re-deciding how artifacts are produced, abandoning provenance, throwing out the human reading surface — if *almost everything load-bearing had to change* — then there was no pattern, only a Galaxy-specific architecture that happened to use general words. The pattern survives only if the spine transfers and the changes localize.
+Set the bar before reading the result. If standing up instance #2 had meant rewriting the source-of-truth model, re-deciding how artifacts are produced, abandoning provenance, throwing out the human reading surface — if *almost everything load-bearing had to change* — then there was no pattern, only a Galaxy-specific architecture that happened to use general words. The pattern survives only if the **substrate** transfers and the changes localize to what each domain adds on top.
 
-The result: the spine transferred verbatim, and the changes localized to a single axis. That single axis is the gate.
+The result: the substrate transferred verbatim. What changed is exactly what *should* change between two domains — the knowledge itself, and the machinery each domain builds to carry and check it.
 
-## Inherited unchanged — the spine
+## Inherited unchanged — the substrate
 
 These transferred essentially verbatim. Instance #2's own `ARCHITECTURE.md` opens by calling them "Inherited DNA … the whole reason we derive from the Foundry rather than starting fresh." Each with its one-line evidence:
 
@@ -26,7 +26,7 @@ These transferred essentially verbatim. Instance #2's own `ARCHITECTURE.md` open
 - **The human reader's surface.** Both render an Astro site over typed content collections, with wiki-link panels, backlinks, tag browses, and raw-text endpoints. Instance #2: "This *is* Pillar 3" — foregrounding knowledge for a human, not just storing it for retrieval.
 - **Deterministic tools do deterministic work.** Both hold the rule that you don't let the model grade itself; deterministic tooling does the deterministic checks. Instance #2 keeps the principle "unchanged" — only its *form* moves.
 - **Corpus grounding.** Both forbid inventing abstractions top-down; every reference must trace to a real exemplar cited by URL/DOI, never mirrored. Instance #2 preserves the URL-not-mirror principle "verbatim."
-- **The validation/gate LOOP shape.** Both run a generate-step refereed by an external check that can force a fix: instance #1's `author → validate → fix`, instance #2's `analyze → referee → revise`. Same topology, including bounded/escalating convergence.
+- **The external-check loop shape.** Both run a generate-step refereed by something *external to the model* that can force a fix: instance #1's `author → validate → fix`, instance #2's `analyze → referee → revise`. Same topology, including bounded/escalating convergence — even though, as below, the external thing differs completely.
 
 Six load-bearing abstractions, carried with little more than a rename. That is the pattern.
 
@@ -35,7 +35,7 @@ Six load-bearing abstractions, carried with little more than a rename. That is t
 Same shapes, different content poured into them:
 
 - **Domain.** Workflow construction → statistical-method validity. The Mold still describes "one action"; the action is now "audit this method" or "construct the calibration the field trusts" instead of "convert this step."
-- **Corpus.** Instance #1's corpus is the IWC workflow set — *all positive exemplars*. Instance #2 needs a **bipolar corpus**: established-good (methods + their validity conditions, to ground "pick an established method, don't invent") *and* cautionary-bad (named invalidity patterns + remedies, to ground the referee). A referee grounded only in good examples can't recognize a bad one — so the second pole has *no parent analog*.
+- **Corpus.** Instance #1's corpus is the IWC workflow set — *all positive exemplars*. Instance #2 needs a **bipolar corpus**: established-good (methods + their validity conditions, to ground "pick an established method, don't invent") *and* cautionary-bad (named invalidity patterns + remedies, to ground the referee). A check grounded only in good examples can't recognize a bad one — so the second pole has *no parent analog*.
 - **Target formats / tool ecosystem.** `gxwf` + `planemo` and `gxformat2` give way to R/Bioconductor, PLINK/regenie, statsmodels, and simulators — but the CLI-manual-page concept carries; it's just authored lazily when a real action needs an exact command.
 - **Mold spec.** The required **`axis`** field (`source-specific | target-specific | tool-specific | generic`) is **dropped** — it describes a *conversion*, which instance #2 isn't doing — and the eval guardrails reframe from *hallucination* ("invented Tool Shed IDs must be flagged") to **referee-correctness** ("a planted double-dipped analysis must be caught, never silently pass"). The four-file eval/scenario/usage/refinement discipline carries over verbatim; only what the evals *guard* changed.
 
@@ -45,27 +45,27 @@ What instance #1 leans on that instance #2 deliberately lightens:
 
 - **The conversion `axis` enum** — dropped, as above. Genuinely conversion-specific.
 - **Strict JSON-Schema Mold IO contracts** — demoted. Instance #1 passes structured JSON between phases, so schemas earn their keep; instance #2's deliverables are critiques and protocols, which are *prose-shaped*. Schemas are reserved for the rare genuinely-structured artifact (e.g. a power-calc result).
-- **Pipeline-primary IA** → Mold-primary IA. Instance #1's Molds exist to fill ordered pipeline phases (the "subway map" leads navigation, and "Molds = union of pipeline phases" is machine-enforced). Instance #2's Molds are standalone toolkit skills; the catalog leads, and a Mold may legitimately belong to no pipeline.
+- **Pipelines** — instance #1's, not the pattern's. Instance #1's Molds exist to fill ordered pipeline phases (the "subway map" leads navigation, and "Molds = union of pipeline phases" is machine-enforced) because workflow construction is inherently sequential. Instance #2's Molds are standalone toolkit skills; the catalog leads, and a Mold may legitimately belong to no pipeline at all. Composition is an extension a domain reaches for when its work is a journey — not part of the substrate.
 
 These are honest *lightenings*, not oversights — instance #2 says so explicitly. Worth noting they're judgment calls: with zero Molds authored yet, "demote the schema contract" is a bet that prose deliverables dominate, not a proven fact.
 
 ## Added — net-new in instance #2
 
-- **The empirical referee loop.** Instance #1's gate is pure infrastructure: a deterministic CLI parses and either accepts or rejects. Instance #2 has no CLI that can decide "is this statistical method valid," so the gate *itself becomes authored knowledge cast into a skill* — a referee Mold that both *critiques* (reasons about known invalidity patterns) and *calibrates* (constructs and runs an empirical check: permutation under the null, simulation under known truth). The gate moves from infrastructure to deliverable.
-- **"Doing Never Self-Certifies."** The net-new principle and the invariant it implies: a Family-A "do" protocol may not terminate in self-certification; it must hand off to a Family-B referee whose verdict gates certification. This *generalizes* the parent's loop rather than replacing it — same `generate → external-check → fix` shape, but the external check is now an empirical Mold instead of a parser.
+- **An empirical referee as the external check.** Instance #1's check is pure infrastructure: a deterministic CLI parses and either accepts or rejects. Instance #2 has no CLI that can decide "is this statistical method valid," so its check *itself becomes authored knowledge cast into a skill* — a referee Mold that both *critiques* (reasons about known invalidity patterns) and *calibrates* (constructs and runs an empirical check: permutation under the null, simulation under known truth). The check moves from infrastructure to deliverable. This is instance #2's domain extension, not a new universal part.
+- **"Doing Never Self-Certifies."** Instance #2's own animating principle: a Family-A "do" protocol may not terminate in self-certification; it must hand off to a Family-B referee whose verdict gates certification. It is a *sharpening* of the shared deterministic-tools rule for a domain where the model is otherwise the only judge — same `generate → external-check → fix` shape, but the external check is now an empirical Mold instead of a parser. It belongs to the stat-gen instance; it is not a law every Foundry must restate.
 
 ## The punchline
 
-Line the two up and exactly **one** structural thing changed shape: the **gate**. Everything load-bearing about the KB → cast → provenance machine — the source-of-truth model, the compilation boundary, the provenance record, the human surface — stayed.
+Line the two up and the **substrate** — the KB → cast → provenance machine, the source-of-truth model, the compilation boundary, the provenance record, the human surface — stayed put. What varied is exactly what two different domains *should* vary: the knowledge, and the machinery each built on top to carry and check it.
 
 | | Instance #1 (Galaxy) | Instance #2 (Stat-Gen) |
 |---|---|---|
-| **Inherited** | KB-as-source, Mold→Cast→provenance, human site, deterministic-does-deterministic, corpus grounding, the loop | *identical* |
+| **Inherited (substrate)** | KB-as-source, Mold→Cast→provenance, human site, deterministic-does-deterministic, corpus grounding, the external-check loop | *identical* |
 | **Adapted** | IWC corpus; `gxformat2` target; `axis` field; hallucination evals | bipolar corpus; stats targets; `axis` dropped; referee-correctness evals |
-| **The gate (the parameter)** | deterministic CLI ("the rails") — infrastructure | empirical referee Mold ("doing never self-certifies") — a deliverable |
+| **Domain machinery (the extension)** | pipelines for sequential construction; a deterministic CLI validator ("the rails") | standalone toolkit Molds; an empirical referee ("doing never self-certifies") as the check |
 
-So the pattern reduces to a single sentence: **an inspectable KB compiled into cast artifacts that carry provenance, standing behind a gate — where the gate is a parameter.** A deterministic CLI is one binding of that parameter; an empirical referee Mold is another. Everything else is the invariant. (See [[the-model]] for the spine and [[guiding-principles]] for the rules it obeys; [[anatomy-of-an-instance]] for the checklist a Foundry must satisfy.)
+So the pattern reduces to a clean claim: **an inspectable KB of deep domain knowledge, compiled into cast artifacts that carry provenance — a substrate each domain extends with the composition and checks its work demands.** A deterministic CLI is one domain's check; an empirical referee is another's; pipelines are one domain's composition and another's needless weight. The substrate is the constant; the extensions are the pattern being *applied*, not violated. (See [[the-model]] for the substrate and [[guiding-principles]] for the rules it obeys; [[anatomy-of-an-instance]] for the substrate-vs-extension split in full.)
 
 ## What a third instance would test
 
-N=2 fixes a *line*; it can't yet tell a line from a curve. The clean prediction to falsify: a third Foundry — say, one whose gate is neither a parser nor an empirical referee but a *human review queue*, or a *formal proof checker* — should again inherit the spine unchanged and vary only the gate. If a third instance forces a change to the source-of-truth model or the provenance contract to fit its domain, that part wasn't invariant after all, and the pattern shrinks to whatever still holds. Until then the claim stands exactly as far as the evidence: the gate is the variable, and the machine behind it is the constant.
+N=2 fixes a *line*; it can't yet tell a line from a curve. The clean prediction to falsify: a third Foundry — in a domain whose external check is neither a parser nor an empirical referee but a *human review queue*, or a *formal proof checker*, and whose work may or may not need pipeline-style composition — should again inherit the substrate unchanged and vary only in its domain knowledge and the extensions that knowledge demands. If a third instance forces a change to the source-of-truth model or the provenance contract to fit its domain, that part wasn't substrate after all, and the pattern shrinks to whatever still holds. Until then the claim stands exactly as far as the evidence: the substrate is the constant, and what each domain builds on it is free to differ.

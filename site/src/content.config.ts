@@ -17,7 +17,7 @@ const docs = defineCollection({
     date: z.coerce.date().optional(),
     // instance profiles
     instance_number: z.number().optional(),
-    gate: z.string().optional(),
+    check: z.string().optional(),
     upstream: z.string().url().optional(),
   }),
 });

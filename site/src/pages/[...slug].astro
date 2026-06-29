@@ -38,9 +38,9 @@ const next = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : undefin
       {dateStr && <span style="color: var(--muted)"> · {dateStr}</span>}
     </p>
 
-    {(d.gate || d.upstream) && (
+    {(d.check || d.upstream) && (
       <div class="not-prose mt-4 mb-6 rounded-lg border p-4 text-sm" style="border-color: var(--rule); background: var(--graphite)">
-        {d.gate && <div><strong>Gate:</strong> {d.gate}</div>}
+        {d.check && <div><strong>External check:</strong> {d.check}</div>}
         {d.upstream && (
           <div class="mt-1"><strong>Upstream:</strong> <a href={d.upstream}>{d.upstream}</a></div>
         )}
