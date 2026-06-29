@@ -7,18 +7,10 @@ interface Props {
 }
 const { href, title, description, badge } = Astro.props;
 ---
-<a
-  href={href}
-  class="block rounded-lg border p-4 no-underline transition hover:shadow-sm"
-  style="border-color: var(--rule); background: #fff"
->
-  <div class="flex items-baseline gap-2">
-    <span class="font-bold" style="color: var(--ink)">{title}</span>
-    {badge && (
-      <span class="text-[0.65rem] uppercase tracking-wider px-1.5 py-0.5 rounded" style="background:#f0ece2; color: var(--accent)">
-        {badge}
-      </span>
-    )}
+<a href={href} class="card block rounded-lg p-5 no-underline">
+  <div class="flex items-baseline gap-2 flex-wrap">
+    <span class="font-semibold text-[1.05rem]" style="font-family: var(--font-display); color: var(--ink)">{title}</span>
+    {badge && <span class="badge">{badge}</span>}
   </div>
-  {description && <p class="mt-1 text-sm" style="color: var(--muted)">{description}</p>}
+  {description && <p class="mt-1.5 text-sm leading-relaxed" style="color: var(--ash)">{description}</p>}
 </a>

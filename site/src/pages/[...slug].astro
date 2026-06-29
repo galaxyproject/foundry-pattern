@@ -39,7 +39,7 @@ const next = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : undefin
     </p>
 
     {(d.gate || d.upstream) && (
-      <div class="not-prose mt-4 mb-6 rounded-lg border p-4 text-sm" style="border-color: var(--rule); background:#fff">
+      <div class="not-prose mt-4 mb-6 rounded-lg border p-4 text-sm" style="border-color: var(--rule); background: var(--graphite)">
         {d.gate && <div><strong>Gate:</strong> {d.gate}</div>}
         {d.upstream && (
           <div class="mt-1"><strong>Upstream:</strong> <a href={d.upstream}>{d.upstream}</a></div>
@@ -53,15 +53,15 @@ const next = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : undefin
   {(prev || next) && (
     <nav class="not-prose mx-auto mt-12 max-w-3xl grid gap-3 sm:grid-cols-2 text-sm" data-pagefind-ignore>
       {prev ? (
-        <a href={`${base}/${prev.id}/`} class="rounded-lg border p-3 no-underline" style="border-color: var(--rule); background:#fff">
-          <div style="color: var(--muted)">← Previous</div>
-          <div class="font-bold" style="color: var(--ink)">{prev.data.title}</div>
+        <a href={`${base}/${prev.id}/`} class="card rounded-lg p-4 no-underline">
+          <div class="uppercase text-xs tracking-widest" style="font-family: var(--font-display); color: var(--ember)">← Previous</div>
+          <div class="font-semibold mt-0.5" style="font-family: var(--font-display); color: var(--ink)">{prev.data.title}</div>
         </a>
       ) : <span />}
       {next && (
-        <a href={`${base}/${next.id}/`} class="rounded-lg border p-3 no-underline text-right" style="border-color: var(--rule); background:#fff">
-          <div style="color: var(--muted)">Next →</div>
-          <div class="font-bold" style="color: var(--ink)">{next.data.title}</div>
+        <a href={`${base}/${next.id}/`} class="card rounded-lg p-4 no-underline text-right">
+          <div class="uppercase text-xs tracking-widest" style="font-family: var(--font-display); color: var(--ember)">Next →</div>
+          <div class="font-semibold mt-0.5" style="font-family: var(--font-display); color: var(--ink)">{next.data.title}</div>
         </a>
       )}
     </nav>

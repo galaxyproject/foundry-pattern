@@ -28,10 +28,10 @@ const doors = [
 <Base title="The Foundry Pattern" description="An inspectable knowledge base, read by humans and acted on by agents, that casts skills which don't rot: frozen, provenance-stamped, behind a gate the authored knowledge can't skip.">
   <section class="max-w-3xl">
     <p class="kicker">A design pattern for actionable knowledge bases</p>
-    <h1 class="text-4xl sm:text-5xl font-bold mt-2 leading-tight">
-      Make the knowledge base <em>actionable</em>.<br />Cast skills that don't <em>rot</em>.
+    <h1 class="text-4xl sm:text-6xl font-semibold mt-4 leading-[1.04]" style="letter-spacing:-0.015em">
+      Make the knowledge base <em class="molten">actionable</em>.<br />Cast skills that don't <em class="molten">rot</em>.
     </h1>
-    <p class="mt-6 text-lg" style="color: var(--ink)">
+    <p class="mt-7 text-lg leading-relaxed" style="color: var(--steel)">
       The Foundry Pattern keeps the knowledge where it belongs. The source of record is an
       inspectable <strong>knowledge base</strong>, authored to be read by a human and acted on
       by an agent. A deterministic <strong>cast</strong> compiles it into frozen skill artifacts
@@ -44,12 +44,15 @@ const doors = [
     </p>
   </section>
 
-  <div class="mt-12 grid gap-4 sm:grid-cols-2">
-    {doors.map((d) => (
-      <a href={d.href} class="block rounded-xl border p-6 no-underline transition hover:shadow-md" style="border-color: var(--rule); background:#fff">
-        <p class="kicker">{d.kicker}</p>
-        <p class="mt-2" style="color: var(--ink)">{d.blurb}</p>
-        <span class="mt-3 inline-block text-sm" style="color: var(--accent)">Enter →</span>
+  <div class="mt-14 grid gap-4 sm:grid-cols-2">
+    {doors.map((d, i) => (
+      <a href={d.href} class="door group block rounded-xl p-6 no-underline">
+        <div class="flex items-center justify-between">
+          <span class="cast-num">{String(i + 1).padStart(2, "0")} / 04</span>
+          <span class="kicker" style="gap:0">{d.kicker}</span>
+        </div>
+        <p class="mt-3 leading-relaxed" style="color: var(--steel)">{d.blurb}</p>
+        <span class="mt-4 inline-block uppercase text-xs tracking-widest transition-colors" style="font-family: var(--font-display); color: var(--ash)">Enter <span class="group-hover:text-[var(--glow)]" style="color: var(--ember)">→</span></span>
       </a>
     ))}
   </div>
