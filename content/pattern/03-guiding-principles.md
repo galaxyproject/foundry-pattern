@@ -15,6 +15,8 @@ The pressure is real because a class of generated work fails in specific, detect
 
 Knowledge stays healthy near the project that owns it. A Foundry should not become a stale mirror of upstream systems; it points to source, quotes only what it must, and syncs through the strongest available mechanism when freshness matters. A Foundry adds value by connecting, explaining, and operationalizing upstream knowledge — not by competing to be its canonical home.
 
+Grounding is a spectrum, and the choice is the author's: cite by URL — cheapest and always fresh, but weakest on stability; quote a fixed excerpt inline — stable to read, but able to go stale silently; or pin a source by content hash, commit, or DOI — stable *and* drift-detectable, but frozen until someone re-pins. Citing rather than mirroring carries an honest cost: upstream *structural* drift is not caught automatically, because the price of not maintaining a copy is not getting a diff when the source moves. The discipline is to pin what must stay stable and review on sync — not to mirror everything to feel safe.
+
 (Instance #1 cites the curated workflow corpus by URL rather than importing it, and lets the CLI remain the source of behavior. Instance #2 pins methods literature and reporting standards by DOI/commit and reads tool behavior from invoking the tool, not from prose it maintains.)
 
 ## Reproducibility At Every Layer
@@ -54,6 +56,8 @@ A passive knowledge base explains but cannot make an agent act. A standalone ski
 ## Corpus-First, Not Invention-First
 
 A Foundry learns from a real, curated [[glossary|grounding corpus]] before it invents abstractions. Corpus-first does not mean copying the corpus wholesale; it means abstractions are justified by observed examples — pages cite concrete cases, Mold behavior aligns with recurring tasks, new taxonomy appears only after content demands it.
+
+Building that grounding from a large corpus is itself tiered, cheap-to-expensive: a broad inexpensive scan to locate where the relevant cases live, a structural pass that reads the *shape* of the candidates without their full contents, and selective deep reads of only the few that earn the attention. The ladder is what keeps corpus-first affordable — survey widely, read deeply only where a real case justifies it — rather than a counsel of perfection nobody can follow.
 
 The same discipline governs the prose a Mold references. A reference note starts as a stub — frontmatter, title, primary-source link — and grows paragraph-by-paragraph only when a real case (a cast run, a logged failure, a place an agent guessed) demands it. Pre-written comprehensive notes are an anti-pattern: they read as plausible, sound authoritative, and quietly propagate the author's priors into every downstream cast. A downstream agent cannot tell invented prose from earned prose, so the safe default is to write nothing until contact with the corpus forces it. A Foundry must not become the thing it gates against.
 

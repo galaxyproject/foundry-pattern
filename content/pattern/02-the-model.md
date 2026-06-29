@@ -15,9 +15,13 @@ The **Knowledge Base (KB)** is the source of truth: an inspectable, human-readab
 
 The KB is plain files. It stays the source of record no matter how many artifacts are cast from it.
 
+Calling the structure *executable* is a claim with teeth. The same typing that lets artifacts fall out of the KB also lets the KB itself be statically validated: every typed reference must resolve or the build fails, controlled tags must exist in the registry, and generated indexes and deterministically rendered artifacts are regenerated and diffed so drift in them announces itself. Casting refuses to compile a Mold that fails these checks. This is compile-time enforcement on the *source* — distinct from the later check that stands between a finished cast and a trusted result.
+
 ## Mold
 
 A **Mold** is the unit of the KB: an abstract, *typed reference manifest* describing one action. It is not the knowledge itself — it is a declaration of which knowledge one action depends on, plus a procedural body skeleton for performing that action. A Mold is a source artifact, independent of any agent runtime.
+
+Not every piece of knowledge becomes a Mold. The line is procedural: a repeatable decision-and-handoff worth casting into its own action is a Mold; a fact, idiom, or contract an action can simply *cite* stays a reference. A Mold is sized to one step of real work — one action a harness would hand off as a unit — which is not the same as *small*; a Mold may be substantial. Getting this boundary right is what keeps the KB a graph of reusable actions rather than either one monolithic skill or a dust of fragments too fine to cast.
 
 Each Mold declares its dependencies as typed references. Every reference carries:
 
@@ -61,6 +65,31 @@ Every cast emits a **Provenance** record (`_provenance.json`) beside the artifac
 - the **checks run** at cast time.
 
 Provenance is what makes drift *mechanically detectable*: re-hash the Mold and its references, compare against the record, and a stale artifact announces itself. It is also the forensic trail — which specific claim came from where — that a bare artifact cannot offer.
+
+### What the record buys, concretely
+
+A provenance record is mostly an index of resolved references, each carrying a source and a destination hash:
+
+```json
+{
+  "mold": { "id": "summarize-source", "revision": 4, "content_hash": "sha256:9f1c…" },
+  "model": "<model>@<version>",
+  "references": [
+    { "id": "input-schema",   "transform": "verbatim",
+      "src_hash": "sha256:71a0…", "dst_hash": "sha256:71a0…", "by": "deterministic" },
+    { "id": "domain-pattern", "transform": "condensed",
+      "src_hash": "sha256:0a5e…", "dst_hash": "sha256:c43b…", "by": "llm",
+      "prompt": "condense-pattern@v3" }
+  ],
+  "checks": ["static-validation", "references-resolved"]
+}
+```
+
+Three things fall out of that shape:
+
+- **Verbatim references prove themselves.** When a reference is copied unchanged, `src_hash == dst_hash` — the cheapest possible proof that nothing was paraphrased between source and artifact. No reading required; the equality *is* the guarantee.
+- **Transformed references name their author.** When a reference is condensed, `src_hash != dst_hash`, and the record names the model and prompt that produced the destination. Every fragment an LLM touched is marked `llm`; everything else is `deterministic`. Trust is auditable fragment by fragment.
+- **Drift and forensics are one read.** To detect staleness, re-hash the Mold and its sources and compare to the record. To answer "where did this claim come from," follow the fragment to its `src`. Both questions are answered by lineage a bare skill simply does not carry.
 
 ## Pipeline and Target
 
