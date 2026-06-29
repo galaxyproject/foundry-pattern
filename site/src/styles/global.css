@@ -255,3 +255,19 @@ article.prose::before {
 .prose a:hover {
   text-decoration-color: var(--link);
 }
+
+/* Pagefind search widget — themed to the foundry dark steel */
+.pagefind-ui {
+  --pagefind-ui-primary: var(--ember);
+  --pagefind-ui-text: var(--steel);
+  --pagefind-ui-background: var(--iron);
+  --pagefind-ui-border: var(--rule);
+  --pagefind-ui-tag: var(--graphite);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 10px;
+  --pagefind-ui-font: var(--font-body);
+}
+.pagefind-ui ::placeholder {
+  color: var(--ash);
+  opacity: 1;
+}
