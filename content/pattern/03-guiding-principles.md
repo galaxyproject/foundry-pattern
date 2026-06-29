@@ -7,9 +7,9 @@ order: 3
 
 # Guiding Principles
 
-A Foundry exists because a class of generated work fails in specific, detectable ways, and because monolithic skills answer those failures with prose caveats that neither compose nor scale. These principles are the design pressure behind the alternative. They are domain-free on purpose: each one holds for any Foundry, and where the two instances honor a principle differently, that difference is the pattern earning its abstraction (see [[anatomy-of-an-instance]]).
+A Foundry is not a glossary, a documentation site, or a pile of skills. It is an attempt to make a body of working knowledge durable, inspectable, executable, and externally checkable while the surrounding tooling keeps changing. These principles are the design pressure behind that attempt. They are domain-free on purpose: each one holds for any Foundry, and where the two instances honor a principle differently, that difference is the pattern earning its abstraction (see [[anatomy-of-an-instance]]).
 
-A Foundry is not a glossary, a documentation site, or a pile of skills. It is an attempt to make a body of working knowledge durable, inspectable, executable, and externally checkable while the surrounding tooling keeps changing. The principles below explain why the [[the-model|architecture]] is shaped the way it is.
+The pressure is real because a class of generated work fails in specific, detectable ways, and monolithic skills answer those failures with prose caveats that neither compose nor scale. Make the knowledge base actionable instead, and the principles below explain why the [[the-model|architecture]] is shaped the way it is.
 
 ## Source Authority Beats Local Copies
 
