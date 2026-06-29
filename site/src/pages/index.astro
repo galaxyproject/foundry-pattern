@@ -6,7 +6,7 @@ const doors = [
   {
     href: `${base}/pattern`,
     kicker: "The Pattern",
-    blurb: "The timeless spec. A knowledge base of Molds, cast into frozen artifacts with provenance — a substrate each domain extends.",
+    blurb: "The timeless spec. A knowledge base of Molds, cast into frozen artifacts with provenance — a pattern each domain instantiates and extends.",
   },
   {
     href: `${base}/case`,
@@ -25,7 +25,7 @@ const doors = [
   },
 ];
 ---
-<Base title="The Foundry Pattern" description="An inspectable knowledge base of deep domain knowledge, read by humans and acted on by agents, that casts skills which don't rot: frozen and provenance-stamped. A substrate to extend, not a template to stamp.">
+<Base title="The Foundry Pattern" description="An inspectable knowledge base of deep domain knowledge, read by humans and acted on by agents, that casts skills which don't rot: frozen and provenance-stamped.">
   <section class="max-w-3xl">
     <p class="kicker">Cast skills that resist rot and empower human inspection.</p>
     <h1 class="text-4xl sm:text-6xl font-semibold mt-4 leading-[1.04]" style="letter-spacing:-0.015em">
@@ -38,20 +38,12 @@ const doors = [
       frozen skill artifacts that carry <strong>provenance</strong> — a <strong>substrate</strong>
       each domain extends with its own knowledge and the checks its work demands.
     </p>
-    <p class="mt-4" style="color: var(--muted)">
-      It is documented in the abstract because it now has two instances, and abstraction
-      earns itself at the diff between them: the substrate holds, and each domain extends it
-      differently.
-    </p>
   </section>
 
   <div class="mt-14 grid gap-4 sm:grid-cols-2">
     {doors.map((d, i) => (
       <a href={d.href} class="door group block rounded-xl p-6 no-underline">
-        <div class="flex items-center justify-between">
-          <span class="cast-num">{String(i + 1).padStart(2, "0")} / 04</span>
-          <span class="kicker" style="gap:0">{d.kicker}</span>
-        </div>
+        <span class="kicker" style="gap:0">{d.kicker}</span>
         <p class="mt-3 leading-relaxed" style="color: var(--steel)">{d.blurb}</p>
         <span class="mt-4 inline-block uppercase text-xs tracking-widest transition-colors" style="font-family: var(--font-display); color: var(--ash)">Enter <span class="group-hover:text-[var(--glow)]" style="color: var(--ember)">→</span></span>
       </a>
