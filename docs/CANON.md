@@ -18,8 +18,10 @@ Three products under one roof:
 - **The Pattern** — the timeless, descriptive spec (what a Foundry *is*).
 - **The Case** — the argument (why skills should be a *packaging* format, not a *source*
   format). Front door: the flagship essay "Skills: Package, Not Source."
-- **The Blog / Lab** — evidence, experiments, and anything *dated* (so the spec never
-  carries a date).
+- **The Blog / Lab** — evidence, experiments, and anything *dated* (so the *spec* never
+  carries a date). Exception by design: Comparisons (in The Case) carries a dated Part B —
+  a periodically-refreshed landscape snapshot. Dating the *argument's* landscape reading is
+  honest; it does not date the Pattern spec, which is a separate product.
 
 ## Naming (use exactly these)
 

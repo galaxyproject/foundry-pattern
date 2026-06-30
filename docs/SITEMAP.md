@@ -22,7 +22,7 @@ Home  ............................. the bet in one breath + three doors
 ├── 2. THE CASE  ................. the argument
 │   ├── Skills: Package, Not Source ★ flagship — "the problems with skills"      [NET-NEW]
 │   ├── The Two Assets ........... provenance (universal) + the enforced check    [NET-NEW]
-│   ├── Comparisons / Landscape .. compile-time-with-provenance vs runtime        [pull: comparisons Part A]
+│   ├── Comparisons .............. Part A positioning (stable) + Part B landscape (dated, refreshed) [pull: comparisons Part A + B]
 │   └── Related Projects ......... the values table                               [NET-NEW — issue #2 rows]
 │
 ├── 3. INSTANCES  ............... the pattern, twice, as proof
@@ -31,8 +31,7 @@ Home  ............................. the bet in one breath + three doors
 │   └── The Diff ................. what generalized vs what stayed local          [NET-NEW — spine]
 │
 └── 4. BLOG / LAB  ............. evidence, experiments, anything dated
-    ├── Blind Regeneration ........ ★ flagship experiment (issue #2)              [NET-NEW]
-    └── Landscape Snapshot 2026-05  the dated survey                              [pull: comparisons Part B]
+    └── Blind Regeneration ........ ★ flagship experiment (issue #2)              [NET-NEW]
 ```
 
 ## Load-bearing docs
@@ -41,8 +40,9 @@ The abstraction's whole weight rests on two net-new pages: **Anatomy of an Insta
 (Pattern) and **The Diff** (Instances). The substrate is invariant across both foundries;
 what each domain extends it with varies — and those two pages are where that contrast is made explicit. The
 flagship **Skills: Package, Not Source** is the front door to The Case; **Blind
-Regeneration** is its evidence; **Landscape Snapshot** absorbs the one dated survey so the
-spec never carries a date.
+Regeneration** is its evidence. **Comparisons** carries the one dated survey as its Part B —
+a periodically-refreshed landscape snapshot — kept in The Case, not the Pattern, so the
+*spec* never carries a date even though the argument's landscape reading does.
 
 ## Pull-through map (old foundry → here)
 
@@ -51,5 +51,5 @@ spec never carries a date.
 | `foundry` story / `FoundryStory` | Pattern → Story | strip Galaxy specifics; one concrete example as illustration |
 | `foundry` guiding-principles | Pattern → Guiding Principles | "IWC corpus"→"grounding corpus", "gxformat2"→"target format"; all principles survive |
 | `foundry` glossary | Pattern → Glossary | drop gxformat2/IWC/gxwf; keep Mold/Cast/Provenance; scope Pipeline + "the gate" as instance terms |
-| `foundry` comparisons Part A | Case → Comparisons | keep ~as-is (already abstract) |
-| `foundry` comparisons Part B | Blog → Landscape Snapshot | move verbatim; it is explicitly dated |
+| `foundry` comparisons Part A | Case → Comparisons (Part A) | keep ~as-is (already abstract) |
+| `foundry` comparisons Part B | Case → Comparisons (Part B) | de-domain (IWC → external exemplar); keep citations + Refresh log; stays a dated, on-demand-refreshed sweep |
