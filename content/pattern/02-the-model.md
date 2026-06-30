@@ -7,7 +7,7 @@ order: 2
 
 # The Model
 
-A Foundry is a small machine with four moving parts: a **Knowledge Base** you author, **Molds** that make slices of it executable, a **Cast** step that freezes those slices into distributable artifacts, and **Provenance** that records what each freeze contained. Everything else — composition, targets, validation — composes from these. This page defines each part and shows how they fit. Instances appear only as illustration; the parts themselves are domain-free.
+A Foundry is a small machine with four moving parts: a **Knowledge Base** you author, **Molds** that make slices of it executable, a **Cast** step that freezes those slices into distributable artifacts (e.g. skills), and **Provenance** that records what each freeze contained. Everything else — targets and validation — follows from these. This page defines each part and shows how they fit. Instances appear only as illustration; the parts themselves are domain-free.
 
 ## Knowledge Base
 
@@ -15,7 +15,7 @@ The **Knowledge Base (KB)** is the source of truth: an inspectable, human-readab
 
 The KB is plain files. It stays the source of record no matter how many artifacts are cast from it.
 
-Calling the structure *executable* is a claim with teeth. The same typing that lets artifacts fall out of the KB also lets the KB itself be statically validated: every typed reference must resolve or the build fails, controlled tags must exist in the registry, and generated indexes and deterministically rendered artifacts are regenerated and diffed so drift in them announces itself. Casting refuses to compile a Mold that fails these checks. This is compile-time enforcement on the *source* — distinct from the later check that stands between a finished cast and a trusted result.
+Calling the structure *executable* is a claim the build enforces. The same typing that lets artifacts fall out of the KB also lets the KB itself be statically validated: every typed reference must resolve or the build fails, controlled tags must exist in the registry, and generated indexes and deterministically rendered artifacts are regenerated and diffed so drift in them announces itself. Casting refuses to compile a Mold that fails these checks. This is compile-time enforcement on the *source* — distinct from the later check that stands between a finished cast and a trusted result.
 
 ## Mold
 
@@ -66,6 +66,8 @@ Every cast emits a **Provenance** record (`_provenance.json`) beside the artifac
 
 Provenance is what makes drift *mechanically detectable*: re-hash the Mold and its references, compare against the record, and a stale artifact announces itself. It is also the forensic trail — which specific claim came from where — that a bare artifact cannot offer.
 
+Traceability and reproducibility are how science and engineering earn trust: a result you can follow back to its inputs and method is one you can check, repeat, and build on. An agent that generates a skill in a single pass keeps the artifact and loses that thread — the output survives, its lineage does not. Recording provenance at compile time is how a Foundry recovers it: the freeze and the record of what was frozen are produced in the same step, so the lineage cannot drift away from the result.
+
 ### What the record buys, concretely
 
 A provenance record is mostly an index of resolved references, each carrying a source and a destination hash:
@@ -91,29 +93,40 @@ Three things fall out of that shape:
 - **Transformed references name their author.** When a reference is condensed, `src_hash != dst_hash`, and the record names the model and prompt that produced the destination. Every fragment an LLM touched is marked `llm`; everything else is `deterministic`. Trust is auditable fragment by fragment.
 - **Drift and forensics are one read.** To detect staleness, re-hash the Mold and its sources and compare to the record. To answer "where did this claim come from," follow the fragment to its `src`. Both questions are answered by lineage a bare skill simply does not carry.
 
-## Target (and composition)
+None of this depends on the exact shape above. Both existing instances happen to record a `_provenance.json`, but the pattern fixes only that lineage is captured and re-checkable — the filename and encoding are an instance detail.
+
+## Target
 
 A **Target** is the output format a cast produces — one agent-skill format, a generic skill, a baked-in bundle. Casting is parameterized by target; the same Mold can be cast to several. The KB stays the single source of truth across all of them; each target is one rendering of it.
 
-Molds also **compose**. Where a domain's work is an inherently multi-step journey, an instance orders Molds into an end-to-end task and may orchestrate them with a harness — the [[galaxy-workflow-foundry]] calls such an ordering a *pipeline*. Composition is real and useful, but it is a domain extension, not one of the four core parts: a domain whose actions stand alone needs no such layer. See [[anatomy-of-an-instance]] for the substrate-vs-extension split.
+## Casting
 
-## How it composes
+<figure class="not-prose my-8" data-pagefind-ignore>
+  <div style="display:flex; align-items:stretch; justify-content:center; gap:1rem; flex-wrap:wrap; font-size:0.875rem">
+    <div style="flex:1 1 200px; max-width:18rem; border:1px solid var(--rule); border-radius:0.7rem; background:var(--soot); padding:1.1rem 1.2rem">
+      <div style="font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.14em; font-size:0.68rem; color:var(--ash)">Knowledge Base</div>
+      <div style="margin-top:0.6rem; color:var(--steel)"><strong style="color:var(--ink)">Mold</strong> — typed refs</div>
+      <div style="margin-top:0.9rem; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ash)">source of truth</div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:0 0 auto; padding:0 0.25rem; min-width:8.5rem">
+      <div style="font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.16em; font-size:0.68rem; color:var(--ember)">cast</div>
+      <div style="font-size:1.7rem; line-height:1; color:var(--ember); margin:0.15rem 0">&rarr;</div>
+      <div style="font-size:0.7rem; color:var(--ash); text-align:center">deterministic first,<br />LLM second</div>
+    </div>
+    <div style="flex:1 1 220px; max-width:18rem; display:flex; flex-direction:column; gap:0.6rem">
+      <div style="border:1px solid var(--ember); border-radius:0.7rem; background:var(--soot); padding:1.1rem 1.2rem">
+        <div style="font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.14em; font-size:0.68rem; color:var(--glow)">Target artifact</div>
+        <div style="margin-top:0.6rem; color:var(--steel)">frozen · condensed · link-free</div>
+      </div>
+      <div style="border:1px dashed var(--rule); border-radius:0.7rem; padding:1.1rem 1.2rem">
+        <div style="font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.14em; font-size:0.68rem; color:var(--ash)">provenance</div>
+        <div style="margin-top:0.6rem; color:var(--steel)">revision · model · refs · checks</div>
+      </div>
+    </div>
+  </div>
+</figure>
 
-```
-                            cast
-                       (deterministic
-   ┌───────────────┐    first,         ┌──────────────────────┐
-   │ Knowledge Base│    LLM second)    │  target artifact      │
-   │   └─ Mold ─────┼──────────────────▶│  (frozen, condensed,  │
-   │      (typed    │                   │   link-free)          │
-   │       refs)    │                   ├──────────────────────┤
-   └───────────────┘                   │  _provenance.json     │
-        source of truth                │  (revision, model,    │
-                                        │   refs, checks)       │
-                                        └──────────────────────┘
-```
-
-Read it left to right: an authored Mold in the KB is cast into an isolated artifact plus a provenance record. One Mold can be cast to many targets; many Molds, where a domain's work is a journey, compose into an ordered sequence; the KB on the left never stops being the source.
+Read it left to right: an authored Mold in the KB is cast into an isolated artifact plus a provenance record. One Mold can be cast to many targets; the KB on the left never stops being the source.
 
 ## Compile-time grounding, not runtime retrieval
 
