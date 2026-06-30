@@ -2,7 +2,7 @@
 title: Anatomy of an Instance
 description: What every Foundry shares (the substrate) versus what each domain adds (the extension surface) — the pattern is a base to extend, not a template to stamp.
 section: pattern
-order: 4
+order: 5
 ---
 
 # Anatomy of an Instance

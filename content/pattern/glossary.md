@@ -2,7 +2,7 @@
 title: Glossary
 description: Canonical definitions for the Foundry Pattern's vocabulary — the invariant substrate, casting and provenance, the per-domain extension surface, and the source-vs-package distinction.
 section: pattern
-order: 5
+order: 6
 ---
 
 # Glossary

@@ -29,11 +29,12 @@ docs/
   SITEMAP.md       ← the information architecture this content realizes
 content/
   pattern/         ← The Pattern: the timeless, descriptive spec
-    01-story.md            why skills rot — the generalized motivation
-    02-the-model.md        KB → Mold → Cast → Provenance, abstractly
-    03-guiding-principles.md
-    04-anatomy-of-an-instance.md   the substrate vs the extension surface
-    05-glossary.md
+    story.md               why skills rot — the generalized motivation
+    the-model.md           KB → Mold → Cast → Provenance, abstractly
+    guiding-principles.md
+    principles-in-action.md     the principles incarnated in the two instances
+    anatomy-of-an-instance.md   the substrate vs the extension surface
+    glossary.md
   case/            ← The Case: the argument
     01-skills-package-not-source.md   ★ flagship
     02-the-two-assets.md              provenance (universal) + the enforced check

@@ -15,6 +15,7 @@ Home  ............................. the bet in one breath + three doors
 │   ├── Story ..................... why skills rot — generalized motivation       [pull: foundry story, de-domained]
 │   ├── The Model ................. KB → Mold → Cast → Provenance, abstractly     [adapt: ARCHITECTURE/COMPILATION]
 │   ├── Guiding Principles ........ the principles, corpus/target made generic    [pull: guiding-principles]
+│   ├── Principles in Action ...... the principles incarnated in the two instances [NET-NEW — concrete companion]
 │   ├── Anatomy of an Instance .... the substrate vs the extension surface       [NET-NEW — spine]
 │   └── Glossary ................. Mold, Cast, Provenance; extension surface      [pull: glossary, instance terms dropped]
 │
