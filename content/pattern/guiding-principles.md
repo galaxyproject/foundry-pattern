@@ -1,6 +1,6 @@
 ---
 title: Guiding Principles
-description: The seven design pressures every Foundry obeys, abstracted from the diff between its two instances — the discipline a domain inherits before it extends the substrate.
+description: The design pressures every Foundry obeys, abstracted from the diff between its two instances — the discipline a domain inherits before it extends the substrate.
 section: pattern
 order: 3
 ---
@@ -18,6 +18,12 @@ Knowledge stays healthy near the project that owns it. A Foundry should not beco
 Grounding is a spectrum, and the choice is the author's: cite by URL — cheapest and always fresh, but weakest on stability; quote a fixed excerpt inline — stable to read, but able to go stale silently; or pin a source by content hash, commit, or DOI — stable *and* drift-detectable, but frozen until someone re-pins. Citing rather than mirroring carries an honest cost: upstream *structural* drift is not caught automatically, because the price of not maintaining a copy is not getting a diff when the source moves. The discipline is to pin what must stay stable and review on sync — not to mirror everything to feel safe.
 
 (Instance #1 cites the curated workflow corpus by URL rather than importing it, and lets the CLI remain the source of behavior. Instance #2 pins methods literature and reporting standards by DOI/commit and reads tool behavior from invoking the tool, not from prose it maintains.)
+
+## Redistributed Content Carries Its License
+
+A Foundry is a redistributor. It vendors upstream artifacts verbatim and derives notes from copyrighted sources, and the moment content crosses in from outside, its license crosses with it. Every imported artifact should declare, as typed metadata, the license it is redistributed under and a pointer to the verbatim license text. That declaration is not decoration: it is validated — the license text must actually be present, and external content with no stated license is a defect the build can refuse — and, where the license constrains reuse, it governs how the content may be cast. A source under a non-derivative or non-redistributable license is carried in the Foundry's own words rather than quoted; a permissively-licensed one may be copied verbatim. The license becomes an input to casting, not a caveat bolted on after the fact.
+
+The Foundry's own authored content carries the Foundry's own license, and the two are never conflated — a reader must always be able to tell what the project is asserting from what it is merely passing through. A knowledge base that redistributes what it has no right to redistribute is a liability; one that cannot state the terms under which its content may be reused has undercut the reuse it exists to enable.
 
 ## Reproducibility At Every Layer
 
@@ -55,7 +61,7 @@ The same discipline governs the prose a Mold references. A reference note starts
 
 ## How The Principles Connect
 
-The principles reinforce each other. Keeping information at its source makes upstream sync possible, but only if derived artifacts record provenance. Provenance is meaningful only if deterministic instruments perform the checks the model should not grade itself on. Those instruments are reusable only when artifacts are portable, which needs an inspectable source of truth, which pushes toward a knowledge base, which becomes actionable through Molds and casts — all kept grounded by a corpus-first posture.
+The principles reinforce each other. Keeping information at its source makes upstream sync possible, but only if derived artifacts record provenance and every artifact carried across the boundary brings its license with it. Provenance is meaningful only if deterministic instruments perform the checks the model should not grade itself on. Those instruments are reusable only when artifacts are portable, which needs an inspectable source of truth, which pushes toward a knowledge base, which becomes actionable through Molds and casts — all kept grounded by a corpus-first posture.
 
 **Actionable Knowledge, Not Passive Notes** is the spine through all of it: it is what turns a knowledge base into something trustworthy rather than merely articulate, and provenance plus the deterministic-tools discipline are what keep "actionable" honest. Progressive disclosure is the connective tissue that holds the loop together. Each layer has a job — upstream owns the facts, the Foundry owns synthesis and casting source, the domain's check owns the verdict, cast artifacts own execution, harnesses own orchestration — and a Foundry works when those jobs stay separate and the connections between them stay explicit. The principles are the invariant discipline; what each domain *builds* on that discipline — its composition, its check — is the pattern being applied.
 
