@@ -2,12 +2,14 @@
 title: Glossary
 description: Canonical definitions for the Foundry Pattern's vocabulary — the invariant substrate, casting and provenance, the per-domain extension surface, and the source-vs-package distinction.
 section: pattern
-order: 6
+order: 7
 ---
 
 # Glossary
 
 Pinned definitions for the abstract pattern. These are the terms every page on this site uses; where a term has a concrete realization in one of the instances, the abstract definition comes first and a brief `(e.g. …)` pointer follows. If two pages disagree, this file wins.
+
+For *why* a Foundry KB keeps a glossary at all, see [[the-model]]; for *how* to build one, see [[setting-up-a-foundry]]. This page is that glossary for the pattern's own vocabulary.
 
 Grouped by theme.
 
