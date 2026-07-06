@@ -17,6 +17,10 @@ The KB is plain files. It stays the source of record no matter how many artifact
 
 Calling the structure *executable* is a claim the build enforces. The same typing that lets artifacts fall out of the KB also lets the KB itself be statically validated: every typed reference must resolve or the build fails, controlled tags must exist in the registry, and generated indexes and deterministically rendered artifacts are regenerated and diffed so drift in them announces itself. Casting refuses to compile a Mold that fails these checks. This is compile-time enforcement on the *source* — distinct from the later check that stands between a finished cast and a trusted result.
 
+### The glossary
+
+Part of what makes the structure hold together is that its vocabulary is *pinned*. A Foundry names things that did not exist before it — a *Mold*, a *Cast*, and, per domain, coined terms with no prior meaning. A reader meeting such a term has nothing to fall back on, and neither does a model: it means only what the KB says it means. The **glossary** is where each term is defined once, so every other page can *use* it without redefining it — which makes it the KB's highest fan-in reference and its final authority, the page that wins where two others disagree. Because a definition is the one kind of reference you cannot afford to paraphrase, casting copies glossary entries **verbatim**, never condensed; the pinned term is an invariant the compiled artifact carries unchanged. Defining that vocabulary is one of the first steps in [[setting-up-a-foundry]]; the [[glossary]] on this site is the pattern's own instance of it.
+
 ## Mold
 
 A **Mold** is the unit of the KB: an abstract, *typed reference manifest* describing one action. It is not the knowledge itself — it is a declaration of which knowledge one action depends on, plus a procedural body skeleton for performing that action. A Mold is a source artifact, independent of any agent runtime.
