@@ -22,6 +22,8 @@ Home  ............................. the bet in one breath + three doors
 ├── 2. THE CASE  ................. the argument
 │   ├── Skills: Package, Not Source ★ flagship — "the problems with skills"      [NET-NEW]
 │   ├── The Two Assets ........... provenance (universal) + the enforced check    [NET-NEW]
+│   ├── The Explainer Is the Source  the third plank — why the KB is human-legible [NET-NEW]
+│   ├── FAIR Skills ............... the outside witness — FAIR converged on R1.2/R1.3 [was blog; de-dated]
 │   ├── Comparisons .............. Part A positioning (stable) + Part B landscape (dated, refreshed) [pull: comparisons Part A + B]
 │   └── Related Projects ......... the values table                               [NET-NEW — issue #2 rows]
 │
@@ -40,7 +42,12 @@ The abstraction's whole weight rests on two net-new pages: **Anatomy of an Insta
 (Pattern) and **The Diff** (Instances). The substrate is invariant across both foundries;
 what each domain extends it with varies — and those two pages are where that contrast is made explicit. The
 flagship **Skills: Package, Not Source** is the front door to The Case; **Blind
-Regeneration** is its evidence. **Comparisons** carries the one dated survey as its Part B —
+Regeneration** is its evidence. The Case's three argument planks run 1–3 (inversion → the
+two assets → the human surface), then **FAIR Skills** at 4 as the *outside witness* — the
+only page that argues from someone else's standard rather than from our own derivation —
+before the two map pages at 5–6. **The Explainer Is the Source** is the third plank, and the
+only one arguing for a *reader*, so the KB's "read and learned by a
+human" clause is defended rather than asserted. **Comparisons** carries the one dated survey as its Part B —
 a periodically-refreshed landscape snapshot — kept in The Case, not the Pattern, so the
 *spec* never carries a date even though the argument's landscape reading does.
 

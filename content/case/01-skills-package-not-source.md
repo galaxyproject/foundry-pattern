@@ -134,7 +134,10 @@ an agent can trace it, back it with a check that actually fires, and keep the
 receipt. The artifact layer is a commodity headed toward zero margin; the source
 layer and the enforced check above it are where the durable value lives.
 
-For where this sits against the rest of the field — runtime retrieval versus
-compile-time grounding, and the neighbors worth crediting — see [[comparisons]].
-For a project-by-project read of who foregrounds a source and who enforces a check,
-see [[related-projects]].
+For why that source has to be readable by a person — and not merely inspectable —
+see [[explainer-is-the-source]]. For the same argument reached from the outside — the FAIR
+data principles, which named provenance and standards-conformance as prerequisites for reuse a
+decade earlier — see [[fair-skills]]. For where this sits against the rest of the field —
+runtime retrieval versus compile-time grounding, and the neighbors worth crediting —
+see [[comparisons]]. For a project-by-project read of who foregrounds a source and
+who enforces a check, see [[related-projects]].

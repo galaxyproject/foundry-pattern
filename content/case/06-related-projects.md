@@ -2,7 +2,7 @@
 title: Related Projects
 description: A gracious map locating neighbor projects against the axes the Foundry Pattern cares about — credit on shared axes, distinctness only where verification holds.
 section: case
-order: 4
+order: 6
 ---
 
 # Related Projects
