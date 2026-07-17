@@ -121,6 +121,54 @@ Pattern bets on **compile-time grounding with provenance** — a deterministic p
 casts selected KB slices into target artifacts, provenance is recorded, drift becomes
 mechanically detectable. Runtime fetch augments, never replaces, compiled grounding.
 
+## The Case's four planks (page order)
+
+The Case is a four-plank argument, then two map pages (Comparisons, Related Projects). The
+planks build: **1 the inversion** (skills-as-source is the wrong choice) → **2 the two
+assets** (what survives instead: provenance + the enforced check) → **3 the human surface**
+→ **4 the outside witness**. Planks 1–2 are the thesis above; 3–4 add these claims and
+carry their own tone rules.
+
+**Plank 3 — the human surface ("The Explainer Is the Source").** Defends the KB's *"read
+and learned by a human"* clause, which the substrate only ever asserted. The clause needs an
+argument because it is *strippable*: strip the human surface and provenance still records,
+the check still gates (Biomni is a real machine-facing instance with no human surface). The
+defense rests on exactly two legs — do not add a third:
+
+- **Flatness.** A cast artifact is condensed/isolated/frozen by construction ("the wiki-links
+  that make the KB navigable are resolved away or stripped"). Flattening *is* what packaging
+  is, so any structure understanding needs can only live at a source layer. The inversion is
+  what makes a structured surface possible at all.
+- **Expert task-fit.** Structure/signaling genuinely aid comprehension (Mayer: spatial
+  contiguity, signaling — *clarity, never ornament*); a linked KB fits how an expert
+  *works* (repeated search/manipulation), not how a student *learns*.
+
+The plank explicitly **does not claim the KB teaches.** Two tempting supports were researched
+against primary sources and **refuted — never re-add them**: *"navigation/hyperlinking aids
+understanding"* (DeStefano & LeFevre; learner-control g≈0.05) and *"aesthetics aid learning"*
+(Mayer's coherence principle; seductive details harm recall). Matuschak's transmissionism
+critique is conceded: the pattern has no comprehension gate (Litt's quiz is the thing it
+lacks). The full citations for the two refutations live in the `human-surface-evidence`
+memory note.
+
+**Plank 4 — the outside witness ("FAIR Skills: The Same Lesson, Twice").** Reasoning only
+from what survives as models improve, the Case landed on two of FAIR's own reusability
+sub-principles: **provenance ↔ R1.2** and **the enforced check ↔ R1.3**. Non-negotiable tone
+rules, because FAIR has fifteen sub-principles and "we hit most" is what a failing analogy
+sounds like:
+
+- **Grade the mappings unequally.** Exactly one is load-bearing: provenance ↔ R1.2, a
+  property-for-property identity. R1.3 is mechanism-for-outcome and *corroborates*.
+  Everything under F/A/I is *illustration* — it gives the failure a vocabulary and would not
+  rescue the page if R1.2 did not hold alone.
+- **Soften "independent."** The derivation did not route through FAIR, but the instances live
+  in bioinformatics where FAIR is ambient — claim "two derivations landing together," never
+  "two strangers."
+- **FAIR ≠ correct.** A perfectly FAIR skill can be confidently wrong; that gap is what the
+  enforced check (not R1.2) covers. And a `_provenance.json` nobody reads is a FAIR badge, not
+  a FAIR property — the defense is that provenance is *consumed* by the build (re-hash, license
+  refusal), not merely emitted.
+
 ## The evidence — the blind-regeneration experiment
 
 A falsifiable test of "redundant for frontier models": an independent frontier-model agent
