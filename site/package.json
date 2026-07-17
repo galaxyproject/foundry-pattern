@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
+    "check:links": "node scripts/check-wiki-links.mjs",
+    "prebuild": "node scripts/check-wiki-links.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "typecheck": "astro check",
