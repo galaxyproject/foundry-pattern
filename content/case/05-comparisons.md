@@ -2,7 +2,7 @@
 title: Comparisons
 description: Where the Foundry Pattern sits relative to adjacent approaches — stable positioning (Part A) plus a dated, periodically-refreshed landscape snapshot of specific systems (Part B) on the runtime-vs-compile-time axis.
 section: case
-order: 3
+order: 5
 ---
 
 # Comparisons

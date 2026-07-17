@@ -149,3 +149,12 @@ frontier model already outperforms.
 Neighboring projects are genuinely good at the artifact layer (see [[related-projects]]);
 the claim here is narrow and about a layer — the source beneath the package, and the
 enforcement around the doing — not a verdict on anyone's skills.
+
+Both assets answer what survives as models improve. They do not say who the source is *for* —
+why the KB is written to be read by a person at all, when the machinery would run without it.
+That is the third plank: [[explainer-is-the-source]].
+
+These same two properties — provenance and standards-conformance — are what the FAIR data
+principles named as prerequisites for reuse a decade before any of this, reasoning from a
+different crisis entirely. [[fair-skills|That convergence]] is the outside witness for the
+whole argument.
