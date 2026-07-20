@@ -1,0 +1,12 @@
+{
+  "name": "foundry-review",
+  "description": "Generic, infrastructure-agnostic skills for reviewing Foundry sites — capture/render fidelity, working links, metadata surfacing, human- AND agent-readable output.",
+  "version": "0.1.0",
+  "author": {
+    "name": "John Chilton",
+    "email": "jmchilton@gmail.com"
+  },
+  "homepage": "https://galaxyproject.github.io/foundry-pattern/",
+  "repository": "https://github.com/galaxyproject/foundry-pattern",
+  "license": "MIT"
+}
