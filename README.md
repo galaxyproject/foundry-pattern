@@ -1,5 +1,7 @@
 # The Foundry Pattern
 
+**📖 Read it: [galaxyproject.github.io/foundry-pattern](https://galaxyproject.github.io/foundry-pattern/)**
+
 An abstract site explaining **the Foundry Pattern** — the design pattern behind a knowledge
 base of deep domain knowledge that compiles itself into trustworthy, frozen skill artifacts
 with provenance. A substrate each domain extends, not a template to stamp.
@@ -57,8 +59,10 @@ Astro site (`site/`) — wiki-link resolution, prev/next, and Pagefind full-text
 search; `npm run build` and `npm run typecheck` are clean. See `docs/SITEMAP.md`
 for the information architecture and `docs/CANON.md` for the authoring contract.
 
-Not yet settled: hosting (`site`/`base` are placeholders for a GitHub Pages
-project site), and a content schema/validator akin to the instances' `meta_schema`.
+Hosted on GitHub Pages at
+[galaxyproject.github.io/foundry-pattern](https://galaxyproject.github.io/foundry-pattern/)
+(auto-deployed from `main` via `.github/workflows/deploy.yml`). Not yet settled: a
+content schema/validator akin to the instances' `meta_schema`.
 
 ```sh
 cd site
