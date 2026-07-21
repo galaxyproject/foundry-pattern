@@ -1,0 +1,29 @@
+{
+  "name": "foundry-review",
+  "version": "0.1.0",
+  "description": "Generic, infrastructure-agnostic skills for reviewing Foundry sites.",
+  "author": {
+    "name": "John Chilton",
+    "email": "jmchilton@gmail.com",
+    "url": "https://github.com/jmchilton"
+  },
+  "homepage": "https://galaxyproject.github.io/foundry-pattern/",
+  "repository": "https://github.com/galaxyproject/foundry-pattern",
+  "license": "MIT",
+  "keywords": ["foundry", "review", "documentation", "static-site", "agent-skills"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Foundry Review",
+    "shortDescription": "Review a Foundry site's rendered pages against source",
+    "longDescription": "Generic skills for reviewing any Foundry site: check that each source is captured and rendered faithfully for both humans and agents — clean markup, working links, surfaced metadata — without assuming a particular site's infrastructure.",
+    "developerName": "The Foundry Pattern",
+    "category": "Developer Tools",
+    "capabilities": ["Read"],
+    "websiteURL": "https://galaxyproject.github.io/foundry-pattern/",
+    "defaultPrompt": [
+      "Review the content pages changed on this branch for render fidelity.",
+      "Check this rendered page against its source note.",
+      "Does the rendered site surface the metadata each source declares?"
+    ]
+  }
+}

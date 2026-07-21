@@ -1,0 +1,16 @@
+{
+  "name": "foundry-pattern",
+  "description": "Generic, infrastructure-agnostic skills for reviewing Foundry-pattern sites.",
+  "owner": {
+    "name": "John Chilton",
+    "email": "jmchilton@gmail.com",
+    "url": "https://github.com/jmchilton"
+  },
+  "plugins": [
+    {
+      "name": "foundry-review",
+      "source": "./plugin",
+      "description": "Review skills for any Foundry site — capture/render fidelity, links, metadata surfacing, human- AND agent-readability. Namespaced as /foundry-review:<skill>."
+    }
+  ]
+}
