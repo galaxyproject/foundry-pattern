@@ -1,4 +1,6 @@
 ---
+import fs from "node:fs";
+import path from "node:path";
 import { getCollection, render } from "astro:content";
 import Base from "../layouts/Base.astro";
 
@@ -9,6 +11,12 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+
+// Pages may attach a literal-text payload (frontmatter `instructions:`, a path under
+// content/) rendered verbatim in a <pre> after the body — instructions, not prose.
+const instructions = entry.data.instructions
+  ? fs.readFileSync(path.resolve("../content", entry.data.instructions), "utf8")
+  : undefined;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const SECTION_LABEL: Record<string, string> = {
@@ -48,6 +56,10 @@ const next = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : undefin
     )}
 
     <Content />
+
+    {instructions && (
+      <pre class="not-prose mt-6 overflow-x-auto rounded-lg border p-4 text-sm leading-relaxed whitespace-pre" style="border-color: var(--rule); background: var(--graphite)"><code>{instructions}</code></pre>
+    )}
   </article>
 
   {(prev || next) && (

@@ -13,6 +13,9 @@ const docs = defineCollection({
     description: z.string().optional(),
     section: z.enum(['pattern', 'case', 'instances', 'blog']),
     order: z.number().optional(),
+    // Path (relative to content/) of a plain-text file rendered verbatim in a <pre>
+    // after the page body — for pages whose payload is literal instructions, not prose.
+    instructions: z.string().optional(),
     // blog
     date: z.coerce.date().optional(),
     // instance profiles
