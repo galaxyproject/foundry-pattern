@@ -121,8 +121,21 @@ Registries — three YAML files at the REPO ROOT, loaded by small src/lib/*.ts r
 - reference_contract.yml  (loader src/lib/reference-contract.ts). The typed-reference vocab:
   kinds, used_at, load, modes, evidence. Inherit used_at/load/modes/evidence unchanged; trim
   `kinds` to what your instance authors.
-- meta_tags.yml  (loader src/lib/meta-tags.ts). Namespaced, closed enums (`<namespace>/<value>`,
-  each with a one-line gloss). Seed from the tags your first notes actually use, corpus-first.
+- meta_tags.yml  (loader src/lib/meta-tags.ts). The controlled tag vocabulary, grouped into
+  FACETS: `facets: <facet>: { label, description, values: { <tag>: <one-line gloss> } }`. A tag
+  is valid when it is an exact key under some facet's `values`. Nothing else validates. EVERY
+  facet is a CLOSED enum — no open/free-form/prefix-wildcard escape hatch, ever. A tag with no
+  gloss is a tag the browse surface cannot document and a reader cannot learn from, so the
+  registry is the complete, permanent catalog of what the corpus can carry; if an external
+  vocabulary changes upstream, enumerate the slice you actually use and re-run the drift check.
+  Membership is DECLARED, not parsed off the `/` prefix — so the slash is a naming convention, a
+  bare key is an ordinary value (use one when a facet has exactly one flag-shaped member), and
+  browse pages group by the DECLARING facet, which makes an "other" bucket impossible rather than
+  merely empty. Tags are cross-cutting facets ONLY; note-kind is the `type:` discriminator and is
+  never copied into `tags:`. Require `tags` min(1) so every note carries at least one facet. Seed
+  corpus-first from the tags your first notes actually use. The FORMAT is SHARED ACROSS INSTANCES
+  (source of truth: this file) — treat a format change as a cross-repo change and mirror it; the
+  facet VOCABULARY is yours.
 - LICENSES/  — vendored verbatim SPDX texts the `license_file` rows point at, plus a README.
 
 Validator — vitest, one command, running the SAME schema the build uses:
@@ -133,6 +146,13 @@ Validator — vitest, one command, running the SAME schema the build uses:
 - site/tests/frontmatter-schema.test.ts — a negative-fixture table: each broken frontmatter
   asserts the SPECIFIC issue path+message it must raise, with a positive baseline per type. A
   rule with no negative fixture is a rule you are only hoping is enforced.
+- site/tests/registry-drift.test.ts — the registries and the corpus must agree BOTH ways. The
+  schema already rejects a note carrying an unregistered value; this asserts the other direction,
+  that nothing you AUTHORED is carried by zero notes — every tag under a facet's `values`, every
+  facet, every reference `kind` you trimmed to. Scope it to the per-instance vocabularies: the
+  inherited rows (license-policy.yml, and reference_contract.yml's used_at/load/modes/evidence)
+  are deliberately complete, so unused ones there are inheritance, not drift. Dead vocabulary is
+  drift you otherwise only find by diffing two instances by hand.
 - Parse frontmatter with js-yaml (yaml.load), so an unquoted `access_date: 2026-07-13` coerces
   to a Date exactly as Astro's loader does — the footgun surfaces in the validator, not in prod.
 
