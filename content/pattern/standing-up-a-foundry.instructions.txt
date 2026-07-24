@@ -122,7 +122,8 @@ Registries — three YAML files at the REPO ROOT, loaded by small src/lib/*.ts r
   kinds, used_at, load, modes, evidence. Inherit used_at/load/modes/evidence unchanged; trim
   `kinds` to what your instance authors.
 - meta_tags.yml  (loader src/lib/meta-tags.ts). The controlled tag vocabulary, grouped into
-  FACETS: `facets: <facet>: { label, description, values: { <tag>: <one-line gloss> } }`. A tag
+  FACETS: `version: 1` plus `facets: <facet>: { label, description, values: { <tag>: <gloss> } }`
+  (`values` may be omitted while a facet is still empty). A tag
   is valid when it is an exact key under some facet's `values`. Nothing else validates. EVERY
   facet is a CLOSED enum — no open/free-form/prefix-wildcard escape hatch, ever. A tag with no
   gloss is a tag the browse surface cannot document and a reader cannot learn from, so the
@@ -153,6 +154,12 @@ Validator — vitest, one command, running the SAME schema the build uses:
   inherited rows (license-policy.yml, and reference_contract.yml's used_at/load/modes/evidence)
   are deliberately complete, so unused ones there are inheritance, not drift. Dead vocabulary is
   drift you otherwise only find by diffing two instances by hand.
+  Keep this a WHOLE-CORPUS test; do NOT fold it into a validator that runs over an arbitrary
+  directory. "Registered but carried by nothing" is only meaningful against every note at once —
+  point the same check at a small fixture and almost the entire registry looks unused. (Learned
+  the hard way: wiring it into a per-directory validator emitted 27 bogus warnings against a
+  two-note fixture.) Also assert the walk found tags at all, so a frontmatter-reader change
+  cannot turn the whole check into a vacuous pass.
 - Parse frontmatter with js-yaml (yaml.load), so an unquoted `access_date: 2026-07-13` coerces
   to a Date exactly as Astro's loader does — the footgun surfaces in the validator, not in prod.
 
