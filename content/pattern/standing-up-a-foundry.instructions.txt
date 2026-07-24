@@ -1,0 +1,221 @@
+STANDING UP A FOUNDRY — WORKING CHECKLIST
+
+This is prescriptive: it maps the abstract pattern onto ONE concrete implementation — the
+Astro-SSG-on-GitHub-Pages stack both current instances share, in the fuller form the
+Statistical Genomics Foundry uses (schema + validator + registries). The abstract "Setting
+up a Foundry" page stays stack-agnostic; this one names packages, versions, paths, commands.
+Nothing here is the only way to satisfy the pattern — it is the one worked example.
+
+Order of work: the glossary comes FIRST (Part 1) — it is the KB's highest fan-in reference
+and the surface the casting model grounds on, so pin it before anything answers to it. Then
+the engineering substrate (Parts 2–4: reading surface, frontmatter contract, registries +
+validator + CI), which is inherited — you are re-standing-up known machinery. Then the rest
+of the domain knowledge (Parts 5–8: corpus, Molds, the external check, composition), which
+only your domain can supply.
+
+
+PART 1 — DEFINE THE VOCABULARY FIRST
+
+A Foundry names things that did not exist before it, and the glossary is the KB's highest
+fan-in reference — the casting model grounds on it, and a human learns the domain from it.
+Pin it first, in one glossary: content/meta/glossary.md (a loose doc, outside every collection
+base, rendered by Part 2's render-vault-doc helper) that the rest of the corpus answers to.
+
+- Bootstrap it with the SHARED SUBSTRATE TERMS before coining a single domain term. Every
+  Foundry glossary carries these eight, inherited from the pattern glossary (the authority —
+  copy its definitions, do not re-invent them):
+      Knowledge Base (KB), Mold, Reference, Cast, Casting, Skill artifact, Target, Provenance.
+  Use these EXACT headwords so a term means the same thing in every instance.
+- THEN coin the domain terms, corpus-first — add a term when a Mold actually needs it, not
+  before.
+- One authoritative sentence per term: abstract meaning first, a brief (e.g. …) where it has a
+  concrete realization.
+- One word per concept; retire the rivals. Resolve singular/plural, capitalization, and
+  half-synonym drift here before it spreads.
+- Scope the shared substrate terms separately from the terms your domain coins. Do not hoist
+  domain jargon into the shared set.
+- Make the glossary the tie-breaker: where two pages disagree, the glossary wins — state it
+  outright. Casting copies glossary entries VERBATIM, never condensed.
+
+
+REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal)
+
+  Toolchain     Node 24, npm (package-lock committed), TypeScript ^5.7.0
+  Framework     astro ^5.17.1 (static output), @astrojs/check ^0.9.4
+  Styling       tailwindcss 4.1.18 + @tailwindcss/vite 4.1.18 + @tailwindcss/typography
+                ^0.5.19; @fontsource/atkinson-hyperlegible ^5.2.8
+  Markdown      marked ^18.0.2 (standalone render) + a thin src/lib/marked.ts wrapper
+  Math          remark-math ^6.0.0 + rehype-katex ^7.0.1 + katex ^0.16.45
+  Search        astro-pagefind ^1.8.6 (integration) + pagefind ^1.5.2 (dev)
+  Schema        zod ^3.25.76  (import `z` from 'zod', NOT from 'astro:content')
+  YAML          js-yaml ^4.1.0 + @types/js-yaml ^4.0.9
+  Validator     vitest ^3.2.4
+
+  Layout        repo root holds site/ and content/ as siblings; paths under content/ resolve
+                from the site/ cwd as '../content/…'. content/meta/ holds cross-cutting docs
+                that are NOT collection entries (glossary, an ops log).
+
+  This table is the single source of truth for packages + versions. The parts below name
+  MODULES and WIRING, not packages — they do not re-list what is pinned here.
+
+
+PART 2 — STAND UP THE READING SURFACE
+
+The corpus renders to a static Astro site under site/. Stand it up first (empty but for the
+glossary): it is where every later artifact is read, and `astro build` is the fastest signal
+that a note is well-formed.
+
+- `npm create astro@latest site` — static output. Pin the base once in site/astro.config.mjs:
+    const base = '/<foundry-name>';
+    export default defineConfig({ site: 'https://<user>.github.io', base, … });
+  Reuse `import.meta.env.BASE_URL` everywhere a URL is built; never re-hardcode the base.
+- Wire the stack's render deps into astro.config.mjs (packages/versions: the table above):
+    markdown.remarkPlugins = [remarkMath, remarkWikiLinks({ base })]
+    markdown.rehypePlugins = [rehypeKatex]
+    vite.plugins += tailwind();   integrations += [pagefind()]
+  Set the body font to Atkinson-Hyperlegible — a human reader is one of the two audiences, so
+  legibility is a substrate concern.
+- Declare routes in the page router site/src/pages/<collection>/[...slug].astro (+ index.astro
+  per collection). Recover any source→route mapping from the router, not a parallel table.
+- Add the shared UI once: site/src/layouts/Base.astro + site/src/components/{Header,Footer,
+  SourceMeta,TagChips}.astro (SourceMeta surfaces provenance/license on every source note).
+- Resolve wiki-links ([[Target]]) through ONE resolver used by BOTH renderer and validator:
+  src/lib/wiki-links.ts (the resolver) with src/lib/remark-wiki-links.ts as its remark twin.
+  Never encode the link rules twice.
+- Render loose docs that live OUTSIDE any collection (the glossary, an ops log) through the
+  shared helper src/lib/render-vault-doc.ts (resolves [[links]], renders via src/lib/marked.ts,
+  injects #term anchors) from a dedicated page — e.g. site/src/pages/glossary.astro reading
+  content/meta/glossary.md. Under content/meta/, so no collection base globs it and the
+  validator skips it.
+- Dev: `npm run dev` (astro dev). Build: `astro build --force`.
+
+
+PART 3 — AUTHOR THE FRONTMATTER CONTRACT (ONCE)
+
+Author the contract one time in site/src/lib/frontmatter-schema.ts as a single zod module, and
+let both the site build and the standalone validator import that one module. One encoding, two
+consumers — the schema is the sole authority on frontmatter shape.
+
+- In frontmatter-schema.ts import `z` from 'zod' directly (not 'astro:content') so the module
+  loads headless under vitest. Export one zod schema per content type (sourceNote, book, mold,
+  pattern) plus a `COLLECTIONS` map: name → { base: '../content/…', schema }. That map is the
+  ONE place collections are enumerated.
+- site/src/content.config.ts is a thin consumer: it spreads COLLECTIONS into defineCollection()
+  calls and adds the glob loaders — nothing else.
+- Encode cross-field rules as zod `.superRefine(...)` raising a specific, path-anchored issue,
+  never as prose in a README. Real examples: an on-demand reference requires a `trigger`; a
+  hypothesis-evidence reference requires a `verification`; a note may not declare verbatim carry
+  under an own-words-only license. If a rule matters, the schema enforces it.
+- Strip a trailing /index in the loader's generateId (a `stripIndex` helper) so entry ids and
+  wiki-link basenames stay clean (`msmb/chap1`, not `msmb/chap1/index`).
+
+
+PART 4 — STAND UP THE REGISTRIES, THE VALIDATOR, AND CI
+
+Registries — three YAML files at the REPO ROOT, loaded by small src/lib/*.ts readers:
+
+- license-policy.yml  (loader src/lib/license-policy.ts + licenses.ts). SPDX id → { policy:
+  verbatim-ok | own-words-only, allowed_modes, license_file }; unknown/missing → deny-by-default
+  row. SHARED ACROSS INSTANCES (source of truth: galaxyproject/foundry-pattern#4) — copy intact,
+  treat any change as a cross-repo change and mirror it.
+- reference_contract.yml  (loader src/lib/reference-contract.ts). The typed-reference vocab:
+  kinds, used_at, load, modes, evidence. Inherit used_at/load/modes/evidence unchanged; trim
+  `kinds` to what your instance authors.
+- meta_tags.yml  (loader src/lib/meta-tags.ts). Namespaced, closed enums (`<namespace>/<value>`,
+  each with a one-line gloss). Seed from the tags your first notes actually use, corpus-first.
+- LICENSES/  — vendored verbatim SPDX texts the `license_file` rows point at, plus a README.
+
+Validator — vitest, one command, running the SAME schema the build uses:
+
+- package.json scripts: "test": "vitest run" and alias "validate": "vitest run".
+- site/tests/corpus-conformance.test.ts — walk every content/**/index.md, parse against its
+  COLLECTIONS schema. The second consumer that makes "one schema, two consumers" real.
+- site/tests/frontmatter-schema.test.ts — a negative-fixture table: each broken frontmatter
+  asserts the SPECIFIC issue path+message it must raise, with a positive baseline per type. A
+  rule with no negative fixture is a rule you are only hoping is enforced.
+- Parse frontmatter with js-yaml (yaml.load), so an unquoted `access_date: 2026-07-13` coerces
+  to a Date exactly as Astro's loader does — the footgun surfaces in the validator, not in prod.
+
+CI / deploy — two GitHub Actions workflows, working-directory: site:
+
+- .github/workflows/ci.yml (on pull_request + push to main): actions/checkout@v6,
+  actions/setup-node@v6 (node-version 24, cache: npm, cache-dependency-path site/package-lock.json),
+  `npm ci` → `npm run typecheck` (astro check) → `npm test` (fails fast) → `npm run build`.
+- .github/workflows/deploy.yml (on push to main): withastro/action@v6 (path: site) then
+  actions/deploy-pages@v5; permissions: pages: write, id-token: write.
+
+
+PART 5 — BRING THE DOMAIN KNOWLEDGE AND ITS GROUNDING CORPUS
+
+The real asset is what the Foundry knows. Bring the sources before building machinery around them.
+
+- One directory per source: content/research/<papers|tutorials|books>/<id>/ holding a regenerable
+  faithful summary index.md and, by exception, an owned guidance.md listing the specific questions
+  to pull from it. Summary = regenerable cast; guidance = what you maintain.
+- Grade a note by RECOVERABILITY, not coverage: good enough only if the target skill could be
+  rebuilt from the captured notes alone — no re-reading the source, no model memory. Hold the
+  specific facts recovery needs: numbers, thresholds, exact procedure, named decision criteria,
+  load-bearing quotes.
+- Summary posture follows the LICENSE, not source type, and is recorded in the note's `derived:`
+  field: own-words-only → paraphrase (keep only short functional strings verbatim as facts —
+  error text, parameter names, thresholds, equations); verbatim-ok → short marked load-bearing
+  quotes allowed.
+- Generate summaries in a CLEAN context (a fresh agent that sees only the source + its guidance.md,
+  never your analysis). Guidance directs attention, not conclusions ("does this source state X?
+  quote it" — never "confirm X"). Carry [summarizer-inferred]/access/re-check flags forward verbatim.
+- Synced multi-chapter source: scripts/sync-book.sh reads content/research/books/<id>/manifest.tsv
+  (<num>TAB<url>), fetches into a gitignored raw/, pins SHA256SUMS. Redistribute NO source text —
+  only manifest + pin (provenance) and your derived summary. Book-invariant metadata (license/
+  attribution/derived) lives ONCE in a co-located book.yml, merged into each chapter at load.
+
+
+PART 6 — IDENTIFY THE ACTIONS AND AUTHOR THE MOLDS
+
+Decompose the domain into repeatable decision-and-handoff units — one Mold per action worth casting.
+
+- Directory-note convention: content/molds/<slug>/index.md bears the frontmatter (typed reference
+  manifest + tags); siblings hold eval.md (fixture-independent property checks — the abstract
+  oracle, never packaged into a cast), scenarios.md (a fixture binding + its expected verdict),
+  and author-facing usage.md / refinement.md. Only index.md is validated.
+- Declare each Mold's references[] as a typed manifest, each entry drawing kind / used_at / load /
+  mode / evidence from reference_contract.yml. Mark evidence honestly: hypothesis (speculative —
+  requires a verification), corpus-observed, or cast-validated.
+- Get the boundary right: not one monolith, not a dust of fragments.
+
+
+PART 7 — BUILD THE EXTERNAL CHECK
+
+Decide what "correct" means in your domain and what can decide it. This is the sharpest, most
+domain-specific part; the substrate deliberately leaves it open, so paths below are structural,
+not a fixed tool.
+
+- Prefer a deterministic decider where output is parseable (a validator/CLI that parses and
+  checks). Where correctness is not mechanically decidable, construct an empirical check the field
+  already trusts and make THAT the deliverable.
+- Encode the check at the protocol altitude, not as a property buried on one Mold.
+- If it must recognize bad work, ground it in a two-pole corpus: content/patterns/<slug>/index.md
+  with `pole: established-good` (methods + when they apply) AND `pole: cautionary-bad` (named
+  failure patterns + signatures + remedies). A checker that has only seen good examples cannot referee.
+- Optionally keep standing scorecards for the doer skills (e.g. content/research/mold-eval/rubrics/):
+  a few near-orthogonal -ability axes graded as a VECTOR, never a rolled-up composite. Which axis
+  is low is the work-list.
+
+
+PART 8 — COMPOSE, IF THE WORK IS SEQUENTIAL
+
+Where a domain's task is an inherently multi-step journey, compose Molds into an ordered
+end-to-end protocol and orchestrate them; a domain whose actions stand alone needs no such layer.
+Keep composition optional and the individual Molds standalone.
+
+
+INHERITED vs. SUPPLIED
+
+Parts 2–4 are the substrate: the site/ Astro app, the one-schema-two-consumers frontmatter
+contract (frontmatter-schema.ts), the root registries (license-policy.yml is literally shared
+across instances), the vitest validator, and the ci.yml/deploy.yml workflows. Re-standing these
+up is mechanical.
+
+Part 1 and Parts 5–8 are the domain — but even the vocabulary starts from a shared spine: the
+eight substrate terms in Part 1 are inherited from the pattern glossary, and only the domain
+terms beyond them, the corpus, the Molds, and the external check that defines what "correct"
+means here are yours to supply. That last one is the part no other instance can hand you.
