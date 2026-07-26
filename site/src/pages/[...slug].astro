@@ -3,6 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { getCollection, render } from "astro:content";
 import Base from "../layouts/Base.astro";
+import KindCatalog from "../components/KindCatalog.astro";
+import TagCatalog from "../components/TagCatalog.astro";
 
 export async function getStaticPaths() {
   const docs = await getCollection("docs");
@@ -60,6 +62,9 @@ const next = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : undefin
     {instructions && (
       <pre class="not-prose mt-6 overflow-x-auto rounded-lg border p-4 text-sm leading-relaxed whitespace-pre" style="border-color: var(--rule); background: var(--graphite)"><code>{instructions}</code></pre>
     )}
+
+    {d.catalog === "kinds" && <KindCatalog />}
+    {d.catalog === "tags" && <TagCatalog />}
   </article>
 
   {(prev || next) && (

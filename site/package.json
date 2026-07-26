@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "check:links": "node scripts/check-wiki-links.mjs",
+    "sync:instances": "node scripts/sync-instance-data.mjs",
+    "check:instances": "node scripts/sync-instance-data.mjs --check",
     "prebuild": "node scripts/check-wiki-links.mjs",
     "build": "astro build",
     "preview": "astro preview",

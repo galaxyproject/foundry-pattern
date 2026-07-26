@@ -1,0 +1,117 @@
+---
+import { loadInstances, facetRows, tagCount } from "../lib/instances";
+
+const instances = loadInstances();
+const rows = facetRows(instances);
+const shared = rows.filter((r) => r.shared);
+const local = rows.filter((r) => !r.shared);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const values = (facet: { values?: Record<string, string> }) =>
+  Object.entries(facet.values ?? {});
+---
+<div class="not-prose mt-8">
+  <div class="rounded-lg border p-4 text-sm" style="border-color: var(--rule); background: var(--graphite)">
+    <strong>Generated</strong> from each instance's <code>meta_tags.yml</code>. The registry
+    FORMAT is shared and specified in
+    <a href={`${base}/pattern/standing-up-a-foundry/`}>Standing up a Foundry</a>; the
+    vocabularies below are each instance's own.
+    <ul class="mt-2 space-y-0.5" style="color: var(--muted)">
+      {instances.map((i) => (
+        <li>
+          <a href={`${base}/instances/${i.slug}/`}>{i.title}</a> —
+          {" "}{Object.keys(i.tags.facets ?? {}).length} facets, {tagCount(i)} tags
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <p class="mt-6 text-sm" style="color: var(--muted)">
+    Every facet is a <strong>closed enum</strong> with a gloss per tag, in both instances.
+    Membership is <em>declared</em> — a tag is valid because a facet lists it, never because
+    its text starts with a facet name — so the slash is a naming convention and an "other"
+    bucket is impossible rather than merely empty.
+  </p>
+
+  {shared.length > 0 && (
+    <>
+      <h2 class="mt-10 text-2xl font-bold" style="font-family: var(--font-display)">
+        Facet keys both instances use
+      </h2>
+      <p class="mt-2 text-sm" style="color: var(--muted)">
+        A shared KEY is not a shared meaning. Read the two descriptions before assuming a tag
+        transfers — this is exactly where a vocabulary silently diverges.
+      </p>
+      {shared.map((row) => (
+        <section class="mt-6 rounded-lg border p-5" style="border-color: var(--rule)">
+          <h3 class="text-xl font-semibold" style="font-family: var(--font-display); color: var(--ember)">
+            <code>{row.key}</code>
+          </h3>
+          <dl class="mt-3 space-y-3 text-sm">
+            {row.present.map((i) => (
+              <div>
+                <dt class="font-semibold">{i.title} — {row.by[i.slug]!.label}</dt>
+                <dd class="mt-0.5" style="color: var(--muted)">{row.by[i.slug]!.description}</dd>
+                <dd class="mt-1">
+                  {values(row.by[i.slug]!).map(([tag]) => <code class="mr-1">{tag}</code>)}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))}
+    </>
+  )}
+
+  <h2 class="mt-12 text-2xl font-bold" style="font-family: var(--font-display)">
+    Vocabularies
+  </h2>
+
+  {instances.map((instance) => (
+    <section class="mt-8">
+      <h3 class="text-xl font-semibold" style="font-family: var(--font-display)">
+        {instance.title}
+      </h3>
+      {rows
+        .filter((row) => row.by[instance.slug])
+        .map((row) => (
+          <div class="mt-4 rounded-lg border p-4" style="border-color: var(--rule)">
+            <div class="flex flex-wrap items-baseline gap-x-3">
+              <code style="color: var(--ember)">{row.key}</code>
+              <span class="font-semibold text-sm">{row.by[instance.slug]!.label}</span>
+              {!row.shared && (
+                <span class="text-xs uppercase" style="font-family: var(--font-display); letter-spacing: 0.1em; color: var(--muted)">
+                  this instance only
+                </span>
+              )}
+            </div>
+            <p class="mt-1 text-sm" style="color: var(--muted)">
+              {row.by[instance.slug]!.description}
+            </p>
+            <dl class="mt-3 grid gap-x-4 gap-y-1 text-sm sm:grid-cols-[auto_1fr]">
+              {values(row.by[instance.slug]!).map(([tag, gloss]) => (
+                <>
+                  <dt><code>{tag}</code></dt>
+                  <dd style="color: var(--muted)">{gloss}</dd>
+                </>
+              ))}
+            </dl>
+            {values(row.by[instance.slug]!).length === 0 && (
+              <p class="mt-2 text-sm" style="color: var(--muted)">
+                Declared with no members yet.
+              </p>
+            )}
+          </div>
+        ))}
+    </section>
+  ))}
+
+  {local.length > 0 && (
+    <p class="mt-10 rounded-lg border p-4 text-sm" style="border-color: var(--rule); color: var(--muted)">
+      <strong style="color: var(--ink)">Divergent facet keys:</strong>{" "}
+      {local.map((row) => (
+        <span class="mr-3"><code>{row.key}</code> ({row.present.map((i) => i.title).join(", ")})</span>
+      ))}
+    </p>
+  )}
+</div>

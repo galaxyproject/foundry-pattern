@@ -1,0 +1,80 @@
+# Tag registry for Mold/Pattern frontmatter `tags:`.
+#
+# Tags are grouped into FACETS (`family`, `role`, `domain`, `topic`) — the MOLD_SPEC
+# adaptation that replaces the parent's `axis` grouping. Seeded corpus-first from the
+# tags the authored Molds + Patterns actually use; a tag outside this registry is drift.
+#
+# Membership is DECLARED, not parsed off the `/` prefix: a tag is valid because its
+# facet lists it under `values`, never because its text starts with a facet name. The
+# slash is therefore a naming convention, and a bare key (no slash) would be an ordinary
+# member — our vocabulary happens to be entirely slashed, but the format does not require
+# it. Browse pages group by the DECLARING facet, so an "other" bucket cannot arise.
+#
+# Every facet is a CLOSED enum: each tag is listed here with a one-line gloss, so every
+# tag the corpus can carry is documented. Adding one is a deliberate registry edit, not a
+# free-form slug. There is no open/free-form escape hatch — not in this registry and not
+# in the loader. Every tag stays browsable with a gloss to render, forever.
+#
+# The FORMAT is shared across Foundry instances (spec: galaxyproject/foundry-pattern,
+# content/pattern/standing-up-a-foundry.instructions.txt) — treat a format change as a
+# cross-repo change. The facet VOCABULARY below is ours alone.
+
+version: 1
+
+facets:
+  family:
+    label: Family
+    description: Which side of the analyze/referee split a Mold sits on (glossary Family A / Family B).
+    values:
+      family/a: Do the analysis (construct).
+      family/b: Referee the analysis (critique + calibrate).
+
+  role:
+    label: Role
+    description: The Family-A or Family-B role a Mold plays (glossary construct/critique/calibrate).
+    values:
+      role/construct: Family-A — frame, design-review, select, run.
+      role/critique: Family-B — reason about validity against known invalidity patterns.
+      role/calibrate: Family-B — construct and run the empirical check (null/simulation/controls/power).
+
+  domain:
+    label: Domain
+    description: Subject-matter area a Mold/note applies to. Closed enum — add a documented row per domain.
+    values:
+      domain/ancestral-reconstruction: Inferring ancestral sequence/character states across a phylogeny.
+      domain/batch-effects: Technical, non-biological variation that confounds measured signal.
+      domain/clustering: Unsupervised grouping into discrete categories; distance choice and cluster validation.
+      domain/comparative-annotation: Projecting/transferring gene annotations across genomes (liftover, CESAR, TOGA, CAT, Liftoff).
+      domain/data-visualization: Constructing honest exploratory/publication data displays; artifacts of scale, smoothing, ordering.
+      domain/differential-expression: Testing expression/abundance differences (RNA-seq, microarray, methylation).
+      domain/dimensionality-reduction: Ordination / low-dimensional embedding of high-dim data (PCA, SVD, MDS, t-SNE).
+      domain/experimental-design: Sample allocation, blocking, and randomization decided before data collection.
+      domain/gene-family-evolution: Gene gain/loss/duplication dynamics across lineages.
+      domain/image-analysis: "Turning digital images into quantitative measurements: segmentation, filtering, feature extraction."
+      domain/molecular-evolution: Sequence change over evolutionary time (substitution, selection).
+      domain/pangenomics: Analysis across a species' full core/accessory gene complement.
+      domain/phylogenetic-comparative-methods: Trait evolution and diversification inferred on a fixed phylogeny (PGLS, BiSSE/HiSSE).
+      domain/phylogenetics: Inferring evolutionary trees from molecular data.
+      domain/single-cell-genomics: Single-cell / droplet assays (demultiplexing, hashing, count-splitting, cluster inference).
+      domain/spatial-statistics: Spatial point patterns vs a complete-spatial-randomness baseline (point processes, Ripley's K).
+      domain/statistical-inference: General validity of statistical inference — multiple testing, post-selection, confounding, reproducibility.
+      domain/supervised-learning: Learning a predictive rule from labeled data while guarding against overfitting.
+      domain/synteny: Conserved gene order / collinearity across genomes (MCScanX, SyRI, GENESPACE).
+      domain/whole-genome-alignment: Genome-to-genome alignment / homology mapping (Cactus, HAL, minimap2, MUMmer, chain/net).
+      domain/whole-genome-duplication: Polyploidy / WGD detection via Ks distributions and duplicate retention.
+
+  topic:
+    label: Topic
+    description: Finer-grained subject beneath a domain. Closed enum — add a documented row per topic.
+    values:
+      topic/confounding: Batch / surrogate-variable / collider confounding of a biological contrast.
+      topic/dnds: Nonsynonymous/synonymous substitution-rate ratio; a test for selection (under molecular-evolution).
+      topic/gc-biased-gene-conversion: gBGC as a confound of selection signals.
+      topic/ks-distribution: Ks-based WGD dating / substitution saturation.
+      topic/liftover: Coordinate/annotation liftover across assemblies.
+      topic/multiple-testing: FWER/FDR control across many simultaneous tests.
+      topic/pangenome-openness: Open/closed pangenome; core/accessory dynamics.
+      topic/positive-selection: Codon-model tests for positive selection (BUSTED/MEME/aBSREL/branch-site).
+      topic/post-selection-inference: Double-dipping / selective inference / count-splitting.
+      topic/recombination: Recombination detection (e.g. GARD) affecting selection inference.
+      topic/reproducibility: Forking paths, p-hacking, researcher degrees of freedom.
