@@ -108,11 +108,20 @@ Adding a kind is adding a directory plus one barrel line. Nothing else is edited
 wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line union.
 
 - A kind directory exports a KIND DEFINITION, not a bare schema:
-      { kind: 'mold', title: 'Mold', origin: 'substrate' | 'instance',
-        build: (ctx: KindContext) => ZodObject }
+      { kind: 'mold', title: 'Mold', origin: 'substrate' | 'instance', summary: '…',
+        build:      (ctx: KindContext) => ZodObject,
+        refine?:    (data, issues, ctx) => void,     // cross-field rules over this kind
+        transform?: (data, issues, ctx) => object }  // only if the entry is ASSEMBLED
   `kind` is the `type:` discriminator value — the sole note-kind discriminator, matching the
   directory name. `origin` records whether the kind is inherited substrate or something this
   domain added; it is what a cross-instance kind catalog groups by, so state it honestly.
+- `build` returns the BARE OBJECT; the two optional slots carry everything else. Both are
+  needed, and they are not the same thing. `refine` states rules over the fields already
+  present. `transform` is for a kind whose entry is ASSEMBLED rather than validated in
+  place — a book chapter merging its book-level licence record — and a refinement cannot do
+  that job because it cannot add fields. Keeping both OUT of `build` is what lets the manifest
+  generator walk `.shape`: zod wraps a refined or transformed object in ZodEffects, which has
+  no shape, and (for a discriminated union) is not a legal member.
 - `build` is a FACTORY taking the shared context, never a module-level constant. The controlled
   vocabularies load from YAML at call time, so a kind that reaches for module state cannot be
   tested against a synthetic registry — and the one thing every kind test needs is a registry it
@@ -131,6 +140,21 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   per kind, assembled into the discriminated union / collections map. Do NOT glob at runtime: the
   contract must load identically under tsc-to-dist, under vitest, and inside Astro, and only static
   imports do all three. Keep it honest with a drift test (Part 4) rather than with cleverness.
+- DEFEND THE INFERENCE, and budget real time for it — this was the expensive part of the split in
+  BOTH instances, and every symptom appears far from its cause. Splitting a schema across files
+  puts type annotations where there were none, and every annotation you write here is a chance to
+  WIDEN a type that used to be inferred. The failures are silent at the seam and loud at the page:
+  one instance turned `entry.data.tags` into `any`, the other produced 100 `astro check` errors
+  across every page that touched a collection — from three separate widenings, each invisible
+  until the type checker was run over the SITE rather than over the schema package.
+  Three concrete rules, all learned the hard way:
+    * Do not annotate a kind `: KindDefinition` — that erases which fields it declares. Pass it
+      through a `defineKind` identity helper generic over its shape, so the shape is INFERRED.
+    * Do not type a shared field group as `ZodRawShape` (or a kind list as `KindDefinition[]`).
+      An index signature erases every field a kind spreads in. Use `typeof theActualConst`.
+    * Do not build the kinds map by MAPPING over the kind list. `.map` produces a homogeneous
+      array and collapses every kind to the widest common type; write the entries out by name.
+  Run the SITE's type check, not just the schema's, before believing any of this works.
 - Astro's site/src/content.config.ts stays a thin consumer: it spreads the assembled map into
   defineCollection() calls and adds the glob loaders — nothing else. Collection and kind are NOT
   required to be one-to-one; a collection is a LOCATION (its own browse route), a kind is what a
