@@ -90,24 +90,74 @@ that a note is well-formed.
 - Dev: `npm run dev` (astro dev). Build: `astro build --force`.
 
 
-PART 3 — AUTHOR THE FRONTMATTER CONTRACT (ONCE)
+PART 3 — AUTHOR THE FRONTMATTER CONTRACT (ONE KIND PER DIRECTORY)
 
-Author the contract one time in site/src/lib/frontmatter-schema.ts as a single zod module, and
-let both the site build and the standalone validator import that one module. One encoding, two
-consumers — the schema is the sole authority on frontmatter shape.
+Author the contract one time and let both the site build and the standalone validator import it.
+One encoding, two consumers — the schema is the sole authority on frontmatter shape. But author it
+as a DIRECTORY PER KIND, not one module holding every kind. A kind is a unit of meaning: it has a
+purpose, a required metadata set, and a worked example, and those three belong beside each other.
 
-- In frontmatter-schema.ts import `z` from 'zod' directly (not 'astro:content') so the module
-  loads headless under vitest. Export one zod schema per content type (sourceNote, book, mold,
-  pattern) plus a `COLLECTIONS` map: name → { base: '../content/…', schema }. That map is the
-  ONE place collections are enumerated.
-- site/src/content.config.ts is a thin consumer: it spreads COLLECTIONS into defineCollection()
-  calls and adds the glob loaders — nothing else.
+  types/
+    context.ts          the shared kind context — the base envelope + field primitives
+    index.ts            the barrel: the ONE enumeration of the kinds this instance defines
+    <kind>/schema.ts    export const kind: KindDefinition  (this kind's contract)
+    <kind>/kind.md      what the kind is FOR, and why each required field is required
+    <kind>/example.md   ONE minimal valid note of this kind — frontmatter and a short body
+
+Adding a kind is adding a directory plus one barrel line. Nothing else is edited, and a reader who
+wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line union.
+
+- A kind directory exports a KIND DEFINITION, not a bare schema:
+      { kind: 'mold', title: 'Mold', origin: 'substrate' | 'instance',
+        build: (ctx: KindContext) => ZodObject }
+  `kind` is the `type:` discriminator value — the sole note-kind discriminator, matching the
+  directory name. `origin` records whether the kind is inherited substrate or something this
+  domain added; it is what a cross-instance kind catalog groups by, so state it honestly.
+- `build` is a FACTORY taking the shared context, never a module-level constant. The controlled
+  vocabularies load from YAML at call time, so a kind that reaches for module state cannot be
+  tested against a synthetic registry — and the one thing every kind test needs is a registry it
+  controls. Passing the context also makes the substrate visible: whatever every kind draws from
+  is exactly what belongs in it.
+- types/context.ts holds THE BASE ENVELOPE and the field primitives — the `tags` array (min(1)),
+  the registry-checked `tag`, `licenseId`, the license-coherence refinement, the typed `reference`
+  object, `wikiLink`. Each kind spreads `...ctx.base` and reaches into `ctx` for the rest. This is
+  the shared-substrate/instance-extension split applied to the frontmatter contract: context.ts is
+  what every Foundry's kinds have in common, the kind directories are what yours adds.
+  Port the envelope HONESTLY. A field you cannot populate truthfully (a `created` date you would
+  have to stamp with today across a corpus you did not author today, an `ai_generated` flag you do
+  not actually track) is worse than an absent one — it manufactures provenance. Leave it out and
+  let the kind catalog show the gap.
+- types/index.ts is a STATIC barrel — `import { kind as mold } from './mold/schema.js'`, one line
+  per kind, assembled into the discriminated union / collections map. Do NOT glob at runtime: the
+  contract must load identically under tsc-to-dist, under vitest, and inside Astro, and only static
+  imports do all three. Keep it honest with a drift test (Part 4) rather than with cleverness.
+- Astro's site/src/content.config.ts stays a thin consumer: it spreads the assembled map into
+  defineCollection() calls and adds the glob loaders — nothing else. Collection and kind are NOT
+  required to be one-to-one; a collection is a LOCATION (its own browse route), a kind is what a
+  note IS. Where they differ, keep the location → kind mapping explicit in one place.
 - Encode cross-field rules as zod `.superRefine(...)` raising a specific, path-anchored issue,
-  never as prose in a README. Real examples: an on-demand reference requires a `trigger`; a
-  hypothesis-evidence reference requires a `verification`; a note may not declare verbatim carry
-  under an own-words-only license. If a rule matters, the schema enforces it.
+  never as prose in a README, and never a second time in the validator. Real examples: an on-demand
+  reference requires a `trigger`; a hypothesis-evidence reference requires a `verification`; a note
+  may not declare verbatim carry under an own-words-only license. If a rule matters, the schema
+  enforces it — and enforces it ONCE. A rule over the fields of one note belongs in the schema; only
+  a rule needing OTHER notes (wiki-link resolution, backlinks, reference-target types) belongs in
+  the validator.
 - Strip a trailing /index in the loader's generateId (a `stripIndex` helper) so entry ids and
   wiki-link basenames stay clean (`msmb/chap1`, not `msmb/chap1/index`).
+
+Emit a KIND MANIFEST — types/kinds.generated.json, committed, regenerated by a script with a
+`--check` mode CI runs:
+
+    { "instance": "<slug>", "version": 1,
+      "kinds": [ { "kind": "mold", "title": "Mold", "origin": "substrate",
+                   "summary": "…", "doc": "<kind.md body>",
+                   "fields": [ { "name": "tags", "required": true, "type": "string[]" }, … ] } ] }
+
+DERIVE `fields` FROM THE ZOD SCHEMA — walk the object shape, read optionality off the schema — never
+hand-write the table. A hand-written required-metadata list is a second encoding, and it drifts the
+first week. The manifest is what a cross-instance kind catalog renders and what lets two Foundries be
+diffed by machine instead of by eye; the FORMAT is SHARED ACROSS INSTANCES (source of truth: this
+file), the kinds in it are yours.
 
 
 PART 4 — STAND UP THE REGISTRIES, THE VALIDATOR, AND CI
@@ -147,6 +197,14 @@ Validator — vitest, one command, running the SAME schema the build uses:
 - site/tests/frontmatter-schema.test.ts — a negative-fixture table: each broken frontmatter
   asserts the SPECIFIC issue path+message it must raise, with a positive baseline per type. A
   rule with no negative fixture is a rule you are only hoping is enforced.
+- site/tests/kind-directories.test.ts — the types/ layout must hold, or the isolation it buys is
+  imaginary. Assert, per kind: the barrel enumerates EXACTLY the directories on disk (both
+  directions — a directory the barrel forgot is a kind that silently does not exist, a barrel line
+  with no directory is a stale import); `kind` equals the directory name; kind.md and example.md
+  both exist; and example.md's frontmatter PARSES AGAINST THAT KIND'S OWN SCHEMA. That last one is
+  what keeps the documentation executable — an example that stopped validating is a kind whose docs
+  now lie, and it is the cheapest positive baseline per kind you will ever get.
+  Assert the walk found kinds at all, so a path change cannot turn the whole check vacuous.
 - site/tests/registry-drift.test.ts — the registries and the corpus must agree BOTH ways. The
   schema already rejects a note carrying an unregistered value; this asserts the other direction,
   that nothing you AUTHORED is carried by zero notes — every tag under a facet's `values`, every
@@ -238,9 +296,10 @@ Keep composition optional and the individual Molds standalone.
 INHERITED vs. SUPPLIED
 
 Parts 2–4 are the substrate: the site/ Astro app, the one-schema-two-consumers frontmatter
-contract (frontmatter-schema.ts), the root registries (license-policy.yml is literally shared
-across instances), the vitest validator, and the ci.yml/deploy.yml workflows. Re-standing these
-up is mechanical.
+contract (types/ — its context.ts base envelope literally shared, its kind directories yours),
+the root registries (license-policy.yml is literally shared across instances; meta_tags.yml and
+kinds.generated.json share a FORMAT), the vitest validator, and the ci.yml/deploy.yml workflows.
+Re-standing these up is mechanical.
 
 Part 1 and Parts 5–8 are the domain — but even the vocabulary starts from a shared spine: the
 eight substrate terms in Part 1 are inherited from the pattern glossary, and only the domain
