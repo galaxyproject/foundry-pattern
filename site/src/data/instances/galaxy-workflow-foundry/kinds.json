@@ -961,7 +961,7 @@
   ],
   "source": {
     "repo": "galaxyproject/foundry",
-    "revision": "97d5181",
-    "path": "packages/note-schema/src/types/kinds.generated.json"
+    "path": "packages/note-schema/src/types/kinds.generated.json",
+    "revision": "79a22e9"
   }
 }

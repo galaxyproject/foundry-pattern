@@ -21,6 +21,8 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
+import { parseKindManifest, withRevision } from '@galaxy-foundry/kind-manifest';
+
 const SITE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = path.join(SITE_ROOT, 'src/data/instances');
 
@@ -90,9 +92,17 @@ for (const instance of INSTANCES) {
   const revision = revisionOf(checkout);
   const outDir = path.join(DATA_DIR, instance.slug);
 
-  const manifest = JSON.parse(fs.readFileSync(path.join(checkout, instance.kinds), 'utf8'));
-  // Stamp the provenance onto the copy itself; the catalog page renders it.
-  manifest.source = { repo: instance.repo, revision, path: instance.kinds };
+  // Validate before vendoring. A manifest that no longer satisfies the shared format should
+  // fail here, naming the offending field, rather than at render time as a blank cell.
+  const read = parseKindManifest(
+    JSON.parse(fs.readFileSync(path.join(checkout, instance.kinds), 'utf8')),
+  );
+
+  // The instance declares its own repo and path; we only record which snapshot we took.
+  // The fallback covers an instance whose generator predates that — it declared nothing, so
+  // we say where we got it from, which is the most we can honestly claim on its behalf.
+  const declared = read.source ?? { repo: instance.repo, path: instance.kinds };
+  const manifest = withRevision({ ...read, source: declared }, revision);
 
   const outputs = [
     [path.join(outDir, 'kinds.json'), `${JSON.stringify(manifest, null, 2)}\n`],

@@ -295,7 +295,7 @@
   ],
   "source": {
     "repo": "jmchilton/statistical-genomics-foundry",
-    "revision": "60cb4cc",
-    "path": "site/src/types/kinds.generated.json"
+    "path": "site/src/types/kinds.generated.json",
+    "revision": "608eba3"
   }
 }
