@@ -30,7 +30,7 @@ its documentation, and a worked example — is specified in Part 3 of
 **Substrate kinds** are declared by *every* instance. That is the empirical definition used
 here, and it is deliberately harsher than a label: a kind counts as substrate because two
 independently-motivated domains both reached for it, not because someone marked it so. If an
-instance claims `origin: substrate` for a kind the other does not declare, this page says so
+instance claims `layer: substrate` for a kind the other does not declare, this page says so
 rather than accepting the claim.
 
 **Instance-specific kinds** are declared by one. These are the extension surface — what each

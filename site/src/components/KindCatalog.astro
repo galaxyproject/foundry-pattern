@@ -2,7 +2,7 @@
 import {
   loadInstances,
   kindRows,
-  originDisagreements,
+  layerDisagreements,
   sharedRequiredFields,
 } from "../lib/instances";
 
@@ -10,7 +10,7 @@ const instances = loadInstances();
 const rows = kindRows(instances);
 const shared = rows.filter((r) => r.shared);
 const local = rows.filter((r) => !r.shared);
-const disagreements = originDisagreements(rows);
+const disagreements = layerDisagreements(rows);
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 <div class="not-prose mt-8">
@@ -32,7 +32,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   {disagreements.length > 0 && (
     <p class="mt-4 rounded-lg border p-4 text-sm" style="border-color: var(--ember); color: var(--muted)">
       <strong style="color: var(--ember)">Drift:</strong> {disagreements.join(", ")} —
-      declared <code>origin: substrate</code> by an instance, but not declared by every
+      declared <code>layer: substrate</code> by an instance, but not declared by every
       instance. The table below reflects what the instances actually declare.
     </p>
   )}

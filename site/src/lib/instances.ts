@@ -23,7 +23,9 @@ export interface ManifestField {
 export interface ManifestKind {
   kind: string;
   title: string;
-  origin: 'substrate' | 'instance';
+  /** Which layer the instance says the kind belongs to. Named `layer`, not `origin`, because a
+   *  kind is free to declare a frontmatter FIELD called `origin` — one of them does. */
+  layer: 'substrate' | 'instance';
   summary: string;
   doc?: string;
   fields: ManifestField[];
@@ -87,7 +89,7 @@ export interface KindRow {
 /**
  * One row per distinct `type:` value across the instances, substrate first.
  *
- * `shared` is computed, not read from the manifests' own `origin` field. The two are meant to
+ * `shared` is computed, not read from the manifests' own `layer` field. The two are meant to
  * agree, and where they do not, this function is right and the manifest is a claim its author
  * has not yet earned — which is worth surfacing rather than smoothing over.
  */
@@ -109,11 +111,11 @@ export function kindRows(instances: Instance[]): KindRow[] {
   );
 }
 
-/** A kind's manifest `origin` disagreeing with what the instances actually declare. */
-export function originDisagreements(rows: KindRow[]): string[] {
+/** A kind's manifest `layer` disagreeing with what the instances actually declare. */
+export function layerDisagreements(rows: KindRow[]): string[] {
   return rows
     .filter((row) =>
-      row.present.some((i) => (row.by[i.slug]!.origin === 'substrate') !== row.shared),
+      row.present.some((i) => (row.by[i.slug]!.layer === 'substrate') !== row.shared),
     )
     .map((row) => row.kind);
 }
