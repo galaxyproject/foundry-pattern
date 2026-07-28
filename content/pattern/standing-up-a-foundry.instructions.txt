@@ -212,18 +212,33 @@ purpose, a required metadata set, and a worked example, and those three belong b
   types/
     context.ts          the shared kind context — the base envelope + field primitives
     index.ts            the barrel: the ONE enumeration of the kinds this instance defines
-    <kind>/schema.ts    export const kind: KindDefinition  (this kind's contract)
+    <kind>/schema.ts    export const kind = defineKind({…})  (this kind's contract — NOT
+                        annotated `: KindDefinition`; see "defend the inference" below)
     <kind>/kind.md      what the kind is FOR, and why each required field is required
     <kind>/example.md   ONE minimal valid note of this kind — frontmatter and a short body
 
 Adding a kind is adding a directory plus one barrel line. Nothing else is edited, and a reader who
 wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line union.
 
-- A kind directory exports a KIND DEFINITION, not a bare schema:
-      { kind: 'mold', title: 'Mold', layer: 'substrate' | 'instance', summary: '…',
-        build:      (ctx: KindContext) => ZodObject,
-        refine?:    (data, issues, ctx) => void,     // cross-field rules over this kind
-        transform?: (data, issues, ctx) => object }  // only if the entry is ASSEMBLED
+- A kind directory exports a KIND DEFINITION, not a bare schema. The contract is `build` plus
+  `refine`, and NOTHING ELSE — both instances arrived here, from opposite directions:
+      type KindShape = { type: z.ZodTypeAny } & z.ZodRawShape;
+
+      defineKind({
+        kind: 'mold', title: 'Mold', layer: 'substrate' | 'instance', summary: '…',
+        build:   (ctx: KindContext) => ZodObject<S>,             // S extends KindShape
+        refine?: (data: z.infer<ZodObject<S>>, issues, ctx) => void,
+      })
+  Note the bound on the shape: `type` is REQUIRED to be in it. Every kind you write will declare
+  `type: z.literal(...)` anyway, but until the bound says so that is a convention some directories
+  happen to follow, not something a consumer can rely on — and it is what lets the kinds compose
+  into a `z.discriminatedUnion`. The bound exists only at compile time, so the test does too:
+  a kind with no `type:` under `@ts-expect-error` in a `.test-d.ts`, which FAILS THE TYPECHECK if
+  the bound is ever loosened back. Check it is non-vacuous — with a loose bound you should get
+  `ts(2578): Unused '@ts-expect-error' directive`. (vitest does not collect `.test-d.ts`; `astro
+  check` / root `tsc` does, so put it where CI already looks.) Add a runtime assertion per kind
+  too: the shape declares `type`, and the literal parses to THAT kind's name rather than merely
+  being present.
   `kind` is the `type:` discriminator value — the sole note-kind discriminator, matching the
   directory name. `layer` records whether the kind is inherited substrate or something this
   domain added; it is what a cross-instance kind catalog groups by, so state it honestly.
@@ -232,18 +247,56 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   says `"origin": "instance"` beside a field named `origin` typed `npm | pypi` is a trap for
   the cross-instance consumer, which is the manifest's whole audience. Keep the metadata
   vocabulary disjoint from anything a kind may plausibly call a field.
-- `build` returns the BARE OBJECT; the two optional slots carry everything else. Both are
-  needed, and they are not the same thing. `refine` states rules over the fields already
-  present. `transform` is for a kind whose entry is ASSEMBLED rather than validated in
-  place — a book chapter merging its book-level licence record — and a refinement cannot do
-  that job because it cannot add fields. Keeping both OUT of `build` is what lets the manifest
-  generator walk `.shape`: zod wraps a refined or transformed object in ZodEffects, which has
-  no shape, and (for a discriminated union) is not a legal member.
-- `build` is a FACTORY taking the shared context, never a module-level constant. The controlled
-  vocabularies load from YAML at call time, so a kind that reaches for module state cannot be
-  tested against a synthetic registry — and the one thing every kind test needs is a registry it
-  controls. Passing the context also makes the substrate visible: whatever every kind draws from
-  is exactly what belongs in it.
+- `build` returns the BARE OBJECT; `refine` carries the cross-field rules over the fields already
+  present. Keeping `refine` OUT of `build` is what lets the manifest generator walk `.shape`: zod
+  wraps a refined object in ZodEffects, which has no shape and is not a legal discriminated-union
+  member.
+- DO NOT ADD A `transform` SLOT — a third slot that lets a kind ASSEMBLE its entry from something
+  other than its own frontmatter, so the note is only complete after a merge. One instance built
+  one, for one kind (a book chapter merging its book-level licence record), and removed it again.
+  It cost more than it looked:
+    * a zod schema that read files off disk, via a path resolved against `process.cwd()` — working
+      only because both callers happened to run from the same directory;
+    * a note complete only after the merge, so a page rendering a licence needed `data as any`;
+    * a kind manifest listing SIX fields for a chapter carrying ten, rendered that way in the
+      cross-instance catalog beside a kind showing all seventeen of its own;
+    * a `transform?` slot and an output generic on every kind definition, for one kind in one
+      instance — and, because a transformed object is also ZodEffects, pressure to replace the
+      discriminated union with a hand-written dispatcher.
+  The fix is to MATERIALIZE instead: a generator copies the assembled fields into each note's
+  frontmatter, a `--check` mode regenerates and compares in CI, and the note then validates in
+  place like every other one. Same trade kinds.generated.json already makes. Verify the generator
+  is idempotent (a second run writes zero files) and that `--check` is non-vacuous (edit one
+  source field, confirm it names exactly the affected notes and leaves the rest alone).
+  With `transform` gone the contract is `build` + `refine` in both instances — which is why the
+  discriminated union survives and the dispatcher was never needed.
+- TYPE `refine`'S `data` AS THE KIND'S OWN INFERRED FRONTMATTER. Not `Record<string, unknown>`,
+  not `any`. This is not a style preference — an untyped `data` makes a validator rule SILENTLY
+  DEAD, and there is no runtime signal. Every refine rule is conditional: it fires only when
+  another field takes a particular value, so a rule that never fires is indistinguishable from a
+  rule with nothing to complain about. On a real corpus:
+
+      if (d.axis === "source-specifc" && !d.source)     // typo — missing the 'i'
+
+  compiled clean, exited 0, and sat there looking enforced while bad notes passed validation.
+  Typed, the same line is `TS2367: This comparison appears to be unintentional … have no overlap`,
+  which enumerates the four legal values. Guard it with a `.test-d.ts` putting a typo'd literal
+  under `@ts-expect-error`, so widening the signature back fails the typecheck; verify it fails in
+  both directions before believing it.
+  If a discriminated union forces a cast somewhere, put it at the single DISPATCH site — where
+  looking the member up by `d.type` already makes it correct — never in the callee's signature,
+  which spreads the widening to every rule.
+- `build` is a FACTORY taking the shared context, never a module-level constant, and the CONTEXT
+  ITSELF takes the registries — `buildKindContext({ tags, contract, licensePolicy })`, not a
+  module that loads YAML at import time. Both halves are needed and only the pair works. A context
+  that loads its own registries can only ever exercise a kind against the REAL ones, so a test
+  about tag validation has to add a tag to meta_tags.yml to run at all. Injected, you build a
+  context declaring a tag that appears in no file in the repo and assert both directions: the
+  schema ACCEPTS the synthetic tag, and REJECTS one the real registry declares. Check that pair is
+  non-vacuous by replacing the registry lookup with `t.length > 0` — the reject assertion must
+  fail, and pass again when restored. Neither assertion can hold while the injected registry is
+  being ignored. Passing the context also makes the substrate visible: whatever every kind draws
+  from is exactly what belongs in it.
 - types/context.ts holds THE BASE ENVELOPE and the field primitives — the `tags` array (min(1)),
   the registry-checked `tag`, `licenseId`, the license-coherence refinement, the typed `reference`
   object, `wikiLink`. Each kind spreads `...ctx.base` and reaches into `ctx` for the rest. This is
@@ -271,7 +324,14 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
       An index signature erases every field a kind spreads in. Use `typeof theActualConst`.
     * Do not build the kinds map by MAPPING over the kind list. `.map` produces a homogeneous
       array and collapses every kind to the widest common type; write the entries out by name.
-  Run the SITE's type check, not just the schema's, before believing any of this works.
+  Run the SITE's type check, not just the schema's — and know that A CLEAN TYPE CHECK DOES NOT
+  PROVE THE INFERENCE SURVIVED. If `entry.data` has degraded to `any`, that is also zero errors;
+  worse, a site that already casts `entry.data as any` anywhere cannot catch it either. Both
+  failure modes report the same thing, so measure instead of trusting the exit code: add a
+  temporary probe accessing a field that does not exist, and read the error. It must name the
+  fields of EVERY kind — the full union, enumerated — and a real field must come back with its
+  actual type rather than `any`. Delete the probe afterwards. Do this once after the split and
+  once after any change to the barrel, the map, or a shared field group.
 - Astro's site/src/content.config.ts stays a thin consumer: it spreads the assembled map into
   defineCollection() calls and adds the glob loaders — nothing else. Collection and kind are NOT
   required to be one-to-one; a collection is a LOCATION (its own browse route), a kind is what a
@@ -313,13 +373,11 @@ package's withRevision(). Do not put `revision` in your own generator — a comm
 gate regenerates it and string-compares can never carry the commit it was generated at, so
 `--check` would fail on every commit.
 
-This is also the check on the `transform` slot above. The manifest lists the fields the SCHEMA
-declares, so a kind whose entry is only complete after a merge cannot be described honestly here —
-a book chapter assembled from a book-level licence record listed SIX fields while carrying ten, and
-rendered that way in the cross-instance catalog beside a kind showing all seventeen of its own.
-Where you can, materialize those fields into the frontmatter with a generator and a `--check` gate
-— the same trade kinds.generated.json already makes — and let the note validate in place like
-every other one.
+The manifest is also what makes the no-`transform` rule above concrete: it lists the fields the
+SCHEMA declares, so a kind assembled from anything other than its own frontmatter is described
+here as fewer fields than it carries, and a reader of the cross-instance catalog is comparing a
+partial row against a complete one without being told. Materialize; then the manifest is honest
+for free.
 
 
 PART 4 — STAND UP THE REGISTRIES, THE VALIDATOR, AND CI
@@ -389,6 +447,13 @@ Validator — vitest, one command, running the SAME schema the build uses:
   GROUP (the shared source-note fields, say) and skips `...ctx.base` passes every other check
   and silently misses the next field added to the envelope — one instance shipped exactly that,
   hidden because the group happened to carry a copy of the one envelope field.
+- site/tests/*.test-d.ts — the TYPE-LEVEL guards from Part 3: a kind missing `type:` and a typo'd
+  literal in a `refine`, each under `@ts-expect-error`. These prove rules that have no runtime
+  behaviour to assert, so nothing else can hold them. Two things to get right: vitest does NOT
+  collect `.test-d.ts`, so they run under `npm run typecheck` and are worth nothing if your
+  tsconfig excludes them — confirm the typecheck actually fails when you delete a directive; and
+  put the directive where TypeScript reports the error, which for a kind definition is on the
+  `build:` property rather than above the `defineKind(` call.
 - site/tests/kind-manifest.test.ts — an INTEGRATION test, not a unit suite. The synthetic-shape
   cases (does the deriver unwrap a defaulted array, is a refined string still `string`) live in
   @galaxy-foundry/kind-manifest with the renderer they exercise; re-testing a dependency's unit
