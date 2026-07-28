@@ -9,9 +9,10 @@ Nothing here is the only way to satisfy the pattern — it is the one worked exa
 Order of work: the glossary comes FIRST (Part 1) — it is the KB's highest fan-in reference
 and the surface the casting model grounds on, so pin it before anything answers to it. Then
 the engineering substrate (Parts 2–4: reading surface, frontmatter contract, registries +
-validator + CI), which is inherited — you are re-standing-up known machinery. Then the rest
-of the domain knowledge (Parts 5–8: corpus, Molds, the external check, composition), which
-only your domain can supply.
+validator + CI), which is inherited — partly INSTALLED from @galaxy-foundry packages and
+partly re-stood-up as known machinery, a split "The shared substrate" below draws and the
+closing section grades. Then the rest of the domain knowledge (Parts 5–8: corpus, Molds, the
+external check, composition), which only your domain can supply.
 
 
 PART 1 — DEFINE THE VOCABULARY FIRST
@@ -55,8 +56,102 @@ REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal
                 from the site/ cwd as '../content/…'. content/meta/ holds cross-cutting docs
                 that are NOT collection entries (glossary, an ops log).
 
-  This table is the single source of truth for packages + versions. The parts below name
-  MODULES and WIRING, not packages — they do not re-list what is pinned here.
+  This table and the substrate table below are the single source of truth for packages +
+  versions. The parts below name MODULES and WIRING, not packages — they do not re-list
+  what is pinned here.
+
+
+THE SHARED SUBSTRATE — INSTALL IT, DO NOT COPY IT
+
+Five pieces of a Foundry are not yours to author. Both existing instances wrote each of them
+independently, and comparing the results found the same thing twice in two different ways. Some
+were one file living in two places — the kind-manifest reader and deriver were character-for-
+character identical apart from quote style, test suites included; the license table differed only
+by a header telling you to mirror it. The others had DRIFTED while staying nominally the same:
+three byte-identical copies of `slugify` inside a single repo, each surrounded by different
+bracket-stripping and different resolution order. Both findings argue for the same fix. All five
+now ship from jmchilton/foundry-lib under the @galaxy-foundry scope, and an instance INSTALLS them:
+
+  @galaxy-foundry/license-policy      ^0.1.1  the license → redistribution table + loader
+  @galaxy-foundry/kind-manifest       ^0.2.1  the manifest format: reader + zod-shape deriver
+  @galaxy-foundry/reference-contract  ^0.1.0  the four vocabularies every instance inherits
+  @galaxy-foundry/tag-registry        ^0.1.0  the meta_tags.yml format and its accessors
+  @galaxy-foundry/wiki-links          ^0.1.0  the [[Target]] grammar, resolver, remark transform
+
+Every one of these was, in an earlier version of this checklist, an instruction to COPY a file
+and mirror any change by hand across repositories. Each of those instructions is now a
+dependency. Do not reinstate one: a mirrored file is a promise that two humans will notice the
+same edit, and the record is that they do not — one instance's mirrored table carried the header
+"any change here is a CROSS-REPO change and must be mirrored there … until then, edit both by
+hand" for months.
+
+WHAT EACH PACKAGE DOES NOT DO is the half that matters. The package ships the FORMAT or the
+MACHINERY; your instance supplies the CONTENT. Get the line wrong in either direction and you
+have either a dependency dictating your domain or a copy that drifts:
+
+  license-policy      Ships the table — which SPDX id permits verbatim carry. You keep license
+                      COHERENCE: own-words-only must not ship a `license_file`; a note vendoring
+                      an external upstream must declare one. Both instances enforce coherence,
+                      and they enforce genuinely DIFFERENT rules. The package answers "what does
+                      this license permit", never "is this note coherent with its license".
+                      Load with bundledPolicy() — the table travels with the dependency, so a
+                      content tree no longer has to CARRY it to be validated or cast against it.
+  kind-manifest       Ships the format, the reader, and the deriver. You keep which kinds exist
+                      and how your registries resolve into the context they are built against —
+                      no two instances do that the same way, which is why the package takes
+                      BUILT SHAPES rather than a context.
+  reference-contract  Ships used_at / load / modes / evidence. You keep `kinds` — exactly the half
+                      that varies by domain. Inherit the four whole: a term you have not used YET
+                      is inheritance, not drift. The one exception is a term that is CAPACITY
+                      rather than description — `modes.condense` commits you to an LLM phase in
+                      your caster, to pending_llm slots, to prompt/model provenance, and to the
+                      loss of byte-stable output that makes a --check gate possible at all —
+                      which you decline with `narrow: { modes: [...] }` until a Mold needs it.
+                      A narrowed group is AUTHORED, so it rejoins the dead-vocabulary check.
+  tag-registry        Ships the format and its three rules (see Part 4). Ships NO VOCABULARY:
+                      facets are the browse axes of one domain — one Foundry groups by
+                      target/tool/cli, another by family/role/domain — and there is no useful
+                      subset to inherit.
+  wiki-links          Ships the grammar, the resolver and the tree walk. Ships NO LINK MAP: which
+                      notes exist and what each is addressable by is your data. One instance keys
+                      by basename plus a Mold's `name` plus a `tool command` pair, another by a
+                      dashed collection id, the pattern site by a filename with its ordering
+                      prefix stripped.
+
+COMPOSE, DO NOT RE-EXPORT. Where your instance supplies a half, write ONE composition point that
+keeps the signature your callers already use, and let every other call site import from the
+package directly:
+
+    export function loadReferenceContract(p = findReferenceContractPath()): ReferenceContract {
+      return buildReferenceContract({ kinds: loadInstanceKinds(p) });
+    }
+
+Done this way, adoption touches the composition point and nothing else — one instance adopted the
+reference contract with its validator, manifest generator, site registries, CLI shim and five test
+files untouched. Re-export only a TYPE a caller must name to build an options object. A barrel
+re-exporting the package's whole API is a name list that drifts from the package's, and one more
+place to look.
+
+TWO THINGS THAT WILL BITE:
+
+- Declare the dependency in the package that IMPORTS it — INCLUDING site/. A package resolving a
+  shipped YAML asset relative to import.meta.url, reached only through a LINKED workspace package,
+  gets inlined into an SSR chunk by Vite, and the path then resolves against site/dist/chunks/
+  instead of node_modules. It passes every test and every typecheck, and fails at `astro build`.
+- kind-manifest pins `zod` as a PEER dependency at ^3.25, because the deriver reads `_def.typeName`
+  — zod 3 internals, since zod exposes no public reflection API and the alternative is the
+  hand-written field table this mechanism exists to prevent. The deriver must also read the SAME
+  zod instance your schemas were built with: a duplicated zod in the tree renders every field
+  `any`. Keep one zod, and keep it in range.
+
+THE RULE FOR WHAT MOVES THERE: a thing moves into the shared substrate once TWO instances have
+independently arrived at it — never because it looks like it should be shared. Abstracting from
+N=1 is how you ship a shared decision nobody has taken. What the evidence has so far kept OUT is
+as instructive as what it let in: the base note envelope (one instance carries thirteen fields,
+the other one — Part 3 says why that gap is honest), the kind schemas (only `mold` and `pattern`
+are common to both instances at all, and even those differ threefold in size), and the license
+coherence rules above. If you are the third instance, the parts where you diverge are evidence
+about the substrate; report them rather than papering over them.
 
 
 PART 2 — STAND UP THE READING SURFACE
@@ -79,9 +174,26 @@ that a note is well-formed.
   per collection). Recover any source→route mapping from the router, not a parallel table.
 - Add the shared UI once: site/src/layouts/Base.astro + site/src/components/{Header,Footer,
   SourceMeta,TagChips}.astro (SourceMeta surfaces provenance/license on every source note).
-- Resolve wiki-links ([[Target]]) through ONE resolver used by BOTH renderer and validator:
-  src/lib/wiki-links.ts (the resolver) with src/lib/remark-wiki-links.ts as its remark twin.
-  Never encode the link rules twice.
+- Resolve wiki-links ([[Target]]) with @galaxy-foundry/wiki-links, in BOTH the renderer and the
+  validator. The package owns the grammar, the exact resolver and the tree walk; you supply the
+  MAP — a thin src/lib/wiki-links.ts adapter returning whatever shape your callers already pass
+  around, and a `resolve` callback for the remark transform. "Never encode the link rules twice"
+  was the instruction here before, and it did not hold: one instance carried THREE byte-identical
+  copies of `slugify` and four more hand-rolled [[...]] regexes, with everything around them
+  drifted — strict vs. naive bracket stripping, deterministic vs. insertion-order resolution.
+  Two rules the package settles, both worth knowing before you are tempted to re-litigate them:
+    * RESOLUTION IS EXACT — no prefix fallback. Measured over ~4,200 links in two corpora, exactly
+      two resolved by prefix alone and both were bugs: `[[...]]` slugifies to the empty string,
+      which prefixes every key, and landed on an arbitrary note out of 264; a deliberate glob
+      meaning two papers was silently narrowed to one. A rule that has never once done its
+      intended job is not worth the unpredictability. An unresolved link renders BOLD — visible to
+      a reader, obvious to an author, and never claiming to lead somewhere.
+    * A BACKTICK MEANS THE SYNTAX, NOT A LINK. `[[Target]]` is how documentation names the token
+      and how a note names a slot it cannot link. The transform rewrites text nodes only, never
+      inlineCode/code/html. The trap is that your validator will ALSO strip code spans before
+      scanning, so a backticked link naming a note that never existed renders as dead monospace
+      and is reported by nothing — both surfaces blind at once. One instance accumulated 63 of
+      them across 12 files. Put the rule in your authoring guide, not just in the transform.
 - Render loose docs that live OUTSIDE any collection (the glossary, an ops log) through the
   shared helper src/lib/render-vault-doc.ts (resolves [[links]], renders via src/lib/marked.ts,
   injects #term anchors) from a dedicated page — e.g. site/src/pages/glossary.astro reading
@@ -178,45 +290,84 @@ Emit a KIND MANIFEST — types/kinds.generated.json, committed, regenerated by a
 `--check` mode CI runs:
 
     { "instance": "<slug>", "version": 1,
+      "source": { "repo": "<owner>/<name>", "path": "<path to this file>" },
       "kinds": [ { "kind": "mold", "title": "Mold", "layer": "substrate",
                    "summary": "…", "doc": "<kind.md body>",
                    "fields": [ { "name": "tags", "required": true, "type": "string[]" }, … ] } ] }
 
-DERIVE `fields` FROM THE ZOD SCHEMA — walk the object shape, read optionality off the schema — never
-hand-write the table. A hand-written required-metadata list is a second encoding, and it drifts the
-first week. The manifest is what a cross-instance kind catalog renders and what lets two Foundries be
-diffed by machine instead of by eye; the FORMAT is SHARED ACROSS INSTANCES (source of truth: this
-file), the kinds in it are yours.
+The FORMAT, the reader, and the zod-shape deriver come from @galaxy-foundry/kind-manifest — do not
+re-encode them. What you write is the composition: which kinds exist, and how your registries
+resolve into the context they are built against. Keep your `buildKindManifest({ instance, docs,
+...registries })` signature over the package's `deriveKindManifest`, so nothing downstream cares
+that the derivation moved.
+
+`fields` is DERIVED from the zod shape — walked, with optionality read off the schema — never
+hand-written. A hand-written required-metadata list is a second encoding and it drifts the first
+week. That derivation has just moved one repo over; the rule has not changed.
+
+The manifest is what a cross-instance kind catalog renders, and what lets two Foundries be diffed
+by machine instead of by eye. Because its consumer is ANOTHER REPOSITORY, `source` is split by who
+actually knows each fact: YOU declare `repo` and `path`, so a consumer vendoring a copy does not
+hard-code your identity on your behalf; WHOEVER TAKES A SNAPSHOT records the `revision`, via the
+package's withRevision(). Do not put `revision` in your own generator — a committed artifact whose
+gate regenerates it and string-compares can never carry the commit it was generated at, so
+`--check` would fail on every commit.
+
+This is also the check on the `transform` slot above. The manifest lists the fields the SCHEMA
+declares, so a kind whose entry is only complete after a merge cannot be described honestly here —
+a book chapter assembled from a book-level licence record listed SIX fields while carrying ten, and
+rendered that way in the cross-instance catalog beside a kind showing all seventeen of its own.
+Where you can, materialize those fields into the frontmatter with a generator and a `--check` gate
+— the same trade kinds.generated.json already makes — and let the note validate in place like
+every other one.
 
 
 PART 4 — STAND UP THE REGISTRIES, THE VALIDATOR, AND CI
 
-Registries — three YAML files at the REPO ROOT, loaded by small src/lib/*.ts readers:
+Registries — TWO YAML files at the REPO ROOT, each holding only the half that is yours. The
+formats, the loaders and the inherited vocabularies are installed (see "The shared substrate"):
 
-- license-policy.yml  (loader src/lib/license-policy.ts + licenses.ts). SPDX id → { policy:
-  verbatim-ok | own-words-only, allowed_modes, license_file }; unknown/missing → deny-by-default
-  row. SHARED ACROSS INSTANCES (source of truth: galaxyproject/foundry-pattern#4) — copy intact,
-  treat any change as a cross-repo change and mirror it.
-- reference_contract.yml  (loader src/lib/reference-contract.ts). The typed-reference vocab:
-  kinds, used_at, load, modes, evidence. Inherit used_at/load/modes/evidence unchanged; trim
-  `kinds` to what your instance authors.
-- meta_tags.yml  (loader src/lib/meta-tags.ts). The controlled tag vocabulary, grouped into
-  FACETS: `version: 1` plus `facets: <facet>: { label, description, values: { <tag>: <gloss> } }`
-  (`values` may be omitted while a facet is still empty). A tag
-  is valid when it is an exact key under some facet's `values`. Nothing else validates. EVERY
-  facet is a CLOSED enum — no open/free-form/prefix-wildcard escape hatch, ever. A tag with no
-  gloss is a tag the browse surface cannot document and a reader cannot learn from, so the
-  registry is the complete, permanent catalog of what the corpus can carry; if an external
-  vocabulary changes upstream, enumerate the slice you actually use and re-run the drift check.
-  Membership is DECLARED, not parsed off the `/` prefix — so the slash is a naming convention, a
-  bare key is an ordinary value (use one when a facet has exactly one flag-shaped member), and
-  browse pages group by the DECLARING facet, which makes an "other" bucket impossible rather than
-  merely empty. Tags are cross-cutting facets ONLY; note-kind is the `type:` discriminator and is
-  never copied into `tags:`. Require `tags` min(1) so every note carries at least one facet. Seed
-  corpus-first from the tags your first notes actually use. The FORMAT is SHARED ACROSS INSTANCES
-  (source of truth: this file) — treat a format change as a cross-repo change and mirror it; the
-  facet VOCABULARY is yours.
-- LICENSES/  — vendored verbatim SPDX texts the `license_file` rows point at, plus a README.
+- license-policy.yml — THERE IS NO SUCH FILE. The table ships in @galaxy-foundry/license-policy;
+  read it with bundledPolicy(). SPDX id → { policy: verbatim-ok | own-words-only, allowed_modes,
+  license_file }; unknown/missing → deny-by-default row. Adopting this deleted 268 lines of table
+  and two loaders from one instance, and let two test scaffolds stop planting a copy of the real
+  table in their temp repos. What stays yours is license COHERENCE, which lives in your validator:
+  own-words-only must not ship a `license_file`; a note vendoring an external upstream must declare
+  one. The two instances' coherence rules genuinely differ, which is why they did not move.
+- reference_contract.yml — holds `kinds` ONLY, and nothing else: the reference kinds YOUR Molds
+  author. used_at/load/modes/evidence come from @galaxy-foundry/reference-contract, and the loader
+  refuses a file that re-declares an inherited block (and refuses a shared table that declares
+  `kinds`) — the boundary is enforced in both directions, because it is the kind of split that
+  otherwise decays quietly. Compose the two halves in src/lib/reference-contract.ts. Your kinds
+  keep their own `href` into your spec docs; the inherited four link to the Foundry Pattern, which
+  is where they are actually specified. Adopting this took one instance's file from 88 lines to 49.
+- meta_tags.yml — the controlled tag vocabulary, grouped into FACETS: `version: 1` plus
+  `facets: <facet>: { label, description, values: { <tag>: <gloss> } }` (`values` may be omitted
+  while a facet is still empty). Parse it with @galaxy-foundry/tag-registry — loadTagRegistry()
+  and the isValidTag/facetOf/facets accessors — never `yaml.load(...) as TagRegistryFile`. BOTH
+  instances did exactly that cast and met a malformed registry as an `undefined` somewhere
+  downstream; the parser now refuses a missing `facets` block, a facet without label/description,
+  a tag with no gloss, and a tag two facets both declare. That last one neither instance could
+  have caught alone: with two declarations there is no single declaring facet, so `facetOf`
+  answers with whichever won the iteration and the browse page files the tag under one while the
+  other silently lists it too.
+  The three rules the format rests on, which the package enforces so you do not have to:
+    * A tag is valid when it is an exact key under some facet's `values`. Nothing else validates.
+    * EVERY facet is a CLOSED enum — no open/free-form/prefix-wildcard escape hatch, ever. A tag
+      with no gloss is a tag the browse surface cannot document and a reader cannot learn from, so
+      the registry is the complete, permanent catalog of what the corpus can carry. If an external
+      vocabulary changes upstream, enumerate the slice you actually use and re-run the drift check.
+    * Membership is DECLARED, not parsed off the `/` prefix — so the slash is a naming convention,
+      a bare key is an ordinary value (use one when a facet has exactly one flag-shaped member),
+      and browse pages group by the DECLARING facet, which makes an "other" bucket impossible
+      rather than merely empty.
+  What stays yours: the FACET VOCABULARY, and the schema rules over it — tags are cross-cutting
+  facets ONLY (note-kind is the `type:` discriminator and is never copied into `tags:`), and
+  `tags` min(1) so every note carries at least one facet. The package ships no vocabulary and
+  decides nothing about what a tag MEANS for a note. Seed corpus-first from the tags your first
+  notes actually use.
+- LICENSES/  — vendored verbatim SPDX texts the policy's `license_file` rows point at, plus a
+  README. The table travels with the dependency; the texts a cast hashes are in YOUR tree.
 
 Validator — vitest, one command, running the SAME schema the build uses:
 
@@ -238,19 +389,28 @@ Validator — vitest, one command, running the SAME schema the build uses:
   GROUP (the shared source-note fields, say) and skips `...ctx.base` passes every other check
   and silently misses the next field added to the envelope — one instance shipped exactly that,
   hidden because the group happened to carry a copy of the one envelope field.
-- site/tests/kind-manifest.test.ts — unit-test the DERIVATION, over synthetic zod shapes:
-  optional, defaulted, effects-wrapped, array-of-object, enum, literal. The `--check` gate
-  cannot do this for you — it regenerates with the same code and string-compares, so a bug in
-  the type renderer produces a wrong manifest that `--check` then blesses forever. The manifest
-  is the one artifact whose consumer is ANOTHER REPOSITORY, which is exactly why the gate that
-  only proves self-consistency is not enough.
+- site/tests/kind-manifest.test.ts — an INTEGRATION test, not a unit suite. The synthetic-shape
+  cases (does the deriver unwrap a defaulted array, is a refined string still `string`) live in
+  @galaxy-foundry/kind-manifest with the renderer they exercise; re-testing a dependency's unit
+  behaviour here would be the duplication the package removed, in a new place. What is only
+  testable HERE: your kinds against your registries, every kind's `type` field resolving to its
+  own literal, byte-stability across two builds so the `--check` gate means something, and a
+  round trip through the shared reader so a format break fails in this repo rather than in
+  another one. The `--check` gate alone is never enough — it regenerates with the same code and
+  string-compares, so a bug in the deriver produces a wrong manifest that `--check` then blesses
+  forever, and the manifest is the one artifact whose consumer is ANOTHER REPOSITORY.
 - site/tests/registry-drift.test.ts — the registries and the corpus must agree BOTH ways. The
   schema already rejects a note carrying an unregistered value; this asserts the other direction,
   that nothing you AUTHORED is carried by zero notes — every tag under a facet's `values`, every
   facet, every reference `kind` you trimmed to. Scope it to the per-instance vocabularies: the
-  inherited rows (license-policy.yml, and reference_contract.yml's used_at/load/modes/evidence)
-  are deliberately complete, so unused ones there are inheritance, not drift. Dead vocabulary is
-  drift you otherwise only find by diffing two instances by hand.
+  INHERITED ones (the installed license-policy table, and the contract's used_at/load/modes/
+  evidence) are deliberately complete, so unused terms there are inheritance, not drift. The
+  exception is a group you NARROWED — narrowing makes it authored, so it rejoins this check.
+  Dead vocabulary is drift you otherwise only find by diffing two instances by hand.
+  Assert here too that the raw meta_tags.yml declares no facet key the format does not define.
+  The loader ignores unrecognized keys exactly as both hand-rolled ones did, so a re-added
+  `open: true` is a silent no-op and reading the ACCESSOR cannot catch it — one instance had this
+  test, phrased against the accessor, passing vacuously for months. Read the file.
   Keep this a WHOLE-CORPUS test; do NOT fold it into a validator that runs over an arbitrary
   directory. "Registered but carried by nothing" is only meaningful against every note at once —
   point the same check at a small fixture and almost the entire registry looks unused. (Learned
@@ -334,11 +494,23 @@ Keep composition optional and the individual Molds standalone.
 
 INHERITED vs. SUPPLIED
 
-Parts 2–4 are the substrate: the site/ Astro app, the one-schema-two-consumers frontmatter
-contract (types/ — its context.ts base envelope literally shared, its kind directories yours),
-the root registries (license-policy.yml is literally shared across instances; meta_tags.yml and
-kinds.generated.json share a FORMAT), the vitest validator, and the ci.yml/deploy.yml workflows.
-Re-standing these up is mechanical.
+Parts 2–4 are the substrate, and they now arrive in three grades rather than one:
+
+  INSTALLED   The five @galaxy-foundry packages. Not re-implemented, not copied, not mirrored —
+              a dependency. This is the license-policy table, the kind-manifest format and its
+              deriver, the four inherited reference vocabularies, the meta_tags.yml format, and
+              the [[Target]] grammar. Standing them up is `npm install` plus a composition point
+              per package, each keeping the signature your callers already use.
+  MECHANICAL  Re-stood-up rather than installed, because it is wiring rather than a format: the
+              site/ Astro app, the one-schema-two-consumers arrangement, the types/ directory
+              layout, the vitest validator, the ci.yml/deploy.yml workflows.
+  YOURS       The halves the packages deliberately decline. Which kinds exist and what each
+              requires; your facet vocabulary; your reference `kinds`; your link map; your
+              license COHERENCE rules; your base envelope, ported honestly.
+
+The middle grade is where the next packages come from. If you find yourself writing something in
+the MECHANICAL column for the second time in a second instance, that is the signal — and only the
+second time, never the first.
 
 Part 1 and Parts 5–8 are the domain — but even the vocabulary starts from a shared spine: the
 eight substrate terms in Part 1 are inherited from the pattern glossary, and only the domain
