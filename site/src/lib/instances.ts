@@ -12,13 +12,16 @@ import path from 'node:path';
 
 import { parseKindManifest } from '@galaxy-foundry/kind-manifest';
 import type { KindManifest, ManifestKind, ManifestSource } from '@galaxy-foundry/kind-manifest';
-import yaml from 'js-yaml';
+import { parseTagRegistry } from '@galaxy-foundry/tag-registry';
+import type { Facet, TagRegistryFile } from '@galaxy-foundry/tag-registry';
 
 const DATA_DIR = path.resolve('src/data/instances');
 
-// The manifest types are the instances' format, not ours — this file used to carry a fourth
-// hand-written copy of them, beside one in each instance and one in the prose spec.
+// Both formats are the instances', not ours. This file used to carry a hand-written copy of
+// each — a fourth copy of the manifest types, and a fifth encoding of the tag-registry shape
+// — beside one in each instance and one in the prose spec.
 export type { KindManifest, ManifestField, ManifestKind } from '@galaxy-foundry/kind-manifest';
+export type { Facet, TagRegistryFile } from '@galaxy-foundry/tag-registry';
 
 /**
  * A manifest as this site holds it: vendored, so it always carries a full source envelope.
@@ -30,17 +33,6 @@ export type { KindManifest, ManifestField, ManifestKind } from '@galaxy-foundry/
  */
 export interface VendoredManifest extends KindManifest {
   source: Required<ManifestSource>;
-}
-
-export interface Facet {
-  label: string;
-  description: string;
-  values?: Record<string, string>;
-}
-
-export interface TagRegistryFile {
-  version: number;
-  facets: Record<string, Facet>;
 }
 
 export interface Instance {
@@ -74,14 +66,27 @@ const INSTANCE_TITLES: Record<string, string> = {
   'statistical-genomics-foundry': 'Statistical Genomics Foundry',
 };
 
+/**
+ * Read one vendored tag registry, validating it against the shared format.
+ *
+ * Same reasoning as `loadManifest`: this is another repository's file, and both instances
+ * used to do `yaml.load(...) as TagRegistryFile` and meet a malformed registry as an
+ * `undefined` somewhere downstream. Parsing refuses a missing `facets` block, a facet with
+ * no label or description, a tag with no gloss, and — the one no single instance could
+ * catch — a tag two facets both declare, which would file it under one facet on the browse
+ * page while the other silently listed it too.
+ */
+function loadTags(slug: string): TagRegistryFile {
+  const file = path.join(DATA_DIR, slug, 'meta_tags.yml');
+  return parseTagRegistry(fs.readFileSync(file, 'utf8'), file);
+}
+
 export function loadInstances(): Instance[] {
   return Object.keys(INSTANCE_TITLES).map((slug) => ({
     slug,
     title: INSTANCE_TITLES[slug],
     manifest: loadManifest(slug),
-    tags: yaml.load(
-      fs.readFileSync(path.join(DATA_DIR, slug, 'meta_tags.yml'), 'utf8'),
-    ) as TagRegistryFile,
+    tags: loadTags(slug),
   }));
 }
 
