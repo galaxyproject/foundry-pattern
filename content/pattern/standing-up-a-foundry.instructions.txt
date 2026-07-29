@@ -63,17 +63,22 @@ REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal
 
 THE SHARED SUBSTRATE — INSTALL IT, DO NOT COPY IT
 
-Five pieces of a Foundry are not yours to author. Both existing instances wrote each of them
+Six pieces of a Foundry are not yours to author. Both existing instances wrote each of them
 independently, and comparing the results found the same thing twice in two different ways. Some
 were one file living in two places — the kind-manifest reader and deriver were character-for-
 character identical apart from quote style, test suites included; the license table differed only
-by a header telling you to mirror it. The others had DRIFTED while staying nominally the same:
-three byte-identical copies of `slugify` inside a single repo, each surrounded by different
-bracket-stripping and different resolution order. Both findings argue for the same fix. All five
-now ship from jmchilton/foundry-lib under the @galaxy-foundry scope, and an instance INSTALLS them:
+by a header telling you to mirror it; the kind CONTRACT itself agreed line for line down to the
+reasons in the comments, which is the strongest form this evidence takes — two authors reaching
+the same design AND the same justification for it. The others had DRIFTED while staying nominally
+the same: three byte-identical copies of `slugify` inside a single repo, each surrounded by
+different bracket-stripping and different resolution order. Both findings argue for the same fix.
+All six now ship from jmchilton/foundry-lib under the @galaxy-foundry scope, and an instance
+INSTALLS them:
 
   @galaxy-foundry/license-policy      ^0.1.1  the license → redistribution table + loader
   @galaxy-foundry/kind-manifest       ^0.2.1  the manifest format: reader + zod-shape deriver
+  @galaxy-foundry/kind-schema         ^0.3.0  the kind contract: what a kind IS, how one is
+                                              assembled, path→kind routing, the kind.md loader
   @galaxy-foundry/reference-contract  ^0.1.0  the four vocabularies every instance inherits
   @galaxy-foundry/tag-registry        ^0.1.0  the meta_tags.yml format and its accessors
   @galaxy-foundry/wiki-links          ^0.1.0  the [[Target]] grammar, resolver, remark transform
@@ -100,6 +105,17 @@ have either a dependency dictating your domain or a copy that drifts:
                       and how your registries resolve into the context they are built against —
                       no two instances do that the same way, which is why the package takes
                       BUILT SHAPES rather than a context.
+  kind-schema         Ships the CONTRACT and the machinery over it: `KindDefinition` (`build` plus
+                      optional `refine`, and nothing else), the `kindDefiner`/`defineKind` identity
+                      helper, `assemble` for one kind, `buildKindUnion` for a mixed corpus, the
+                      `manifestKinds` bridge into kind-manifest, path→kind routing
+                      (`./collections`), and the `kind.md` reader (`./docs`). Ships NO KINDS —
+                      and, less obviously, NO CONTEXT. The context is the SEAM: the two instances
+                      agree exactly on a kind's shape and disagree entirely on what a kind may
+                      DRAW FROM (one spreads a seven-field envelope and hands kinds a tag
+                      registry, the other spreads one field and hands kinds a license table), so
+                      `KindDefinition` is generic over it and you alias the parameter away once.
+                      Ships no collection TABLE either — that names your directories.
   reference-contract  Ships used_at / load / modes / evidence. You keep `kinds` — exactly the half
                       that varies by domain. Inherit the four whole: a term you have not used YET
                       is inheritance, not drift. The one exception is a term that is CAPACITY
@@ -132,7 +148,7 @@ files untouched. Re-export only a TYPE a caller must name to build an options ob
 re-exporting the package's whole API is a name list that drifts from the package's, and one more
 place to look.
 
-TWO THINGS THAT WILL BITE:
+THREE THINGS THAT WILL BITE:
 
 - Declare the dependency in the package that IMPORTS it — INCLUDING site/. A package resolving a
   shipped YAML asset relative to import.meta.url, reached only through a LINKED workspace package,
@@ -143,6 +159,13 @@ TWO THINGS THAT WILL BITE:
   hand-written field table this mechanism exists to prevent. The deriver must also read the SAME
   zod instance your schemas were built with: a duplicated zod in the tree renders every field
   `any`. Keep one zod, and keep it in range.
+- If your repo is a WORKSPACE, state ONE version of each package across every member. A range that
+  admits the current release does not mean the lockfile resolved it: one instance had two copies of
+  kind-schema installed at once — 0.3.0 where a `^0.3.0` range asked for it, 0.2.0 where an older
+  `^0.2.0` range let the lockfile keep what it already had — and the older copy simply had no
+  `./docs` subpath to import. Not a type error and not a version conflict; a module resolving to a
+  build that predates the export. Bump the ranges as a set, and check what is actually on disk
+  rather than what the ranges permit.
 
 THE RULE FOR WHAT MOVES THERE: a thing moves into the shared substrate once TWO instances have
 independently arrived at it — never because it looks like it should be shared. Abstracting from
@@ -171,7 +194,20 @@ that a note is well-formed.
   Set the body font to Atkinson-Hyperlegible — a human reader is one of the two audiences, so
   legibility is a substrate concern.
 - Declare routes in the page router site/src/pages/<collection>/[...slug].astro (+ index.astro
-  per collection). Recover any source→route mapping from the router, not a parallel table.
+  per collection), and name each route AFTER ITS COLLECTION KEY, so the key IS the route and
+  there is no mapping to keep. The collection table (Part 3) is then the only list of
+  collections in the repo, and everything that needs to know where a note lives — the Astro
+  loader, the validator walk, the drift checks, the wiki-link map — reads it.
+  "Recover the mapping from the router, not a parallel table" was the instruction here before,
+  and it was the wrong half of a true idea: ONE table is right, recovering it from the router is
+  not, because a router cannot tell you which files are notes. What happened instead is what
+  always happens — the second list got written anyway, in the module that needed it. One instance
+  carried a `{ dir, route }` list inside its wiki-link map builder: five rows where the table had
+  six. The missing row was `experiments`, which had a real `/experiments/<id>` page and twelve
+  notes, and resolved from no `[[link]]` at all. Nothing failed. The route existed, the notes
+  rendered, and every link into them silently did not. Pin the rule with a test asserting
+  `src/pages/<key>` exists for every key, and that every collection carrying notes reaches the
+  link map — the two halves that were free to disagree.
 - Add the shared UI once: site/src/layouts/Base.astro + site/src/components/{Header,Footer,
   SourceMeta,TagChips}.astro (SourceMeta surfaces provenance/license on every source note).
 - Resolve wiki-links ([[Target]]) with @galaxy-foundry/wiki-links, in BOTH the renderer and the
@@ -202,15 +238,18 @@ that a note is well-formed.
 - Dev: `npm run dev` (astro dev). Build: `astro build --force`.
 
 
-PART 3 — AUTHOR THE FRONTMATTER CONTRACT (ONE KIND PER DIRECTORY)
+PART 3 — AUTHOR THE KINDS (THE CONTRACT IS INSTALLED; ONE KIND PER DIRECTORY)
 
-Author the contract one time and let both the site build and the standalone validator import it.
-One encoding, two consumers — the schema is the sole authority on frontmatter shape. But author it
-as a DIRECTORY PER KIND, not one module holding every kind. A kind is a unit of meaning: it has a
+Author the kinds one time and let both the site build and the standalone validator import them.
+One encoding, two consumers — the schema is the sole authority on frontmatter shape. What a KIND IS
+is not yours to define: `@galaxy-foundry/kind-schema` ships the contract, the assembly, the routing
+and the doc reader. What you author is which kinds exist and what each requires. Author them as a
+DIRECTORY PER KIND, not one module holding every kind. A kind is a unit of meaning: it has a
 purpose, a required metadata set, and a worked example, and those three belong beside each other.
 
   types/
-    context.ts          the shared kind context — the base envelope + field primitives
+    context.ts          the shared kind context — the base envelope + field primitives, plus the
+                        one-time alias of the package's generic (below)
     index.ts            the barrel: the ONE enumeration of the kinds this instance defines
     <kind>/schema.ts    export const kind = defineKind({…})  (this kind's contract — NOT
                         annotated `: KindDefinition`; see "defend the inference" below)
@@ -220,25 +259,32 @@ purpose, a required metadata set, and a worked example, and those three belong b
 Adding a kind is adding a directory plus one barrel line. Nothing else is edited, and a reader who
 wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line union.
 
+- BIND THE CONTRACT TO YOUR CONTEXT ONCE, in types/context.ts, and your kind files never mention
+  the generic again:
+      export type KindDefinition<T extends KindShape = KindShape> =
+        LibKindDefinition<KindContext, T>;
+      export const defineKind = kindDefiner<KindContext>();
+  `kindDefiner` is curried because `defineKind` has to stay generic in the kind's SHAPE while
+  already fixed to your CONTEXT, and TypeScript gives no way to bind one type parameter of a
+  generic function and leave the other free at the call site. This is the whole adoption cost.
 - A kind directory exports a KIND DEFINITION, not a bare schema. The contract is `build` plus
-  `refine`, and NOTHING ELSE — both instances arrived here, from opposite directions:
-      type KindShape = { type: z.ZodTypeAny } & z.ZodRawShape;
-
+  `refine`, and NOTHING ELSE — both instances arrived there from opposite directions, which is why
+  it is now installed rather than restated:
       defineKind({
         kind: 'mold', title: 'Mold', layer: 'substrate' | 'instance', summary: '…',
-        build:   (ctx: KindContext) => ZodObject<S>,             // S extends KindShape
-        refine?: (data: z.infer<ZodObject<S>>, issues, ctx) => void,
+        build:   (ctx) => z.object({ type: z.literal('mold'), ...ctx.base, … }).strict(),
+        refine?: (data, issues, ctx) => void,
       })
-  Note the bound on the shape: `type` is REQUIRED to be in it. Every kind you write will declare
-  `type: z.literal(...)` anyway, but until the bound says so that is a convention some directories
-  happen to follow, not something a consumer can rely on — and it is what lets the kinds compose
-  into a `z.discriminatedUnion`. The bound exists only at compile time, so the test does too:
-  a kind with no `type:` under `@ts-expect-error` in a `.test-d.ts`, which FAILS THE TYPECHECK if
-  the bound is ever loosened back. Check it is non-vacuous — with a loose bound you should get
-  `ts(2578): Unused '@ts-expect-error' directive`. (vitest does not collect `.test-d.ts`; `astro
-  check` / root `tsc` does, so put it where CI already looks.) Add a runtime assertion per kind
-  too: the shape declares `type`, and the literal parses to THAT kind's name rather than merely
-  being present.
+  Two properties of the installed type are worth understanding before you are tempted to work
+  around them. The shape is BOUND to carry `type` (`{ type: z.ZodTypeAny } & z.ZodRawShape`):
+  every kind you write would declare `type: z.literal(...)` anyway, but until the bound says so
+  that is a convention some directories happen to follow rather than something a consumer can
+  rely on — and it is what lets the kinds compose into a `z.discriminatedUnion`. And there is
+  deliberately NO third slot for assembling an entry from anything but its own frontmatter (see
+  the no-`transform` rule below). The package holds both of those with its own type-level tests,
+  so you do not owe a `.test-d.ts` for the bound. What you DO still owe is a runtime assertion per
+  kind: the shape declares `type`, and the literal parses to THAT kind's name rather than merely
+  being present. Nothing in the type system checks that a kind named `mold` says `mold`.
   `kind` is the `type:` discriminator value — the sole note-kind discriminator, matching the
   directory name. `layer` records whether the kind is inherited substrate or something this
   domain added; it is what a cross-instance kind catalog groups by, so state it honestly.
@@ -269,7 +315,9 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   is idempotent (a second run writes zero files) and that `--check` is non-vacuous (edit one
   source field, confirm it names exactly the affected notes and leaves the rest alone).
   With `transform` gone the contract is `build` + `refine` in both instances — which is why the
-  discriminated union survives and the dispatcher was never needed.
+  discriminated union survives and the dispatcher was never needed, and why the installed
+  `KindDefinition` has no such slot to reach for. That is the rule being enforced by a dependency
+  rather than by your recollection of having read this paragraph.
 - TYPE `refine`'S `data` AS THE KIND'S OWN INFERRED FRONTMATTER. Not `Record<string, unknown>`,
   not `any`. This is not a style preference — an untyped `data` makes a validator rule SILENTLY
   DEAD, and there is no runtime signal. Every refine rule is conditional: it fires only when
@@ -307,9 +355,19 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   not actually track) is worse than an absent one — it manufactures provenance. Leave it out and
   let the kind catalog show the gap.
 - types/index.ts is a STATIC barrel — `import { kind as mold } from './mold/schema.js'`, one line
-  per kind, assembled into the discriminated union / collections map. Do NOT glob at runtime: the
-  contract must load identically under tsc-to-dist, under vitest, and inside Astro, and only static
-  imports do all three. Keep it honest with a drift test (Part 4) rather than with cleverness.
+  per kind, collected into `export const KINDS = [mold, pattern, …] as const`. Do NOT glob at
+  runtime: the contract must load identically under tsc-to-dist, under vitest, and inside Astro,
+  and only static imports do all three. Keep it honest with a drift test (Part 4) rather than with
+  cleverness.
+  `as const` is not tidiness — it is load-bearing, and this is the one place a new instance is
+  most likely to lose the inference without any error to show for it. Assembly comes from the
+  package in two forms and you may need only one: `assemble(definition, ctx)` gives ONE kind's
+  schema, which is what a per-collection loader wants; `buildKindUnion(KINDS, ctx)` gives every
+  kind in one schema dispatching on `type`, for a validator walking a mixed corpus that cannot
+  know a note's kind before reading it. `buildKindUnion` is generic over the kind LIST, so it
+  recovers each member's type from the tuple you hand it. Hand it a widened
+  `readonly AnyKindDefinition<Ctx>[]` instead and validation still behaves identically while the
+  output type degrades to `any` — every field access compiling and yielding nothing.
 - DEFEND THE INFERENCE, and budget real time for it — this was the expensive part of the split in
   BOTH instances, and every symptom appears far from its cause. Splitting a schema across files
   puts type annotations where there were none, and every annotation you write here is a chance to
@@ -323,19 +381,52 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
     * Do not type a shared field group as `ZodRawShape` (or a kind list as `KindDefinition[]`).
       An index signature erases every field a kind spreads in. Use `typeof theActualConst`.
     * Do not build the kinds map by MAPPING over the kind list. `.map` produces a homogeneous
-      array and collapses every kind to the widest common type; write the entries out by name.
+      array and collapses every kind to the widest common type; write the entries out by name,
+      and keep the LIST a tuple (`as const`) for the same reason.
   Run the SITE's type check, not just the schema's — and know that A CLEAN TYPE CHECK DOES NOT
-  PROVE THE INFERENCE SURVIVED. If `entry.data` has degraded to `any`, that is also zero errors;
-  worse, a site that already casts `entry.data as any` anywhere cannot catch it either. Both
-  failure modes report the same thing, so measure instead of trusting the exit code: add a
-  temporary probe accessing a field that does not exist, and read the error. It must name the
-  fields of EVERY kind — the full union, enumerated — and a real field must come back with its
-  actual type rather than `any`. Delete the probe afterwards. Do this once after the split and
-  once after any change to the barrel, the map, or a shared field group.
-- Astro's site/src/content.config.ts stays a thin consumer: it spreads the assembled map into
-  defineCollection() calls and adds the glob loaders — nothing else. Collection and kind are NOT
-  required to be one-to-one; a collection is a LOCATION (its own browse route), a kind is what a
-  note IS. Where they differ, keep the location → kind mapping explicit in one place.
+  PROVE THE INFERENCE SURVIVED. How loudly a widening lands varies enough that no instance should
+  take its own exit code for a proof; measured across the two, widening a kind to the DEFAULT shape
+  costs 1 `astro check` error in one instance and fails the schema package's build outright in the
+  other, while widening to an `any` shape costs 8 errors in one and NONE AT ALL in the other —
+  because an `any` satisfies every field access rather than failing one. A site that already casts
+  `entry.data as any` anywhere cannot catch it either. Zero errors is what both success and total
+  erasure look like.
+  So do not hold this with a typecheck, and do not hold it with a probe you delete. Diagnose with
+  the probe — access a field that does not exist and read the error: it must name the fields of
+  EVERY kind, the full union enumerated, and a real field must come back with its actual type
+  rather than `any` — then COMMIT the check in a `.test-d.ts` that asserts the same thing
+  permanently: the discriminator is assignable, narrowing on `type` reaches an arm-specific field,
+  a field NO kind declares fails under `@ts-expect-error`, and an arm-specific field fails
+  UNNARROWED. One instance carried three comments claiming its `astro check` caught this; measured,
+  it caught none of the two hazards, and the type-level test was what actually held. Re-verify by
+  deliberately re-widening the kind list and confirming the file goes red.
+- ONE COLLECTION TABLE, and everything that needs to know where a note lives reads it. A row is
+  `{ base, pattern, kind }` — typed `as const satisfies Record<string, CollectionRoute>` against
+  `@galaxy-foundry/kind-schema/collections`, with your schema hung off the same row:
+      export const COLLECTIONS = {
+        molds:          { base: 'content/molds', pattern: ['**/index.md'], kind: 'mold',        … },
+        'cli-tools':    { base: 'content/cli',   pattern: ['*/index.md'],  kind: 'cli-tool',    … },
+        'cli-commands': { base: 'content/cli',   pattern: ['*/*.md', '!*/index.md'],
+                                                                          kind: 'cli-command', … },
+      } as const satisfies Record<string, CollectionRoute & { kind: NoteKind; schema: unknown }>;
+  Collection and kind are NOT required to be one-to-one; a collection is a LOCATION (its own browse
+  route), a kind is what a note IS. Both non-1:1 cases are real and both instances have one: one
+  directory holding two kinds (`cli/<tool>/index.md` is a cli-tool, `cli/<tool>/<cmd>.md` is a
+  cli-command — note the `!`-exclusion that keeps them disjoint), and two collections resolving to
+  one kind (a browse route that wants its own URL without inventing a kind for it).
+  Astro's site/src/content.config.ts then stays a thin consumer: it walks the table into
+  defineCollection() calls with a glob loader per row, and nothing else. Every OTHER consumer —
+  the validator's corpus walk, the registry-drift check, the wiki-link map — matches against the
+  same rows with the package's `matchesCollection` / `collectionOf` / `kindOf`, rather than
+  hand-rolling `**/index.md` a fourth time. One instance had exactly four hand-rolled copies of
+  that selector, two of them character-identical `walkIndexFiles` helpers in adjacent test files.
+  Two things to get right. `base` is matched as a PLAIN PREFIX of the paths you pass in, so the
+  frame is yours to pick — repo-relative, project-relative, absolute — but it must be the SAME
+  frame as the paths and the same frame for EVERY row, or a collection silently claims nothing.
+  Pick the frame the table is naturally written in and give it a name (`contentPath(rel)`), so a
+  caller cannot half-convert. And assert your table PARTITIONS the corpus: `collectionOf` returns
+  the first match in table order, so two rows claiming one path is a table bug that order merely
+  hides — `collectionsClaiming` exists to write that test with.
 - Encode cross-field rules as zod `.superRefine(...)` raising a specific, path-anchored issue,
   never as prose in a README, and never a second time in the validator. Real examples: an on-demand
   reference requires a `trigger`; a hypothesis-evidence reference requires a `verification`; a note
@@ -356,10 +447,34 @@ Emit a KIND MANIFEST — types/kinds.generated.json, committed, regenerated by a
                    "fields": [ { "name": "tags", "required": true, "type": "string[]" }, … ] } ] }
 
 The FORMAT, the reader, and the zod-shape deriver come from @galaxy-foundry/kind-manifest — do not
-re-encode them. What you write is the composition: which kinds exist, and how your registries
-resolve into the context they are built against. Keep your `buildKindManifest({ instance, docs,
-...registries })` signature over the package's `deriveKindManifest`, so nothing downstream cares
-that the derivation moved.
+re-encode them. The BRIDGE between the two comes from kind-schema:
+
+    buildKindManifest({
+      instance: '<slug>',
+      source: MANIFEST_SOURCE,                                  // yours: repo + path
+      kinds: manifestKinds(KINDS, ctx, loadKindDocs(KINDS, 'src/types')),
+    });
+
+`manifestKinds` lives in kind-schema rather than kind-manifest because kind-manifest describes a
+kind it is HANDED and must not learn what a `KindDefinition` is — its reader half has a consumer
+that only ever reads manifests other Foundries produced and never defines a kind. kind-schema knows
+both sides. Without it each instance writes the same five-line map, and both of them did, identical
+down to the `doc` spread.
+
+`loadKindDocs` (from `@galaxy-foundry/kind-schema/docs`) reads `<typesDir>/<kind>/kind.md` for every
+kind in the list and TRIMS each body — trimmed because your `--check` gate byte-compares the
+manifest, and a trailing newline that varies by editor would fail it on whitespace. It is driven by
+the kind LIST rather than by a directory listing, so a kind with no `kind.md` is an error naming
+itself and an unrelated directory under `types/` is not mistaken for a kind. It THROWS rather than
+exiting: whether that means exit 1 is your command's call. This is a separate entry point because
+it is the only part of kind-schema that touches a filesystem — everything else imports nothing from
+`node:`, which is what lets your site pull `KindDefinition` into browser code without dragging `fs`
+in behind it.
+
+What is left for you to write is the composition: which kinds exist, and how your registries resolve
+into the context they are built against. Keep your own `buildKindManifest({ instance, docs,
+...registries })` signature over the package calls, so nothing downstream cares that the derivation
+moved.
 
 `fields` is DERIVED from the zod shape — walked, with optionality read off the schema — never
 hand-written. A hand-written required-metadata list is a second encoding and it drifts the first
@@ -430,8 +545,11 @@ formats, the loaders and the inherited vocabularies are installed (see "The shar
 Validator — vitest, one command, running the SAME schema the build uses:
 
 - package.json scripts: "test": "vitest run" and alias "validate": "vitest run".
-- site/tests/corpus-conformance.test.ts — walk every content/**/index.md, parse against its
-  COLLECTIONS schema. The second consumer that makes "one schema, two consumers" real.
+- site/tests/corpus-conformance.test.ts — walk the corpus THROUGH THE COLLECTION TABLE (Part 3),
+  parsing each note against its row's schema. The second consumer that makes "one schema, two
+  consumers" real. Walk it with the table's own matcher rather than a local `**/index.md` glob:
+  a walk that selects differently from the loader is a set of notes the site validates and the
+  validator does not, or the reverse, and neither surfaces as a failure.
 - site/tests/frontmatter-schema.test.ts — a negative-fixture table: each broken frontmatter
   asserts the SPECIFIC issue path+message it must raise, with a positive baseline per type. A
   rule with no negative fixture is a rule you are only hoping is enforced.
@@ -442,18 +560,26 @@ Validator — vitest, one command, running the SAME schema the build uses:
   both exist; and example.md's frontmatter PARSES AGAINST THAT KIND'S OWN SCHEMA. That last one is
   what keeps the documentation executable — an example that stopped validating is a kind whose docs
   now lie, and it is the cheapest positive baseline per kind you will ever get.
+  (A missing kind.md is already fatal to manifest generation, since `loadKindDocs` is driven by the
+  kind list and names the kind it cannot read. Keeping the assertion here anyway costs one line and
+  fails in the suite rather than in a generator, but example.md and the two directions of the barrel
+  are what only this test holds.)
   Assert the walk found kinds at all, so a path change cannot turn the whole check vacuous.
   Assert also that every kind SPREADS THE BASE ENVELOPE. A kind that spreads only a field
   GROUP (the shared source-note fields, say) and skips `...ctx.base` passes every other check
   and silently misses the next field added to the envelope — one instance shipped exactly that,
   hidden because the group happened to carry a copy of the one envelope field.
-- site/tests/*.test-d.ts — the TYPE-LEVEL guards from Part 3: a kind missing `type:` and a typo'd
-  literal in a `refine`, each under `@ts-expect-error`. These prove rules that have no runtime
-  behaviour to assert, so nothing else can hold them. Two things to get right: vitest does NOT
-  collect `.test-d.ts`, so they run under `npm run typecheck` and are worth nothing if your
-  tsconfig excludes them — confirm the typecheck actually fails when you delete a directive; and
-  put the directive where TypeScript reports the error, which for a kind definition is on the
-  `build:` property rather than above the `defineKind(` call.
+- site/tests/*.test-d.ts — the TYPE-LEVEL guards from Part 3. Two, now that the shape bound is the
+  package's to hold: the assembled UNION (discriminator assignable, narrowing on `type` reaching an
+  arm-specific field, a field no kind declares failing, an arm-specific field failing unnarrowed),
+  and a typo'd literal in a `refine`. Each negative case under `@ts-expect-error`. These prove rules
+  that have no runtime behaviour to assert, so nothing else can hold them — and as Part 3 says, the
+  site typecheck provably does not. Three things to get right: vitest does NOT collect `.test-d.ts`,
+  so they run under `npm run typecheck` and are worth nothing if your tsconfig excludes them —
+  confirm the typecheck actually fails when you delete a directive; put the directive where
+  TypeScript reports the error, which for a kind definition is on the `build:` property rather than
+  above the `defineKind(` call; and verify non-vacuity by the widening itself, not by deleting a
+  line — re-widen the kind list to `AnyKindDefinition[]` and confirm the file goes red.
 - site/tests/kind-manifest.test.ts — an INTEGRATION test, not a unit suite. The synthetic-shape
   cases (does the deriver unwrap a defaulted array, is a refined string still `string`) live in
   @galaxy-foundry/kind-manifest with the renderer they exercise; re-testing a dependency's unit
@@ -467,7 +593,11 @@ Validator — vitest, one command, running the SAME schema the build uses:
 - site/tests/registry-drift.test.ts — the registries and the corpus must agree BOTH ways. The
   schema already rejects a note carrying an unregistered value; this asserts the other direction,
   that nothing you AUTHORED is carried by zero notes — every tag under a facet's `values`, every
-  facet, every reference `kind` you trimmed to. Scope it to the per-instance vocabularies: the
+  facet, every reference `kind` you trimmed to, every kind in the barrel. Assert the converse for
+  kinds too, against the collection table: every kind must have somewhere to PUT notes. A kind no
+  collection routes to is UNAUTHORABLE — its schema can never run, so "declared by zero notes" is
+  the only thing that would ever notice, and it reports the symptom rather than the cause.
+  Scope it to the per-instance vocabularies: the
   INHERITED ones (the installed license-policy table, and the contract's used_at/load/modes/
   evidence) are deliberately complete, so unused terms there are inheritance, not drift. The
   exception is a group you NARROWED — narrowing makes it authored, so it rejoins this check.
@@ -515,7 +645,12 @@ The real asset is what the Foundry knows. Bring the sources before building mach
 - Synced multi-chapter source: scripts/sync-book.sh reads content/research/books/<id>/manifest.tsv
   (<num>TAB<url>), fetches into a gitignored raw/, pins SHA256SUMS. Redistribute NO source text —
   only manifest + pin (provenance) and your derived summary. Book-invariant metadata (license/
-  attribution/derived) lives ONCE in a co-located book.yml, merged into each chapter at load.
+  attribution/derived) lives ONCE in a co-located book.yml and is COPIED INTO each chapter's
+  frontmatter by a generator with a `--check` mode, never merged in at load — this is the
+  no-`transform` rule of Part 3, and this is the exact kind that taught it. book.yml stays the only
+  place to edit; the generated block is overwritten; `--check` regenerates and compares in CI. The
+  chapter then validates from its own frontmatter like every other note, and its manifest row lists
+  the ten fields it carries rather than the six it declared.
 
 
 PART 6 — IDENTIFY THE ACTIONS AND AUTHOR THE MOLDS
@@ -561,11 +696,12 @@ INHERITED vs. SUPPLIED
 
 Parts 2–4 are the substrate, and they now arrive in three grades rather than one:
 
-  INSTALLED   The five @galaxy-foundry packages. Not re-implemented, not copied, not mirrored —
+  INSTALLED   The six @galaxy-foundry packages. Not re-implemented, not copied, not mirrored —
               a dependency. This is the license-policy table, the kind-manifest format and its
-              deriver, the four inherited reference vocabularies, the meta_tags.yml format, and
-              the [[Target]] grammar. Standing them up is `npm install` plus a composition point
-              per package, each keeping the signature your callers already use.
+              deriver, the kind CONTRACT and its assembly and routing, the four inherited
+              reference vocabularies, the meta_tags.yml format, and the [[Target]] grammar.
+              Standing them up is `npm install` plus a composition point per package, each keeping
+              the signature your callers already use.
   MECHANICAL  Re-stood-up rather than installed, because it is wiring rather than a format: the
               site/ Astro app, the one-schema-two-consumers arrangement, the types/ directory
               layout, the vitest validator, the ci.yml/deploy.yml workflows.
