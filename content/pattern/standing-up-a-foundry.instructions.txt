@@ -23,16 +23,27 @@ Pin it first, in one glossary: content/meta/glossary.md (a loose doc, outside ev
 base, rendered by Part 2's render-vault-doc helper) that the rest of the corpus answers to.
 
 - Bootstrap it with the SHARED SUBSTRATE TERMS before coining a single domain term. Every
-  Foundry glossary carries these eleven, inherited from the pattern glossary (the authority —
+  Foundry glossary carries these eight, inherited from the pattern glossary (the authority —
   copy its definitions, do not re-invent them):
-      Knowledge Base (KB), Note, Kind, Companion, Mold, Reference, Cast, Casting,
-      Skill artifact, Target, Provenance.
+      Knowledge Base (KB), Mold, Reference, Cast, Casting, Skill artifact, Target, Provenance.
   Use these EXACT headwords so a term means the same thing in every instance.
-  Note / Kind / Companion are the LAYOUT vocabulary and they define each other in that order —
-  a note declares a kind, a kind fixes whether its notes are files or directories, and only a
-  directory-shaped kind can have companions. Pin all three or none: `companion` used before
-  `note` is pinned means "some file near another file", which is what the word meant in both
-  instances for a year, in four mechanisms that disagreed.
+- THEN the STACK terms — a second inherited tier, and the one an instance is most likely to get
+  wrong by re-coining. Adopting this checklist's stack means adopting its vocabulary for how a
+  corpus is typed and laid out, pinned in the pattern site's Astro-Stack Glossary:
+      Note, Kind, Shape, Companion, Collection, Kind context, Kind manifest, Tag/Facet.
+  THREE TIERS, and keep them scoped apart in your glossary exactly as you keep your domain terms
+  apart from both: the pattern's terms hold for a Foundry on ANY stack, the stack's terms hold
+  for the ones sharing this one, and yours hold for you. Hoisting a stack term into the pattern
+  tier is the same error as hoisting your domain jargon into either — it makes the pattern look
+  like it demands a decision it does not.
+  Note / Kind / Companion define each other in that order — a note declares a kind, a kind fixes
+  whether its notes are files or directories, and only a directory-shaped kind can have
+  companions. Pin all three or none: `companion` used before `note` is pinned means "some file
+  near another file", which is what the word meant in both instances for a year, across four
+  mechanisms that disagreed.
+  One collision to resolve out loud rather than inherit: `kind` names BOTH a note's kind and a
+  reference's kind, and both are closed vocabularies you will write down. Say which you mean
+  wherever both are in scope; the two current instances both have pages where they are not.
 - THEN coin the domain terms, corpus-first — add a term when a Mold actually needs it, not
   before.
 - One authoritative sentence per term: abstract meaning first, a brief (e.g. …) where it has a
@@ -818,6 +829,7 @@ the MECHANICAL column for the second time in a second instance, that is the sign
 second time, never the first.
 
 Part 1 and Parts 5–8 are the domain — but even the vocabulary starts from a shared spine: the
-eleven substrate terms in Part 1 are inherited from the pattern glossary, and only the domain
+eight substrate terms in Part 1 are inherited from the pattern glossary and the eight stack terms
+from the Astro-Stack Glossary, and only the domain
 terms beyond them, the corpus, the Molds, and the external check that defines what "correct"
 means here are yours to supply. That last one is the part no other instance can hand you.

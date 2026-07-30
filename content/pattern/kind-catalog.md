@@ -2,7 +2,7 @@
 title: Kind Catalog
 description: Every content kind both Foundries define, with each kind's required metadata generated from that instance's own schemas — substrate kinds side by side, instance-specific kinds apart.
 section: pattern
-order: 8
+order: 9
 catalog: kinds
 ---
 
@@ -63,7 +63,8 @@ arrived beside Molds in *both* Foundries, and neither took them from the other.
 Kinds can now say this out loud. A kind declares its **shape** — whether its notes are flat files
 or directories — and its **companions**, the non-note files belonging beside a directory-shaped
 note, each with a requirement level and a disposition saying whether casting may carry it into an
-artifact. Both terms are pinned in the [[glossary]] and specified in Part 3 of the
+artifact. Both terms are pinned in the [[astro-stack-glossary]] — they belong to this stack rather
+than to the pattern — and specified in Part 3 of the
 [[standing-up-a-foundry|Astro-stack worked example]].
 
 Two things that declaration makes visible for the first time:

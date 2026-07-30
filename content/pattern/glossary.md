@@ -2,7 +2,7 @@
 title: Glossary
 description: Canonical definitions for the Foundry Pattern's vocabulary — the invariant substrate, casting and provenance, the per-domain extension surface, and the source-vs-package distinction.
 section: pattern
-order: 10
+order: 11
 ---
 
 # Glossary
@@ -10,6 +10,8 @@ order: 10
 Pinned definitions for the abstract pattern. These are the terms every page on this site uses; where a term has a concrete realization in one of the instances, the abstract definition comes first and a brief `(e.g. …)` pointer follows. If two pages disagree, this file wins.
 
 For *why* a Foundry KB keeps a glossary at all, see [[the-model]]; for *how* to build one, see [[setting-up-a-foundry]]. This page is that glossary for the pattern's own vocabulary.
+
+**Scope.** Only terms that hold for a Foundry built on *any* stack are pinned here. Vocabulary describing how a corpus is typed, shaped, and laid out on disk belongs to an implementation, not to the pattern, and is pinned separately in the [[astro-stack-glossary]] — including `note`, `kind`, and `companion`. If you came looking for one of those, that is the page.
 
 Grouped by theme.
 
@@ -27,13 +29,7 @@ Grouped by theme.
 
 **Mold** — the unit of the KB: an abstract, typed *reference manifest* describing one action. Its frontmatter declares the references it depends on (other KB pages, schemas, CLI manual pages, prompts, examples); its body is a procedural skeleton tying them together. Molds are abstract source artifacts, independent of any agent runtime.
 
-**Reference** — a typed dependency a Mold declares. The *kind* discriminator controls how casting treats it, so resolving references is per-kind dispatch, not "follow every link the same way." Common kinds: `pattern` (LLM-condensed prose), `schema` (copied verbatim), `cli-command` (cast to a structured sidecar), `prompt` (inlined), `example` (copied), `eval` (Foundry-only, never packaged).
-
-**Note** — the unit of the corpus: one authored entry that declares its kind in frontmatter and validates against that kind's schema. A Mold is one kind of note; a paper summary, a pattern, a tutorial are others. A note is either a flat file or a directory whose `index.md` *is* the note — which of the two is a property of its kind, not of the individual note.
-
-**Kind** — the `type:` discriminator a note declares, together with the one schema that validates it. The kind decides what metadata is required, what casting may assume, and what the site can render, so it is what makes a corpus machine-readable rather than a pile of Markdown. A kind declares three things beyond its frontmatter schema: its **shape** (`file` or `directory`), its companions, and its `layer` — `substrate` if the pattern supplied it, `instance` if the domain added it. The [[kind-catalog]] tests that last claim against both instances rather than accepting it.
-
-**Companion** — a non-note file in a directory-shaped note's directory, declared once by the **kind** rather than repeatedly by each note (e.g. `eval.md` beside a Mold; `guidance.md` beside a summarized paper). Three consequences worth stating outright: only directory-shaped kinds have companions; a sibling that is itself a note is never one (a `cli-command` beside a `cli-tool` is a note, not a companion); and a companion describes **layout** only — a file a note actually *depends* on is a Reference instead. Each declaration carries a requirement level (`required` / `recommended` / `optional`) and a **disposition** — whether casting may carry the file into a skill artifact (`foundry-only`, `cast-input`, `bundled`).
+**Reference** — a typed dependency a Mold declares. The *kind* discriminator controls how casting treats it, so resolving references is per-kind dispatch, not "follow every link the same way." (A **reference** kind, which is not the same vocabulary as the **note** kinds in the [[astro-stack-glossary]]; the two words collide and the pages that use both should say which they mean.) Common kinds: `pattern` (LLM-condensed prose), `schema` (copied verbatim), `cli-command` (cast to a structured sidecar), `prompt` (inlined), `example` (copied), `eval` (Foundry-only, never packaged).
 
 ## Compilation
 
