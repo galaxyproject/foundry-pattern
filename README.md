@@ -49,14 +49,14 @@ content/
   blog/            ← evidence, experiments, and anything dated
     2026-06-blind-regeneration.md     ★ flagship experiment
     2026-05-landscape-snapshot.md
-site/              ← Astro app (to be scaffolded)
+site/              ← Astro app
 ```
 
 ## Status
 
 Drafted and standing. 14 content pages across the four sections, plus a working
 Astro site (`site/`) — wiki-link resolution, prev/next, and Pagefind full-text
-search; `npm run build` and `npm run typecheck` are clean. See `docs/SITEMAP.md`
+search; `npm test`, `npm run build` and `npm run typecheck` are clean. See `docs/SITEMAP.md`
 for the information architecture and `docs/CANON.md` for the authoring contract.
 
 Hosted on GitHub Pages at
@@ -68,6 +68,7 @@ content schema/validator akin to the instances' `meta_schema`.
 cd site
 npm install
 npm run dev      # dev server (search needs a build)
+npm test         # the catalog's cross-instance claims, against the vendored manifests
 npm run build    # static build + Pagefind index
 npm run preview  # serve the build, search included
 ```

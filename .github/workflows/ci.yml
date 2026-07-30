@@ -22,6 +22,10 @@ jobs:
           cache: npm
           cache-dependency-path: site/package-lock.json
       - run: npm ci
+      # The catalog's cross-instance claims — which kinds are substrate, which companions
+      # transferred, where the layouts diverge. Everything below this line would pass with all
+      # of them wrong, since a wrong answer still typechecks, still links, and still builds.
+      - run: npm test
       - run: npm run typecheck
       # Every [[Target]] must resolve. `build` runs this too, via prebuild — running it first
       # means a broken link reports as a broken link rather than as a failed build.
