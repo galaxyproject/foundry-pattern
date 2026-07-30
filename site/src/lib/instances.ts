@@ -11,7 +11,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { parseKindManifest } from '@galaxy-foundry/kind-manifest';
-import type { KindManifest, ManifestKind, ManifestSource } from '@galaxy-foundry/kind-manifest';
+import type {
+  Companion,
+  KindManifest,
+  ManifestKind,
+  ManifestSource,
+} from '@galaxy-foundry/kind-manifest';
 import { parseTagRegistry } from '@galaxy-foundry/tag-registry';
 import type { Facet, TagRegistryFile } from '@galaxy-foundry/tag-registry';
 
@@ -20,7 +25,13 @@ const DATA_DIR = path.resolve('src/data/instances');
 // Both formats are the instances', not ours. This file used to carry a hand-written copy of
 // each — a fourth copy of the manifest types, and a fifth encoding of the tag-registry shape
 // — beside one in each instance and one in the prose spec.
-export type { KindManifest, ManifestField, ManifestKind } from '@galaxy-foundry/kind-manifest';
+export type {
+  Companion,
+  KindManifest,
+  ManifestField,
+  ManifestKind,
+  NoteShape,
+} from '@galaxy-foundry/kind-manifest';
 export type { Facet, TagRegistryFile } from '@galaxy-foundry/tag-registry';
 
 /**
@@ -160,6 +171,77 @@ export const tagCount = (instance: Instance): number =>
     (n, f) => n + Object.keys(f.values ?? {}).length,
     0,
   );
+
+/** One companion filename, and what each instance declaring the kind says about it. */
+export interface CompanionRow {
+  file: string;
+  /** Per-instance declaration, absent where that instance does not declare this companion. */
+  by: Record<string, Companion | undefined>;
+  /** Declared by EVERY instance that declares the kind. */
+  shared: boolean;
+  /**
+   * Shared, and every declaring instance agrees on requirement AND disposition.
+   *
+   * Kept apart from `shared` because they are different claims. `guidance.md` is `required` for
+   * a paper and `optional` for a book chapter in the same instance; two instances splitting that
+   * way on one kind would be a real difference, and a table that reported only the filename
+   * would render it as a match.
+   */
+  identical: boolean;
+}
+
+/**
+ * One row per distinct companion across the instances declaring the kind, shared first.
+ *
+ * Same discipline as `kindRows`: shared is COMPUTED. A companion arriving in both foundries is
+ * the strongest transfer evidence this site has — a layout is not something you copy without
+ * also copying the practice that produced it — so it is worth exactly as much as the derivation
+ * behind it, and no more.
+ */
+export function companionRows(row: KindRow): CompanionRow[] {
+  const declaring = row.present.filter((i) => row.by[i.slug]!.shape === 'directory');
+  const files = [
+    ...new Set(declaring.flatMap((i) => (row.by[i.slug]!.companions ?? []).map((c) => c.file))),
+  ];
+  const rows = files.map((file) => {
+    const by: Record<string, Companion | undefined> = {};
+    for (const instance of declaring) {
+      by[instance.slug] = (row.by[instance.slug]!.companions ?? []).find((c) => c.file === file);
+    }
+    const declared = declaring.map((i) => by[i.slug]).filter((c): c is Companion => Boolean(c));
+    const shared = declared.length === declaring.length && declaring.length > 1;
+    return {
+      file,
+      by,
+      shared,
+      identical:
+        shared &&
+        declared.every(
+          (c) =>
+            c.requirement === declared[0].requirement && c.disposition === declared[0].disposition,
+        ),
+    };
+  });
+  return rows.sort(
+    (a, b) => Number(b.shared) - Number(a.shared) || a.file.localeCompare(b.file),
+  );
+}
+
+/**
+ * Kinds whose notes are flat files in one instance and directories in another.
+ *
+ * Instances that declare no shape at all are skipped rather than counted as a third value: an
+ * older manifest is silent, not different, and reporting silence as disagreement would put a
+ * kind on this list for the one reason that says nothing about the kind.
+ */
+export function shapeDifferences(rows: KindRow[]): string[] {
+  return rows
+    .filter(
+      (row) =>
+        new Set(row.present.map((i) => row.by[i.slug]!.shape).filter(Boolean)).size > 1,
+    )
+    .map((row) => row.kind);
+}
 
 /** Fields required by EVERY instance that declares the kind — the kind's shared envelope. */
 export function sharedRequiredFields(row: KindRow): string[] {

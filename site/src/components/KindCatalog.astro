@@ -1,23 +1,36 @@
 ---
 import {
+  companionRows,
   loadInstances,
   kindRows,
   layerDisagreements,
   sharedRequiredFields,
+  shapeDifferences,
 } from "../lib/instances";
+import type { ManifestKind } from "../lib/instances";
 
 const instances = loadInstances();
 const rows = kindRows(instances);
 const shared = rows.filter((r) => r.shared);
 const local = rows.filter((r) => !r.shared);
 const disagreements = layerDisagreements(rows);
+const differingShapes = shapeDifferences(rows);
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+// A directory kind that enumerates nothing is not the same as one that declares undeclared
+// files legitimate. Both would render as an absent companion table, so `allow` is said out loud.
+const openSet = (kind: ManifestKind) => kind.additionalCompanions === "allow";
 ---
 <div class="not-prose mt-8">
   <div class="rounded-lg border p-4 text-sm" style="border-color: var(--rule); background: var(--graphite)">
     <strong>Generated</strong> from each instance's own schemas. Every required-metadata table
     below is derived from that instance's zod definitions, not transcribed — so a kind that
-    changes upstream changes here, and cannot quietly disagree.
+    changes upstream changes here, and cannot quietly disagree. A kind also declares its
+    <strong>shape</strong> and its <strong>companions</strong>: each companion carries a
+    requirement level (<code>required</code> / <code>recommended</code> / <code>optional</code>)
+    and a disposition saying where it may travel — <code>foundry-only</code> never leaves the
+    Foundry, <code>cast-input</code> is read while casting but not shipped,
+    <code>bundled</code> is carried into the artifact.
     <ul class="mt-2 space-y-0.5" style="color: var(--muted)">
       {instances.map((i) => (
         <li>
@@ -34,6 +47,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       <strong style="color: var(--ember)">Drift:</strong> {disagreements.join(", ")} —
       declared <code>layer: substrate</code> by an instance, but not declared by every
       instance. The table below reflects what the instances actually declare.
+    </p>
+  )}
+
+  {differingShapes.length > 0 && (
+    <p class="mt-4 rounded-lg border p-4 text-sm" style="border-color: var(--rule); color: var(--muted)">
+      <strong style="color: var(--ink)">Same kind, different shape:</strong>{" "}
+      {differingShapes.join(", ")} — a flat file in one instance, a directory in the other. Not
+      drift, and not smoothed over: the two are the same kind carrying the same required
+      metadata, laid out differently because one domain needed files beside the note and the
+      other did not. Before kinds declared a shape this difference lived inside each instance's
+      collection glob and reached no manifest, so this page could not have reported it.
     </p>
   )}
 
@@ -54,7 +78,25 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       <dl class="mt-3 space-y-3 text-sm">
         {row.present.map((i) => (
           <div>
-            <dt class="font-semibold">{i.title}</dt>
+            <dt class="font-semibold">
+              {i.title}
+              {row.by[i.slug]!.shape && (
+                <span
+                  class="ml-2 rounded px-1.5 py-0.5 text-xs font-normal"
+                  style="background: var(--graphite); color: var(--muted)"
+                >
+                  {row.by[i.slug]!.shape}
+                </span>
+              )}
+              {openSet(row.by[i.slug]!) && (
+                <span
+                  class="ml-1 rounded px-1.5 py-0.5 text-xs font-normal"
+                  style="background: var(--graphite); color: var(--glow)"
+                >
+                  open companion set
+                </span>
+              )}
+            </dt>
             <dd class="mt-0.5" style="color: var(--muted)">{row.by[i.slug]!.summary}</dd>
             <dd class="mt-1">
               <span style="color: var(--muted)">requires</span>{" "}
@@ -70,6 +112,54 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
           <strong>Required by both:</strong>{" "}
           {sharedRequiredFields(row).map((f) => <code class="mr-1">{f}</code>)}
         </p>
+      )}
+      {companionRows(row).length > 0 && (
+        <div class="mt-3 border-t pt-3" style="border-color: var(--rule)">
+          <p class="text-sm"><strong>Companions</strong></p>
+          <div class="mt-2 overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr style="color: var(--muted)">
+                  <th class="pb-1 pr-4 font-normal">file</th>
+                  {row.present.map((i) => (
+                    <th class="pb-1 pr-4 font-normal">{i.title}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {companionRows(row).map((companion) => (
+                  <tr class="border-t align-top" style="border-color: var(--rule)">
+                    <td class="py-1.5 pr-4">
+                      <code style={companion.identical ? "color: var(--glow)" : undefined}>
+                        {companion.file}
+                      </code>
+                    </td>
+                    {row.present.map((i) => (
+                      <td class="py-1.5 pr-4">
+                        {companion.by[i.slug] ? (
+                          <span>
+                            {companion.by[i.slug]!.requirement}
+                            <span style="color: var(--muted)">
+                              {" · "}{companion.by[i.slug]!.disposition}
+                            </span>
+                          </span>
+                        ) : (
+                          <span style="color: var(--muted)">—</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {companionRows(row).some((c) => c.identical) && (
+            <p class="mt-2 text-sm" style="color: var(--muted)">
+              Highlighted files are declared by both instances at the same requirement and the
+              same disposition — the layout itself transferring, not just the kind's name.
+            </p>
+          )}
+        </div>
       )}
     </section>
   ))}
@@ -93,6 +183,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
           .map((row) => (
             <div class="mt-3 rounded-lg border p-4" style="border-color: var(--rule)">
               <code style="color: var(--ember)">{row.kind}</code>
+              {row.by[instance.slug]!.shape && (
+                <span
+                  class="ml-2 rounded px-1.5 py-0.5 text-xs"
+                  style="background: var(--graphite); color: var(--muted)"
+                >
+                  {row.by[instance.slug]!.shape}
+                </span>
+              )}
+              {openSet(row.by[instance.slug]!) && (
+                <span
+                  class="ml-1 rounded px-1.5 py-0.5 text-xs"
+                  style="background: var(--graphite); color: var(--glow)"
+                >
+                  open companion set
+                </span>
+              )}
               <p class="mt-1 text-sm" style="color: var(--muted)">
                 {row.by[instance.slug]!.summary}
               </p>
@@ -102,6 +208,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
                   .filter((f) => f.required)
                   .map((f) => <code class="mr-1">{f.name}</code>)}
               </p>
+              {(row.by[instance.slug]!.companions ?? []).length > 0 && (
+                <ul class="mt-2 space-y-0.5 text-sm">
+                  {row.by[instance.slug]!.companions!.map((companion) => (
+                    <li>
+                      <code>{companion.file}</code>{" "}
+                      <span style="color: var(--muted)">
+                        {companion.requirement} · {companion.disposition}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
       </div>
