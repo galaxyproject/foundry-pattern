@@ -22,8 +22,8 @@ described**. Each instance emits a `kinds.generated.json` manifest whose require
 tables are derived from the same zod definitions its validator runs; this site vendors those
 manifests and renders them. Nothing below is transcribed, so nothing below can quietly stop
 being true. The layout that makes this possible — one directory per kind, holding the schema,
-its documentation, and a worked example — is specified in Part 3 of
-[[standing-up-a-foundry]].
+its documentation, and a worked example — is specified in Part 3 of the
+[[standing-up-a-foundry|Astro-stack worked example]].
 
 ## How to read it
 
@@ -50,5 +50,5 @@ Two things worth noticing when you read the tables:
   The "required by both" line under each substrate kind is the part that is really shared.
 
 For where these kinds live inside a repository, and what a new instance should copy first, see
-[[anatomy-of-an-instance]] and [[standing-up-a-foundry]]. For the vocabulary the `tags` field
-draws on, see [[tag-catalog]].
+[[anatomy-of-an-instance]] and the [[standing-up-a-foundry|Astro-stack worked example]]. For the
+vocabulary the `tags` field draws on, see [[tag-catalog]].

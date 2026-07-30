@@ -1,19 +1,20 @@
 ---
-title: Standing up a Foundry
-description: The worked example behind Setting up a Foundry — how one concrete stack (Astro, zod, six installed packages) resolves each abstract invariant into a named decision, and what building the second instance corrected.
+title: "One Worked Example: the Astro Stack"
+description: How one concrete stack — Astro, zod, six installed packages — resolves each of the pattern's invariants into a named decision, and what building a second instance on it corrected.
 section: pattern
 order: 7
 instructions: pattern/standing-up-a-foundry.instructions.txt
 ---
 
-# Standing up a Foundry
+# One Worked Example: the Astro Stack
 
 [[setting-up-a-foundry|Setting up a Foundry]] is the summary in front of this page, and it is
 deliberately stack-agnostic: it says *pin the vocabulary*, *type the frontmatter*, *build an
 external check* — and names no tool that could do any of them. That silence is right for a
 pattern and useless for a repository. An instance cannot decline to pick a site generator.
 
-This page is the checklist that picks. Every step below resolves one abstract commitment into a
+This page is the checklist that picks — standing up a Foundry on one stack, concretely, all the
+way down to commands. Every step below resolves one abstract commitment into a
 specific decision — a named package, a path, a command — for **one** stack: a static Astro site
 deployed to GitHub Pages, Markdown content in a `content/` tree beside it, TypeScript and zod
 for the frontmatter contract, a vitest validator, and six installed `@galaxy-foundry/*`
