@@ -78,6 +78,22 @@ and the parts each domain had to invent are separated by evidence instead of by 
 browse vocabulary layered over those kinds is in the [[tag-catalog]]. For the comparative
 argument these tables are the raw material for, see [[the-diff]].
 
+## The vocabulary comes with the stack
+
+Adopting a stack means adopting its words, and those are not the pattern's words. `note`, `kind`,
+`shape`, `companion`, `collection` describe how a corpus gets typed and laid out on disk — real
+decisions, but decisions *this* implementation made, which a Foundry on another stack could
+reasonably answer differently or not face at all. They are pinned in the
+[[astro-stack-glossary]], deliberately apart from the [[glossary]].
+
+An instance therefore inherits vocabulary from two places before coining anything of its own: the
+pattern's terms, which every Foundry carries, and this stack's, which only the ones sharing it do.
+That is worth *recording* per term — an inherited word has to keep its inherited meaning — but it
+is not a reason to partition an instance's glossary into three sections. A Foundry's glossary
+should read as one cohesive vocabulary for the domain it teaches; where each term came from is a
+property of the entry, the same way a kind declares its `layer` rather than living in a separate
+directory of substrate kinds. Part 1 below starts there, before any machinery.
+
 ## How to read the checklist below
 
 It is rendered **verbatim**, and it reads as instructions rather than prose because that is what

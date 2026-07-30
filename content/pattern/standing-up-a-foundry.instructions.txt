@@ -27,14 +27,40 @@ base, rendered by Part 2's render-vault-doc helper) that the rest of the corpus 
   copy its definitions, do not re-invent them):
       Knowledge Base (KB), Mold, Reference, Cast, Casting, Skill artifact, Target, Provenance.
   Use these EXACT headwords so a term means the same thing in every instance.
+- THEN the STACK terms, because adopting a stack means adopting its words. This one brings eight,
+  pinned in the pattern site's Astro-Stack Glossary and inherited exactly as the eight above are —
+  copied, not re-coined:
+      Note, Kind, Shape, Companion, Collection, Kind context, Kind manifest, Tag/Facet.
+  This is the tier an instance is likeliest to get wrong, and the reason is that these terms feel
+  like yours: you will type `kind` fifty times a day in your own repository, and re-deriving what
+  it means locally is the natural thing to do. It is also the tier that does not hold for a Foundry
+  on another stack, so it is not the pattern's to demand.
+  Note / Kind / Companion define each other in that order — a note declares a kind, a kind fixes
+  whether its notes are files or directories, and only a directory-shaped kind can have
+  companions. Pin all three or none: `companion` used before `note` is pinned means "some file
+  near another file", which is what the word meant in both instances for a year, across four
+  mechanisms that disagreed.
+  One collision to resolve out loud rather than inherit: `kind` names BOTH a note's kind and a
+  reference's kind, and both are closed vocabularies you will write down. Say which you mean
+  wherever both are in scope; the two current instances both have pages where they are not.
 - THEN coin the domain terms, corpus-first — add a term when a Mold actually needs it, not
   before.
 - One authoritative sentence per term: abstract meaning first, a brief (e.g. …) where it has a
   concrete realization.
 - One word per concept; retire the rivals. Resolve singular/plural, capitalization, and
   half-synonym drift here before it spreads.
-- Scope the shared substrate terms separately from the terms your domain coins. Do not hoist
-  domain jargon into the shared set.
+- ONE GLOSSARY, ordered for a reader learning YOUR domain — not partitioned by where each term
+  came from. Terms arrive from three places (the pattern, your stack, your own coinage), but that
+  is PROVENANCE, and provenance is a property of an ENTRY rather than a reason to split the page.
+  Record it per term the way a kind records `layer` instead of living in a separate directory of
+  substrate kinds: one marker, and a consumer asking what transferred computes the answer instead
+  of trusting your headings. A reader meeting your vocabulary for the first time needs it grouped
+  by MEANING; they did not arrive wanting a tour of which upstream supplied what.
+  The marker still carries everything the older "keep them scoped apart" rule was actually after:
+  an inherited term keeps its inherited DEFINITION, and a term you coined must not be able to pass
+  as one the pattern handed you. Both hold wherever the entry sits on the page. What you must not
+  do is redefine an inherited term to mean something local — that is the real failure, and moving
+  it to a different section was never what prevented it.
 - Make the glossary the tie-breaker: where two pages disagree, the glossary wins — state it
   outright. Casting copies glossary entries VERBATIM, never condensed.
 
@@ -76,9 +102,11 @@ All six now ship from jmchilton/foundry-lib under the @galaxy-foundry scope, and
 INSTALLS them:
 
   @galaxy-foundry/license-policy      ^0.1.1  the license → redistribution table + loader
-  @galaxy-foundry/kind-manifest       ^0.2.1  the manifest format: reader + zod-shape deriver
-  @galaxy-foundry/kind-schema         ^0.3.0  the kind contract: what a kind IS, how one is
-                                              assembled, path→kind routing, the kind.md loader
+  @galaxy-foundry/kind-manifest       ^0.3.0  the manifest format: reader + zod-shape deriver,
+                                              and the LAYOUT vocabulary a manifest carries
+  @galaxy-foundry/kind-schema         ^0.4.0  the kind contract: what a kind IS, how one is
+                                              assembled, path→kind routing, the kind.md loader,
+                                              the companion check
   @galaxy-foundry/reference-contract  ^0.1.0  the four vocabularies every instance inherits
   @galaxy-foundry/tag-registry        ^0.1.0  the meta_tags.yml format and its accessors
   @galaxy-foundry/wiki-links          ^0.1.0  the [[Target]] grammar, resolver, remark transform
@@ -104,12 +132,19 @@ have either a dependency dictating your domain or a copy that drifts:
   kind-manifest       Ships the format, the reader, and the deriver. You keep which kinds exist
                       and how your registries resolve into the context they are built against —
                       no two instances do that the same way, which is why the package takes
-                      BUILT SHAPES rather than a context.
-  kind-schema         Ships the CONTRACT and the machinery over it: `KindDefinition` (`build` plus
-                      optional `refine`, and nothing else), the `kindDefiner`/`defineKind` identity
-                      helper, `assemble` for one kind, `buildKindUnion` for a mixed corpus, the
-                      `manifestKinds` bridge into kind-manifest, path→kind routing
-                      (`./collections`), and the `kind.md` reader (`./docs`). Ships NO KINDS —
+                      BUILT SHAPES rather than a context. It also owns the LAYOUT VOCABULARY —
+                      `NoteShape`, `Companion`, `CompanionRequirement`, `CompanionDisposition` —
+                      for the same reason it owns `KindLayer`: a manifest carries these values
+                      across a repository boundary, so the closed sets are part of the FORMAT.
+                      kind-schema re-exports them rather than declaring a second copy.
+  kind-schema         Ships the CONTRACT and the machinery over it: `KindDefinition` (`build`,
+                      optional `refine`, plus the `shape` + `companions` declaration it EXTENDS),
+                      the `kindDefiner`/`defineKind` identity helper, `assemble` for one kind,
+                      `buildKindUnion` for a mixed corpus, the `manifestKinds` bridge into
+                      kind-manifest, path→kind routing (`./collections`), the `kind.md` reader
+                      (`./docs`), and `companionsOf`/`checkCompanions` over a directory listing
+                      you already have — PURE, no I/O, which is what keeps the main barrel
+                      importable from browser code. Ships NO KINDS —
                       and, less obviously, NO CONTEXT. The context is the SEAM: the two instances
                       agree exactly on a kind's shape and disagree entirely on what a kind may
                       DRAW FROM (one spreads a seven-field envelope and hands kinds a tag
@@ -268,10 +303,18 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   already fixed to your CONTEXT, and TypeScript gives no way to bind one type parameter of a
   generic function and leave the other free at the call site. This is the whole adoption cost.
 - A kind directory exports a KIND DEFINITION, not a bare schema. The contract is `build` plus
-  `refine`, and NOTHING ELSE — both instances arrived there from opposite directions, which is why
-  it is now installed rather than restated:
+  `refine` over the FRONTMATTER, and `shape` plus `companions` over the LAYOUT — and nothing else.
+  The frontmatter half is what both instances arrived at from opposite directions, which is why it
+  is installed rather than restated. The layout half is what NEITHER had, and its absence is
+  measured in the next bullet:
       defineKind({
         kind: 'mold', title: 'Mold', layer: 'substrate' | 'instance', summary: '…',
+        shape: 'directory',                        // or 'file'. Required of every kind.
+        companions: [                              // [] means none, and means it as an assertion
+          { file: 'eval.md', requirement: 'recommended', disposition: 'foundry-only',
+            purpose: 'Fixture-independent property checks for this Mold.' },
+        ],
+        additionalCompanions?: 'forbid' | 'allow', // 'forbid' is the default
         build:   (ctx) => z.object({ type: z.literal('mold'), ...ctx.base, … }).strict(),
         refine?: (data, issues, ctx) => void,
       })
@@ -293,6 +336,51 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   says `"origin": "instance"` beside a field named `origin` typed `npm | pypi` is a trap for
   the cross-instance consumer, which is the manifest's whole audience. Keep the metadata
   vocabulary disjoint from anything a kind may plausibly call a field.
+- DECLARE THE LAYOUT AT THE KIND, NOT AT THE NOTE. `shape: 'directory'` means the note IS
+  `index.md` and everything else in that directory is either a companion or another kind's note.
+  Both fields are REQUIRED of every kind rather than opt-in: no kind legitimately does not know
+  its own shape, so gradual adoption buys nothing and costs the cross-instance catalog a column
+  with holes in it — and the holes would hide a real finding, that `pattern` is a directory in one
+  instance and a flat file in the other. That is a substrate difference which was expressible only
+  inside each instance's collection glob and reached no manifest.
+  What this REPLACES is the reason it is worth the two fields. One instance answered "what files
+  belong to this note?" in FOUR places that did not agree: two hand-written per-kind allowlists in
+  the validator, a per-NOTE `companions:` frontmatter list the caster copied into bundles, a
+  `<stem>.*` scan of a bundled note's body that existed only to catch that list being FORGOTTEN,
+  and a site component naming `eval.md` by literal path. The per-note list is the tell — it
+  existed because nothing at the KIND level knew, and the body scan existed because a per-note
+  list can be forgotten. Declare it once at the kind and the premise of all four is gone. Do not
+  add the kind-level declaration BESIDE the allowlists; a third copy is the drift you are removing.
+- `companions: []` MEANS NONE, and an absent key is not an option. "Not modelled" versus "none,
+  enforced" is a distinction invisible to a reader and unrenderable in a catalog without
+  misreporting one of the two, so the open-set half is said out loud instead:
+  `additionalCompanions: 'allow'` for a kind whose companion set is genuinely open — vendored
+  sidecars beside a research note, the acquisition files beside a book. It is NOT "unmodelled": a
+  kind may declare what it knows AND permit the rest. The default `'forbid'` is what makes a
+  misnamed `scenario.md` an error rather than a file the walker silently drops.
+- A SIBLING THAT IS ITSELF A NOTE IS NEVER A COMPANION, and nothing can infer that from a
+  filename. `content/cli/<tool>/` holds an `index.md` that is a `cli-tool` and sibling `.md` files
+  that are each a `cli-command`, so `cli-tool` declares `companions: []` and still has a directory
+  full of markdown. Infer from the extension instead and every CLI command in the corpus reports
+  as a stray. `checkCompanions` therefore takes the note-or-not answer as INPUT rather than
+  deciding it; `kindOf(table, path)` from `./collections` is what answers, which is the second job
+  the one collection table of Part 2 is doing.
+- A companion `file` is a LITERAL NAME in ONE directory — no globs, no path separators. A trailing
+  slash names a directory and is satisfied by that directory EXISTING; what is inside it is that
+  directory's business. The single case that wanted a wildcard was fixed by changing the layout so
+  the file has a fixed name, which is the general move: a pattern escape hatch is very hard to
+  remove once a corpus leans on it.
+  `disposition` is ONE axis — whether the file reaches a skill artifact. `foundry-only` never
+  leaves (eval, scenarios). `cast-input` means the caster READS it and it does not appear in the
+  output (a per-note condensation prompt). `bundled` is copied in (a vendored schema). The middle
+  value is the one a boolean cannot express, and it is not hypothetical: a target's forbidden-file
+  list is every companion that is not `bundled` — BOTH other values — and one instance's target
+  omits exactly the `cast-input` file from that list today.
+- COMPANIONS DESCRIBE LAYOUT, NOT DEPENDENCIES. If a companion declaration starts growing
+  `used_at` / `load` / `mode`, it has turned into a second reference contract, and the answer is a
+  `references:` entry instead. Worth watching precisely because both sides can be described as
+  "a file this note needs" — the difference is that a companion says where a file SITS and a
+  reference says what a note DRAWS ON.
 - `build` returns the BARE OBJECT; `refine` carries the cross-field rules over the fields already
   present. Keeping `refine` OUT of `build` is what lets the manifest generator walk `.shape`: zod
   wraps a refined object in ZodEffects, which has no shape and is not a legal discriminated-union
@@ -443,7 +531,10 @@ Emit a KIND MANIFEST — types/kinds.generated.json, committed, regenerated by a
     { "instance": "<slug>", "version": 1,
       "source": { "repo": "<owner>/<name>", "path": "<path to this file>" },
       "kinds": [ { "kind": "mold", "title": "Mold", "layer": "substrate",
-                   "summary": "…", "doc": "<kind.md body>",
+                   "summary": "…", "doc": "<kind.md body>", "example": "<example.md body>",
+                   "shape": "directory", "locations": ["molds", "research/experiments"],
+                   "companions": [ { "file": "eval.md", "requirement": "recommended",
+                                     "purpose": "…", "disposition": "foundry-only" }, … ],
                    "fields": [ { "name": "tags", "required": true, "type": "string[]" }, … ] } ] }
 
 The FORMAT, the reader, and the zod-shape deriver come from @galaxy-foundry/kind-manifest — do not
@@ -452,8 +543,29 @@ re-encode them. The BRIDGE between the two comes from kind-schema:
     buildKindManifest({
       instance: '<slug>',
       source: MANIFEST_SOURCE,                                  // yours: repo + path
-      kinds: manifestKinds(KINDS, ctx, loadKindDocs(KINDS, 'src/types')),
+      kinds: manifestKinds(KINDS, ctx, {
+        docs:        loadKindDocs(KINDS, 'src/types'),
+        collections: COLLECTIONS,        // `locations` are DERIVED from it, never hand-listed
+        examples:    <yours>,            // no loader ships for this one — see below
+      }),
     });
+
+The third argument is an OPTIONS OBJECT, not a positional docs record — three record-shaped inputs
+read positionally is where a caller passes examples as docs. If you are coming from the earlier
+positional form, passing `loadKindDocs(…)` bare now yields a manifest with every `doc` MISSING
+rather than an error, because the object it lands in has no `docs` key.
+
+`examples` is the one extra with no loader behind it: `loadKindDocs` is fixed to `kind.md`, so a
+`kind name -> example.md body` record is yours to read — the same walk your kind-directory test
+already does to prove each example parses. Neither current instance populates it yet, so a catalog
+consuming manifests today should treat `example` as absent rather than as "this kind has none".
+
+`locations` is the collection bases routing to this kind, derived from the table rather than
+declared, for the same reason the field list is derived from the zod shape that validates: a
+hand-written location list is a second encoding of the routing table, and it drifts. Deriving also
+gets the many-to-one case right for free — two collections resolving to one kind yield two
+locations, and that mapping is exactly why an instance can enumerate five kinds while routing six
+collections. Nothing could state that before; it was a fact about a glob.
 
 `manifestKinds` lives in kind-schema rather than kind-manifest because kind-manifest describes a
 kind it is HANDED and must not learn what a `KindDefinition` is — its reader half has a consumer
@@ -550,6 +662,18 @@ Validator — vitest, one command, running the SAME schema the build uses:
   consumers" real. Walk it with the table's own matcher rather than a local `**/index.md` glob:
   a walk that selects differently from the loader is a set of notes the site validates and the
   validator does not, or the reverse, and neither surfaces as a failure.
+- The same walk, one level up: CHECK THE LAYOUT, not only the frontmatter. For every directory
+  note, hand `checkCompanions` the listing you already have plus that note's kind, and act on the
+  three results it returns — `missingRequired` is an error, `unknown` is an error unless the kind
+  declared `additionalCompanions: 'allow'`, and `missingRecommended` is a WARNING. That middle
+  level is the one a test cannot carry: a test has pass and fail and nothing between, so
+  "expected, but its absence is not a defect" needs a validator with severities or it is not
+  asserted at all. Whichever you have, SAY SO — an instance that quietly demotes `recommended` to
+  `optional` because its runner has two outcomes has edited the spec to fit the tooling.
+  Two wiring notes. Tell it which sibling entries are NOTES; it will not guess, and the reason is
+  in Part 3. And drive the walk from the collection table, so the directories checked are exactly
+  the ones the loader routes — same single-walk rule as the conformance test above, same reason.
+  This check REPLACES the per-kind allowlists. It does not sit beside them.
 - site/tests/frontmatter-schema.test.ts — a negative-fixture table: each broken frontmatter
   asserts the SPECIFIC issue path+message it must raise, with a positive baseline per type. A
   rule with no negative fixture is a rule you are only hoping is enforced.
@@ -714,6 +838,7 @@ the MECHANICAL column for the second time in a second instance, that is the sign
 second time, never the first.
 
 Part 1 and Parts 5–8 are the domain — but even the vocabulary starts from a shared spine: the
-eight substrate terms in Part 1 are inherited from the pattern glossary, and only the domain
+eight substrate terms in Part 1 are inherited from the pattern glossary and the eight stack terms
+from the Astro-Stack Glossary, and only the domain
 terms beyond them, the corpus, the Molds, and the external check that defines what "correct"
 means here are yours to supply. That last one is the part no other instance can hand you.
