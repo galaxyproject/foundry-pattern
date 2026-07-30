@@ -29,6 +29,12 @@ Grouped by theme.
 
 **Reference** — a typed dependency a Mold declares. The *kind* discriminator controls how casting treats it, so resolving references is per-kind dispatch, not "follow every link the same way." Common kinds: `pattern` (LLM-condensed prose), `schema` (copied verbatim), `cli-command` (cast to a structured sidecar), `prompt` (inlined), `example` (copied), `eval` (Foundry-only, never packaged).
 
+**Note** — the unit of the corpus: one authored entry that declares its kind in frontmatter and validates against that kind's schema. A Mold is one kind of note; a paper summary, a pattern, a tutorial are others. A note is either a flat file or a directory whose `index.md` *is* the note — which of the two is a property of its kind, not of the individual note.
+
+**Kind** — the `type:` discriminator a note declares, together with the one schema that validates it. The kind decides what metadata is required, what casting may assume, and what the site can render, so it is what makes a corpus machine-readable rather than a pile of Markdown. A kind declares three things beyond its frontmatter schema: its **shape** (`file` or `directory`), its companions, and its `layer` — `substrate` if the pattern supplied it, `instance` if the domain added it. The [[kind-catalog]] tests that last claim against both instances rather than accepting it.
+
+**Companion** — a non-note file in a directory-shaped note's directory, declared once by the **kind** rather than repeatedly by each note (e.g. `eval.md` beside a Mold; `guidance.md` beside a summarized paper). Three consequences worth stating outright: only directory-shaped kinds have companions; a sibling that is itself a note is never one (a `cli-command` beside a `cli-tool` is a note, not a companion); and a companion describes **layout** only — a file a note actually *depends* on is a Reference instead. Each declaration carries a requirement level (`required` / `recommended` / `optional`) and a **disposition** — whether casting may carry the file into a skill artifact (`foundry-only`, `cast-input`, `bundled`).
+
 ## Compilation
 
 **Cast** *(verb)* — produce a self-contained artifact from a Mold via the casting process. *(noun)* — one casting result for a (Mold, target) pair.

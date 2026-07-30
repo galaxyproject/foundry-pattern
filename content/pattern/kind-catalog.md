@@ -49,6 +49,39 @@ Two things worth noticing when you read the tables:
 - **A kind's *name* transferring is weaker evidence than its *required fields* transferring.**
   The "required by both" line under each substrate kind is the part that is really shared.
 
+## Name, fields, layout
+
+There is an order to how much a match is worth, and it runs in one direction.
+
+A kind's **name** is the weakest evidence: a name can be borrowed, and the second instance had the
+first one's repository open. Its **required fields** are stronger — two schemas agreeing is two
+authors independently deciding the same metadata is load-bearing. Its **layout**, meaning what
+files sit beside a note and under what names, is stronger still, because a layout is not something
+you copy without also copying the working practice that produced it. `eval.md` and `scenarios.md`
+arrived beside Molds in *both* Foundries, and neither took them from the other.
+
+Kinds can now say this out loud. A kind declares its **shape** — whether its notes are flat files
+or directories — and its **companions**, the non-note files belonging beside a directory-shaped
+note, each with a requirement level and a disposition saying whether casting may carry it into an
+artifact. Both terms are pinned in the [[glossary]] and specified in Part 3 of the
+[[standing-up-a-foundry|Astro-stack worked example]].
+
+Two things that declaration makes visible for the first time:
+
+- **`pattern` is a directory in one instance and a flat file in the other.** Same kind, same
+  layer, different physical form. That difference used to live inside each instance's collection
+  glob and reached no manifest, so this page could not have reported it however carefully you
+  read the tables.
+- **An open companion set is not an empty one.** A kind may declare that files it has not
+  enumerated are legitimately present — vendored sources beside a research note, acquisition
+  files beside a book chapter. That says *unbounded*, not *none*. They are opposite claims, and
+  only one of them is checkable.
+
+**Not in the tables below yet.** The declarations landed in the instances first. The snapshots
+this page renders predate them, and this site's manifest reader is still the version that drops
+the new fields on the way in. So the section above describes what the instances now declare, not
+what is rendered below — deliberately stated rather than left for a reader to discover as a gap.
+
 For where these kinds live inside a repository, and what a new instance should copy first, see
 [[anatomy-of-an-instance]] and the [[standing-up-a-foundry|Astro-stack worked example]]. For the
 vocabulary the `tags` field draws on, see [[tag-catalog]].
