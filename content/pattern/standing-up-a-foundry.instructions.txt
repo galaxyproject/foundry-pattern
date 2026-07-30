@@ -67,14 +67,16 @@ base, rendered by Part 2's render-vault-doc helper) that the rest of the corpus 
 
 REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal)
 
-  Toolchain     Node 24, npm (package-lock committed), TypeScript ^5.7.0
-  Framework     astro ^5.17.1 (static output), @astrojs/check ^0.9.4
-  Styling       tailwindcss 4.1.18 + @tailwindcss/vite 4.1.18 + @tailwindcss/typography
+  Toolchain     Node 24 (engines: >=22.12), pnpm via corepack (lockfile committed, the version
+                pinned by `packageManager` in package.json), TypeScript ^5.7.0
+  Framework     astro ^7.1.6 (static output), @astrojs/check ^0.9.4, vite ^8.0.0 (dev)
+  Styling       tailwindcss 4.3.3 + @tailwindcss/vite 4.3.3 + @tailwindcss/typography
                 ^0.5.19; @fontsource/atkinson-hyperlegible ^5.2.8
-  Markdown      marked ^18.0.2 (standalone render) + a thin src/lib/marked.ts wrapper
+  Markdown      marked ^18.0.2 (standalone render) + a thin src/lib/marked.ts wrapper;
+                @astrojs/markdown-remark ^7.2.2 for the site's own pipeline (see Part 2)
   Math          remark-math ^6.0.0 + rehype-katex ^7.0.1 + katex ^0.16.45
-  Search        astro-pagefind ^1.8.6 (integration) + pagefind ^1.5.2 (dev)
-  Schema        zod ^3.25.76  (import `z` from 'zod', NOT from 'astro:content')
+  Search        astro-pagefind ^2.0.1 (integration) + pagefind ^1.5.2 (dev)
+  Schema        zod ^4.4.3  (import `z` from 'zod', NOT from 'astro:content')
   YAML          js-yaml ^4.1.0 + @types/js-yaml ^4.0.9
   Validator     vitest ^3.2.4
 
@@ -85,6 +87,10 @@ REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal
   This table and the substrate table below are the single source of truth for packages +
   versions. The parts below name MODULES and WIRING, not packages — they do not re-list
   what is pinned here.
+
+  "As a set" is not a style preference in one place: `zod` and the two substrate packages that
+  read its internals move TOGETHER, in one commit, because the peer range admits exactly one
+  major. See the zod bullet below for what a split bump does.
 
 
 THE SHARED SUBSTRATE — INSTALL IT, DO NOT COPY IT
@@ -102,9 +108,9 @@ All six now ship from jmchilton/foundry-lib under the @galaxy-foundry scope, and
 INSTALLS them:
 
   @galaxy-foundry/license-policy      ^0.1.1  the license → redistribution table + loader
-  @galaxy-foundry/kind-manifest       ^0.3.0  the manifest format: reader + zod-shape deriver,
+  @galaxy-foundry/kind-manifest       ^0.4.0  the manifest format: reader + zod-shape deriver,
                                               and the LAYOUT vocabulary a manifest carries
-  @galaxy-foundry/kind-schema         ^0.4.0  the kind contract: what a kind IS, how one is
+  @galaxy-foundry/kind-schema         ^0.5.0  the kind contract: what a kind IS, how one is
                                               assembled, path→kind routing, the kind.md loader,
                                               the companion check
   @galaxy-foundry/reference-contract  ^0.1.0  the four vocabularies every instance inherits
@@ -183,17 +189,44 @@ files untouched. Re-export only a TYPE a caller must name to build an options ob
 re-exporting the package's whole API is a name list that drifts from the package's, and one more
 place to look.
 
-THREE THINGS THAT WILL BITE:
+FIVE THINGS THAT WILL BITE:
 
 - Declare the dependency in the package that IMPORTS it — INCLUDING site/. A package resolving a
   shipped YAML asset relative to import.meta.url, reached only through a LINKED workspace package,
   gets inlined into an SSR chunk by Vite, and the path then resolves against site/dist/chunks/
   instead of node_modules. It passes every test and every typecheck, and fails at `astro build`.
-- kind-manifest pins `zod` as a PEER dependency at ^3.25, because the deriver reads `_def.typeName`
-  — zod 3 internals, since zod exposes no public reflection API and the alternative is the
-  hand-written field table this mechanism exists to prevent. The deriver must also read the SAME
-  zod instance your schemas were built with: a duplicated zod in the tree renders every field
-  `any`. Keep one zod, and keep it in range.
+- kind-manifest pins `zod` as a PEER dependency at ^4, because the deriver reads `_zod.def.type` —
+  zod INTERNALS, since zod exposes no public reflection API and the alternative is the hand-written
+  field table this mechanism exists to prevent. Three consequences, the last of which is what a
+  port actually costs:
+    * The peer range admits ONE major, with no v3 fallback. Supporting both was considered and
+      rejected: a branch on internals is code whose untested arm renders every field `any` — a
+      manifest that generates, validates and publishes while saying nothing. An instance upgrades
+      zod and these two packages in the same commit, or it does neither.
+    * The deriver must read the SAME zod instance your schemas were built with. A duplicated zod in
+      the tree renders every field `any` by the same route. Keep one zod, and keep it in range.
+    * What zod 4 renamed is not a detail you can skip past if you are porting a v3 instance: every
+      type tag moved off `_def.typeName` and changed spelling (`ZodString` → `string`), an array's
+      element is `element` not `type`, a literal carries `values` (plural — v4 literals may hold
+      several) not `value`, an enum carries `entries` (an object) not `values`, a discriminated
+      union now tags as plain `union`, and a `ZodRawShape`'s values type as the CORE schema, which
+      carries neither `.isOptional()` nor enough structure to walk. All of that is the PACKAGE's
+      problem, not yours — the point of installing it. What IS yours: `z.ZodObject<T, 'strict'>`
+      becomes `z.ZodObject<T, core.$strict>` (the second parameter is a config object in v4, not a
+      mode string), `z.ZodType` loses its middle `ZodTypeDef` parameter, `z.string().url()` becomes
+      `z.url()`, `z.ZodIssueCode.custom` becomes the string `'custom'`, and `z.ZodIssue` becomes
+      `z.core.$ZodIssue`. `superRefine`, `RefinementCtx`, `discriminatedUnion` and `.strict()` all
+      survive unchanged, so the schema BODIES mostly do not move.
+- The zod bump and the astro bump are ONE COMMIT, not two, and the reason is worth knowing before
+  you plan the work: astro 5 types `defineCollection`'s schema as `ZodType<any, ZodTypeDef, any>`,
+  which a zod-4 schema does not satisfy — so the intermediate state does not typecheck in either
+  order. The runtime is worse than the types suggest: astro 5 reads `parsed.error.errors[0]`, which
+  v4 renamed to `.issues`, so the FIRST invalid note throws a TypeError instead of reporting which
+  field of which note failed. A validator that reports "cannot read property of undefined" where it
+  used to name the field has not caught the note — it has lost the ability to.
+- A caret on a 0.x version does not cross a minor. `^0.3.0` will not take 0.4.0, so every substrate
+  range moves BY HAND on a minor release; there is no `pnpm update` that will do it for you, and
+  nothing fails while it is not done — you keep the old package.
 - If your repo is a WORKSPACE, state ONE version of each package across every member. A range that
   admits the current release does not mean the lockfile resolved it: one instance had two copies of
   kind-schema installed at once — 0.3.0 where a `^0.3.0` range asked for it, 0.2.0 where an older
@@ -218,16 +251,30 @@ The corpus renders to a static Astro site under site/. Stand it up first (empty 
 glossary): it is where every later artifact is read, and `astro build` is the fastest signal
 that a note is well-formed.
 
-- `npm create astro@latest site` — static output. Pin the base once in site/astro.config.mjs:
+- `pnpm create astro@latest site` — static output. Pin the base once in site/astro.config.mjs:
     const base = '/<foundry-name>';
     export default defineConfig({ site: 'https://<user>.github.io', base, … });
   Reuse `import.meta.env.BASE_URL` everywhere a URL is built; never re-hardcode the base.
 - Wire the stack's render deps into astro.config.mjs (packages/versions: the table above):
-    markdown.remarkPlugins = [remarkMath, remarkWikiLinks({ base })]
-    markdown.rehypePlugins = [rehypeKatex]
+    markdown.processor = unified({          // from '@astrojs/markdown-remark'
+      remarkPlugins: [remarkMath, [remarkWikiLinks, { base }]],
+      rehypePlugins: [rehypeKatex],
+    })
+    compressHTML = true
     vite.plugins += tailwind();   integrations += [pagefind()]
   Set the body font to Atkinson-Hyperlegible — a human reader is one of the two audiences, so
   legibility is a substrate concern.
+- ASTRO 7 RUNS NO REMARK OR REHYPE PLUGIN UNLESS YOU ASK. It renders markdown with Sätteri, a Rust
+  pipeline, and `markdown.remarkPlugins` — the astro ≤6 spelling, and the one every tutorial still
+  shows — is simply not consulted. It does not warn. The failure is a site that builds clean with
+  every `[[Target]]` rendered as literal text and every `$…$` as literal dollars, which is why the
+  wiring above names `markdown.processor` instead: opting the unified pipeline back in explicitly.
+  For this stack that is not a nicety — `[[wiki-links]]` is one of the six installed packages, and
+  Part 4's link check asserts against a grammar the renderer would no longer be applying.
+  `compressHTML: true` is a second pin of the same shape: 7 defaults it to 'jsx', which drops the
+  whitespace between inline elements that sit on their own source lines, so prose silently loses
+  spaces around links. Both are places where the SILENT default changed, and both are worth a
+  comment in the config saying so — a future reader deleting either sees no test go red.
 - Declare routes in the page router site/src/pages/<collection>/[...slug].astro (+ index.astro
   per collection), and name each route AFTER ITS COLLECTION KEY, so the key IS the route and
   there is no mapping to keep. The collection table (Part 3) is then the only list of
@@ -270,7 +317,7 @@ that a note is well-formed.
   injects #term anchors) from a dedicated page — e.g. site/src/pages/glossary.astro reading
   content/meta/glossary.md. Under content/meta/, so no collection base globs it and the
   validator skips it.
-- Dev: `npm run dev` (astro dev). Build: `astro build --force`.
+- Dev: `pnpm run dev` (astro dev). Build: `astro build --force`.
 
 
 PART 3 — AUTHOR THE KINDS (THE CONTRACT IS INSTALLED; ONE KIND PER DIRECTORY)
@@ -343,14 +390,17 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   with holes in it — and the holes would hide a real finding, that `pattern` is a directory in one
   instance and a flat file in the other. That is a substrate difference which was expressible only
   inside each instance's collection glob and reached no manifest.
-  What this REPLACES is the reason it is worth the two fields. One instance answered "what files
-  belong to this note?" in FOUR places that did not agree: two hand-written per-kind allowlists in
-  the validator, a per-NOTE `companions:` frontmatter list the caster copied into bundles, a
-  `<stem>.*` scan of a bundled note's body that existed only to catch that list being FORGOTTEN,
-  and a site component naming `eval.md` by literal path. The per-note list is the tell — it
-  existed because nothing at the KIND level knew, and the body scan existed because a per-note
-  list can be forgotten. Declare it once at the kind and the premise of all four is gone. Do not
-  add the kind-level declaration BESIDE the allowlists; a third copy is the drift you are removing.
+  What this REPLACES is the reason it is worth the two fields. One instance answered "what may sit
+  beside this note?" in four places that did not agree: two hand-written per-kind allowlists in the
+  validator (mold, pipeline), a per-kind constant naming the single required file for a third
+  (prompt), and NOTHING AT ALL for a fourth. Note what each could not say. An allowlist cannot say
+  a file is REQUIRED; a required-file constant cannot say a file is FORBIDDEN; and none of the four
+  was reachable from the kind whose layout it described, so a catalog rendering that kind could
+  report neither. That is the shape of the argument for one declaration: not that four is more than
+  one, but that each of the four could express a different HALF of the same fact.
+  That instance has since carried this out, and the collapse is the confirmation: all four are
+  gone, replaced by one walk handing `checkCompanions` a directory listing. Do not add the
+  kind-level declaration BESIDE the allowlists — a fifth copy is the drift you are removing.
 - `companions: []` MEANS NONE, and an absent key is not an option. "Not modelled" versus "none,
   enforced" is a distinction invisible to a reader and unrenderable in a catalog without
   misreporting one of the two, so the open-set half is said out loud instead:
@@ -370,21 +420,57 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   directory's business. The single case that wanted a wildcard was fixed by changing the layout so
   the file has a fixed name, which is the general move: a pattern escape hatch is very hard to
   remove once a corpus leans on it.
+  A trailing slash is also the case a naive matcher misses: one instance's stray-file walk looked
+  only at FILES, so a directory-shaped companion was unmatchable and reported as undeclared no
+  matter what the kind said. Check that yours matches a declared directory before you need it to.
   `disposition` is ONE axis — whether the file reaches a skill artifact. `foundry-only` never
   leaves (eval, scenarios). `cast-input` means the caster READS it and it does not appear in the
   output (a per-note condensation prompt). `bundled` is copied in (a vendored schema). The middle
-  value is the one a boolean cannot express, and it is not hypothetical: a target's forbidden-file
-  list is every companion that is not `bundled` — BOTH other values — and one instance's target
-  omits exactly the `cast-input` file from that list today.
+  value is the one a boolean cannot express, and the reason to model it at the kind is a measured
+  one. A target's forbidden-file list is every companion that is not `bundled` — BOTH other values
+  — and one instance kept that list by hand in its target config, where it named TWO of the eight
+  its kinds declared. Deriving it from the declarations closed the gap: of the nine tests written
+  against the derived set, six pass under the old hand-written list, which is the drift measured
+  rather than asserted. Derive it, and do not generate the list back into the target — a generated
+  copy needs its own `--check` to stay honest, which is the failure mode being removed, and a
+  disposition is a fact about the KIND that a per-target restatement can only disagree with.
+  Two things a union across kinds has to get right, neither of which a two-name list ever
+  exercised: a name ANY kind declares `bundled` must be excluded even where another kind calls it
+  `foundry-only` (one instance packages `examples/` from two kinds), and a file a reference legally
+  claims must be exempt, because the check has only a BASENAME to go on — a vendored `README.md`
+  beside a research note is otherwise refused by the mold companion of that name.
 - COMPANIONS DESCRIBE LAYOUT, NOT DEPENDENCIES. If a companion declaration starts growing
   `used_at` / `load` / `mode`, it has turned into a second reference contract, and the answer is a
   `references:` entry instead. Worth watching precisely because both sides can be described as
   "a file this note needs" — the difference is that a companion says where a file SITS and a
   reference says what a note DRAWS ON.
+- WHAT MAY SIT BESIDE A NOTE AND WHAT A NOTE CARRIES INTO A CAST ARE TWO QUESTIONS, and only the
+  first is the kind's. It is tempting to collapse them once the kind knows the layout — the
+  directory listing is right there, so why should a note declare anything? Because the answer to
+  the second question decides what reaches a SKILL BUNDLE, and deriving it from the listing means a
+  file ships because of where somebody saved it. One instance planned exactly that collapse,
+  implemented the kind-level half, and then kept its per-NOTE `companions:` list deliberately —
+  what a note carries is DECLARED, never inferred. The two coexist without duplicating because they
+  answer different questions: the kind's list is names in one directory and is about layout; the
+  note's is paths (its own subdirectories included) and is about membership. Reject `..` in the
+  second one — a character class permissive enough for filenames admits it as a whole segment, and
+  a note that can name `../` can bundle a file it does not own.
+- A LAYOUT DECLARATION SAYS A FILE IS THERE, NEVER THAT IT SAYS ANYTHING. Whether `eval.md` exists
+  beside a Mold is the declaration's business, and `recommended` is what produces the warning.
+  Whether it contains a single property check is a rule about CONTENTS, which no layout vocabulary
+  should learn to express — keep those in the validator. Draw this line when you adopt the
+  declaration, or the checks it should have deleted stay, each now duplicating a warning the
+  declaration already emits.
 - `build` returns the BARE OBJECT; `refine` carries the cross-field rules over the fields already
-  present. Keeping `refine` OUT of `build` is what lets the manifest generator walk `.shape`: zod
-  wraps a refined object in ZodEffects, which has no shape and is not a legal discriminated-union
-  member.
+  present. What that protects is the manifest generator's walk of `.shape` — and note that zod 4
+  changed who ENFORCES it. Under zod 3 a refined object became a ZodEffects: no `.shape`, and not
+  a legal discriminated-union member, so the separation was compulsory. Under zod 4 `.refine()`
+  leaves the type alone and hangs a check off it — a refined object is still a ZodObject, still
+  has `.shape`, still assembles into a union. The rule is now the CONTRACT's to hold, not the
+  library's, which is exactly when a rule quietly stops being obeyed. Keep it: `.transform()` is
+  the one operation that still wraps (as a `pipe`, whose `in` is the source type and which has no
+  `.shape`), so the hazard did not go away — it narrowed to the slot the next bullet says not to
+  add. A rule that has lost its enforcement mechanism and kept its reason is worth stating twice.
 - DO NOT ADD A `transform` SLOT — a third slot that lets a kind ASSEMBLE its entry from something
   other than its own frontmatter, so the note is only complete after a merge. One instance built
   one, for one kind (a book chapter merging its book-level licence record), and removed it again.
@@ -395,8 +481,9 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
     * a kind manifest listing SIX fields for a chapter carrying ten, rendered that way in the
       cross-instance catalog beside a kind showing all seventeen of its own;
     * a `transform?` slot and an output generic on every kind definition, for one kind in one
-      instance — and, because a transformed object is also ZodEffects, pressure to replace the
-      discriminated union with a hand-written dispatcher.
+      instance — and, because a transformed object is a wrapper with no `.shape` (a `pipe` under
+      zod 4, a ZodEffects under 3 — this is the one hazard the major did NOT retire), pressure to
+      replace the discriminated union with a hand-written dispatcher.
   The fix is to MATERIALIZE instead: a generator copies the assembled fields into each note's
   frontmatter, a `--check` mode regenerates and compares in CI, and the note then validates in
   place like every other one. Same trade kinds.generated.json already makes. Verify the generator
@@ -673,7 +760,15 @@ Validator — vitest, one command, running the SAME schema the build uses:
   Two wiring notes. Tell it which sibling entries are NOTES; it will not guess, and the reason is
   in Part 3. And drive the walk from the collection table, so the directories checked are exactly
   the ones the loader routes — same single-walk rule as the conformance test above, same reason.
-  This check REPLACES the per-kind allowlists. It does not sit beside them.
+  This check REPLACES the per-kind allowlists. It does not sit beside them — one instance has now
+  deleted all four of its mechanisms in favour of this one walk, so the replacement is a thing that
+  happened rather than a thing being recommended. Two carve-outs survive the collapse, and both are
+  about a file's CONTENTS rather than its presence: a rule that one companion's frontmatter uses a
+  fixed decision vocabulary, and the eval/scenario body checks. Those are not layout, and moving
+  them into a layout declaration is how that declaration starts growing a second reference
+  contract. And exclude dotfiles from the listing before you hand it over: editor and OS state is
+  not something a kind failed to declare, and it is the one exclusion the declaration cannot state
+  for itself.
 - site/tests/frontmatter-schema.test.ts — a negative-fixture table: each broken frontmatter
   asserts the SPECIFIC issue path+message it must raise, with a positive baseline per type. A
   rule with no negative fixture is a rule you are only hoping is enforced.
@@ -699,7 +794,7 @@ Validator — vitest, one command, running the SAME schema the build uses:
   and a typo'd literal in a `refine`. Each negative case under `@ts-expect-error`. These prove rules
   that have no runtime behaviour to assert, so nothing else can hold them — and as Part 3 says, the
   site typecheck provably does not. Three things to get right: vitest does NOT collect `.test-d.ts`,
-  so they run under `npm run typecheck` and are worth nothing if your tsconfig excludes them —
+  so they run under `pnpm run typecheck` and are worth nothing if your tsconfig excludes them —
   confirm the typecheck actually fails when you delete a directive; put the directive where
   TypeScript reports the error, which for a kind definition is on the `build:` property rather than
   above the `defineKind(` call; and verify non-vacuity by the widening itself, not by deleting a
@@ -742,8 +837,11 @@ Validator — vitest, one command, running the SAME schema the build uses:
 CI / deploy — two GitHub Actions workflows, working-directory: site:
 
 - .github/workflows/ci.yml (on pull_request + push to main): actions/checkout@v6,
-  actions/setup-node@v6 (node-version 24, cache: npm, cache-dependency-path site/package-lock.json),
-  `npm ci` → `npm run typecheck` (astro check) → `npm test` (fails fast) → `npm run build`.
+  actions/setup-node@v6 (node-version 24), `corepack enable`, then
+  `pnpm install --frozen-lockfile` → `pnpm run typecheck` (astro check) → `pnpm test` (fails fast)
+  → `pnpm run build`. Do NOT also pin the pnpm version in this file: corepack reads
+  `packageManager` from package.json, so the manifest is the one place it is stated, and a second
+  pin in CI is a copy that drifts silently the first time only one of them is bumped.
 - .github/workflows/deploy.yml (on push to main): withastro/action@v6 (path: site) then
   actions/deploy-pages@v5; permissions: pages: write, id-token: write.
 
@@ -824,7 +922,7 @@ Parts 2–4 are the substrate, and they now arrive in three grades rather than o
               a dependency. This is the license-policy table, the kind-manifest format and its
               deriver, the kind CONTRACT and its assembly and routing, the four inherited
               reference vocabularies, the meta_tags.yml format, and the [[Target]] grammar.
-              Standing them up is `npm install` plus a composition point per package, each keeping
+              Standing them up is one install plus a composition point per package, each keeping
               the signature your callers already use.
   MECHANICAL  Re-stood-up rather than installed, because it is wiring rather than a format: the
               site/ Astro app, the one-schema-two-consumers arrangement, the types/ directory

@@ -77,7 +77,14 @@ summarized paper). Three consequences worth stating outright:
 Each declaration carries a **requirement level** (`required` / `recommended` / `optional`) and a
 **disposition** — whether casting may carry the file into a skill artifact (`foundry-only` never
 leaves; `cast-input` is read by the caster but does not appear in the output; `bundled` is copied
-in).
+in). The disposition is enforced, not descriptive: a cast's forbidden-file list is derived from
+it rather than restated beside it.
+
+> A second collision worth naming, like the one above. An instance may also carry a per-*note*
+> `companions:` field, and it answers a different question — not *what may sit beside this note*
+> (layout, the kind's to declare) but *what does this note carry into a cast* (membership, which
+> stays declared per note precisely so that no file ships because of where it was saved). Both
+> senses are legitimate; a page using either should say which.
 
 **Collection** — a *location*: a base directory plus the pattern selecting which files under it are
 notes, and the kind those notes are. Collections and kinds are deliberately not one-to-one — one

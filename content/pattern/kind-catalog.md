@@ -67,21 +67,30 @@ artifact. Both terms are pinned in the [[astro-stack-glossary]] — they belong 
 than to the pattern — and specified in Part 3 of the
 [[standing-up-a-foundry|Astro-stack worked example]].
 
-Two things that declaration makes visible for the first time:
+Three things that declaration makes visible for the first time:
 
 - **`pattern` is a directory in one instance and a flat file in the other.** Same kind, same
   layer, different physical form. That difference used to live inside each instance's collection
   glob and reached no manifest, so this page could not have reported it however carefully you
   read the tables.
 - **An open companion set is not an empty one.** A kind may declare that files it has not
-  enumerated are legitimately present — vendored sources beside a research note, acquisition
-  files beside a book chapter. That says *unbounded*, not *none*. They are opposite claims, and
-  only one of them is checkable.
+  enumerated are legitimately present — vendored sources beside a research note. That says
+  *unbounded*, not *none*. They are opposite claims, only one of them is checkable, and the table
+  below marks the open one rather than leaving a blank to be read either way. Exactly one kind
+  across both instances declares it. A book chapter looked like the second case and is not: its
+  acquisition files sit at the *book* level, one directory above the chapter that is the note, so
+  declaring the chapter open would have claimed unboundedness where the truth is those files
+  belong to a container that is not a note at all.
+- **The declaration is load-bearing, not documentation.** One instance's casting pipeline kept a
+  hand-written list of files a skill artifact may never carry; it named two of the eight its kinds
+  declare. Deriving that list from the dispositions instead is what turned the metadata this page
+  reports into something a check answers to — and the size of the gap is the argument for it.
 
-**Not in the tables below yet.** The declarations landed in the instances first. The snapshots
-this page renders predate them, and this site's manifest reader is still the version that drops
-the new fields on the way in. So the section above describes what the instances now declare, not
-what is rendered below — deliberately stated rather than left for a reader to discover as a gap.
+Each substrate kind below carries a companion table with one row per file and one column per
+instance, reading *requirement · disposition*. A file both instances declare at the same
+requirement and the same disposition is highlighted: that is the layout transferring, and it is
+the strongest claim on this page. A file one instance declares and the other does not shows as a
+dash — an extension inside a shared kind, which is a real difference and not a gap in the data.
 
 For where these kinds live inside a repository, and what a new instance should copy first, see
 [[anatomy-of-an-instance]] and the [[standing-up-a-foundry|Astro-stack worked example]]. For the

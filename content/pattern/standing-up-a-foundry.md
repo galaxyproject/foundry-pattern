@@ -65,6 +65,12 @@ deduced:
 - **Commit the probe.** One instance carried three comments claiming its typecheck caught a
   hazard; measured, it caught neither of the two. Zero errors is what success and total erasure
   both look like.
+- **An upgrade can move a rule's enforcement without moving the rule.** Both instances took the
+  same major-version wave, and it changed *who* was holding two of the checklist's rules. A schema
+  library stopped making one of them compulsory, so the contract now holds it alone; a framework
+  stopped running a plugin pipeline unless asked, so a build that renders every link as literal
+  text still passes. Neither failure is loud, and a checklist that keeps the rule while its
+  original justification quietly expires is how prescription rots.
 
 That last one is the shape of the whole category: the checklist absorbed the measurement, not
 the assumption.
