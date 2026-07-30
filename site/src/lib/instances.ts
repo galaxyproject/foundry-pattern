@@ -199,14 +199,15 @@ export interface CompanionRow {
  * behind it, and no more.
  */
 export function companionRows(row: KindRow): CompanionRow[] {
+  // Only directory-shaped instances declare a layout. A companion named on a file-shaped kind
+  // has no directory to sit in — `companionsOf` refuses to build one, so no instance can emit
+  // it — and rendering it as this kind's layout would be reporting a claim nobody made.
   const declaring = row.present.filter((i) => row.by[i.slug]!.shape === 'directory');
-  const files = [
-    ...new Set(declaring.flatMap((i) => (row.by[i.slug]!.companions ?? []).map((c) => c.file))),
-  ];
+  const files = [...new Set(declaring.flatMap((i) => row.by[i.slug]!.companions.map((c) => c.file)))];
   const rows = files.map((file) => {
     const by: Record<string, Companion | undefined> = {};
     for (const instance of declaring) {
-      by[instance.slug] = (row.by[instance.slug]!.companions ?? []).find((c) => c.file === file);
+      by[instance.slug] = row.by[instance.slug]!.companions.find((c) => c.file === file);
     }
     const declared = declaring.map((i) => by[i.slug]).filter((c): c is Companion => Boolean(c));
     const shared = declared.length === declaring.length && declaring.length > 1;
@@ -230,16 +231,14 @@ export function companionRows(row: KindRow): CompanionRow[] {
 /**
  * Kinds whose notes are flat files in one instance and directories in another.
  *
- * Instances that declare no shape at all are skipped rather than counted as a third value: an
- * older manifest is silent, not different, and reporting silence as disagreement would put a
- * kind on this list for the one reason that says nothing about the kind.
+ * There is no third value to guard against. This used to skip instances declaring no shape, on
+ * the reasoning that an older manifest is silent rather than different — but the format makes
+ * `shape` required, so a silent manifest does not parse and never arrives here. The guarantee
+ * belongs to the reader; restating it here only implied it might not hold.
  */
 export function shapeDifferences(rows: KindRow[]): string[] {
   return rows
-    .filter(
-      (row) =>
-        new Set(row.present.map((i) => row.by[i.slug]!.shape).filter(Boolean)).size > 1,
-    )
+    .filter((row) => new Set(row.present.map((i) => row.by[i.slug]!.shape)).size > 1)
     .map((row) => row.kind);
 }
 

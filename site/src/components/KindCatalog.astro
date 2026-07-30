@@ -80,14 +80,12 @@ const openSet = (kind: ManifestKind) => kind.additionalCompanions === "allow";
           <div>
             <dt class="font-semibold">
               {i.title}
-              {row.by[i.slug]!.shape && (
-                <span
-                  class="ml-2 rounded px-1.5 py-0.5 text-xs font-normal"
-                  style="background: var(--graphite); color: var(--muted)"
-                >
-                  {row.by[i.slug]!.shape}
-                </span>
-              )}
+              <span
+                class="ml-2 rounded px-1.5 py-0.5 text-xs font-normal"
+                style="background: var(--graphite); color: var(--muted)"
+              >
+                {row.by[i.slug]!.shape}
+              </span>
               {openSet(row.by[i.slug]!) && (
                 <span
                   class="ml-1 rounded px-1.5 py-0.5 text-xs font-normal"
@@ -183,14 +181,12 @@ const openSet = (kind: ManifestKind) => kind.additionalCompanions === "allow";
           .map((row) => (
             <div class="mt-3 rounded-lg border p-4" style="border-color: var(--rule)">
               <code style="color: var(--ember)">{row.kind}</code>
-              {row.by[instance.slug]!.shape && (
-                <span
-                  class="ml-2 rounded px-1.5 py-0.5 text-xs"
-                  style="background: var(--graphite); color: var(--muted)"
-                >
-                  {row.by[instance.slug]!.shape}
-                </span>
-              )}
+              <span
+                class="ml-2 rounded px-1.5 py-0.5 text-xs"
+                style="background: var(--graphite); color: var(--muted)"
+              >
+                {row.by[instance.slug]!.shape}
+              </span>
               {openSet(row.by[instance.slug]!) && (
                 <span
                   class="ml-1 rounded px-1.5 py-0.5 text-xs"
@@ -208,9 +204,9 @@ const openSet = (kind: ManifestKind) => kind.additionalCompanions === "allow";
                   .filter((f) => f.required)
                   .map((f) => <code class="mr-1">{f.name}</code>)}
               </p>
-              {(row.by[instance.slug]!.companions ?? []).length > 0 && (
+              {row.by[instance.slug]!.companions.length > 0 && (
                 <ul class="mt-2 space-y-0.5 text-sm">
-                  {row.by[instance.slug]!.companions!.map((companion) => (
+                  {row.by[instance.slug]!.companions.map((companion) => (
                     <li>
                       <code>{companion.file}</code>{" "}
                       <span style="color: var(--muted)">
