@@ -77,6 +77,10 @@ Two things that declaration makes visible for the first time:
   enumerated are legitimately present — vendored sources beside a research note, acquisition
   files beside a book chapter. That says *unbounded*, not *none*. They are opposite claims, and
   only one of them is checkable.
+- **The declaration is load-bearing, not documentation.** One instance's casting pipeline kept a
+  hand-written list of files a skill artifact may never carry; it named two of the eight its kinds
+  declare. Deriving that list from the dispositions instead is what turned the metadata this page
+  reports into something a check answers to — and the size of the gap is the argument for it.
 
 **Not in the tables below yet.** The declarations landed in the instances first. The snapshots
 this page renders predate them, and this site's manifest reader is still the version that drops

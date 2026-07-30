@@ -390,14 +390,17 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   with holes in it — and the holes would hide a real finding, that `pattern` is a directory in one
   instance and a flat file in the other. That is a substrate difference which was expressible only
   inside each instance's collection glob and reached no manifest.
-  What this REPLACES is the reason it is worth the two fields. One instance answered "what files
-  belong to this note?" in FOUR places that did not agree: two hand-written per-kind allowlists in
-  the validator, a per-NOTE `companions:` frontmatter list the caster copied into bundles, a
-  `<stem>.*` scan of a bundled note's body that existed only to catch that list being FORGOTTEN,
-  and a site component naming `eval.md` by literal path. The per-note list is the tell — it
-  existed because nothing at the KIND level knew, and the body scan existed because a per-note
-  list can be forgotten. Declare it once at the kind and the premise of all four is gone. Do not
-  add the kind-level declaration BESIDE the allowlists; a third copy is the drift you are removing.
+  What this REPLACES is the reason it is worth the two fields. One instance answered "what may sit
+  beside this note?" in four places that did not agree: two hand-written per-kind allowlists in the
+  validator (mold, pipeline), a per-kind constant naming the single required file for a third
+  (prompt), and NOTHING AT ALL for a fourth. Note what each could not say. An allowlist cannot say
+  a file is REQUIRED; a required-file constant cannot say a file is FORBIDDEN; and none of the four
+  was reachable from the kind whose layout it described, so a catalog rendering that kind could
+  report neither. That is the shape of the argument for one declaration: not that four is more than
+  one, but that each of the four could express a different HALF of the same fact.
+  That instance has since carried this out, and the collapse is the confirmation: all four are
+  gone, replaced by one walk handing `checkCompanions` a directory listing. Do not add the
+  kind-level declaration BESIDE the allowlists — a fifth copy is the drift you are removing.
 - `companions: []` MEANS NONE, and an absent key is not an option. "Not modelled" versus "none,
   enforced" is a distinction invisible to a reader and unrenderable in a catalog without
   misreporting one of the two, so the open-set half is said out loud instead:
@@ -417,17 +420,47 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   directory's business. The single case that wanted a wildcard was fixed by changing the layout so
   the file has a fixed name, which is the general move: a pattern escape hatch is very hard to
   remove once a corpus leans on it.
+  A trailing slash is also the case a naive matcher misses: one instance's stray-file walk looked
+  only at FILES, so a directory-shaped companion was unmatchable and reported as undeclared no
+  matter what the kind said. Check that yours matches a declared directory before you need it to.
   `disposition` is ONE axis — whether the file reaches a skill artifact. `foundry-only` never
   leaves (eval, scenarios). `cast-input` means the caster READS it and it does not appear in the
   output (a per-note condensation prompt). `bundled` is copied in (a vendored schema). The middle
-  value is the one a boolean cannot express, and it is not hypothetical: a target's forbidden-file
-  list is every companion that is not `bundled` — BOTH other values — and one instance's target
-  omits exactly the `cast-input` file from that list today.
+  value is the one a boolean cannot express, and the reason to model it at the kind is a measured
+  one. A target's forbidden-file list is every companion that is not `bundled` — BOTH other values
+  — and one instance kept that list by hand in its target config, where it named TWO of the eight
+  its kinds declared. Deriving it from the declarations closed the gap: of the nine tests written
+  against the derived set, six pass under the old hand-written list, which is the drift measured
+  rather than asserted. Derive it, and do not generate the list back into the target — a generated
+  copy needs its own `--check` to stay honest, which is the failure mode being removed, and a
+  disposition is a fact about the KIND that a per-target restatement can only disagree with.
+  Two things a union across kinds has to get right, neither of which a two-name list ever
+  exercised: a name ANY kind declares `bundled` must be excluded even where another kind calls it
+  `foundry-only` (one instance packages `examples/` from two kinds), and a file a reference legally
+  claims must be exempt, because the check has only a BASENAME to go on — a vendored `README.md`
+  beside a research note is otherwise refused by the mold companion of that name.
 - COMPANIONS DESCRIBE LAYOUT, NOT DEPENDENCIES. If a companion declaration starts growing
   `used_at` / `load` / `mode`, it has turned into a second reference contract, and the answer is a
   `references:` entry instead. Worth watching precisely because both sides can be described as
   "a file this note needs" — the difference is that a companion says where a file SITS and a
   reference says what a note DRAWS ON.
+- WHAT MAY SIT BESIDE A NOTE AND WHAT A NOTE CARRIES INTO A CAST ARE TWO QUESTIONS, and only the
+  first is the kind's. It is tempting to collapse them once the kind knows the layout — the
+  directory listing is right there, so why should a note declare anything? Because the answer to
+  the second question decides what reaches a SKILL BUNDLE, and deriving it from the listing means a
+  file ships because of where somebody saved it. One instance planned exactly that collapse,
+  implemented the kind-level half, and then kept its per-NOTE `companions:` list deliberately —
+  what a note carries is DECLARED, never inferred. The two coexist without duplicating because they
+  answer different questions: the kind's list is names in one directory and is about layout; the
+  note's is paths (its own subdirectories included) and is about membership. Reject `..` in the
+  second one — a character class permissive enough for filenames admits it as a whole segment, and
+  a note that can name `../` can bundle a file it does not own.
+- A LAYOUT DECLARATION SAYS A FILE IS THERE, NEVER THAT IT SAYS ANYTHING. Whether `eval.md` exists
+  beside a Mold is the declaration's business, and `recommended` is what produces the warning.
+  Whether it contains a single property check is a rule about CONTENTS, which no layout vocabulary
+  should learn to express — keep those in the validator. Draw this line when you adopt the
+  declaration, or the checks it should have deleted stay, each now duplicating a warning the
+  declaration already emits.
 - `build` returns the BARE OBJECT; `refine` carries the cross-field rules over the fields already
   present. What that protects is the manifest generator's walk of `.shape` — and note that zod 4
   changed who ENFORCES it. Under zod 3 a refined object became a ZodEffects: no `.shape`, and not
@@ -727,7 +760,15 @@ Validator — vitest, one command, running the SAME schema the build uses:
   Two wiring notes. Tell it which sibling entries are NOTES; it will not guess, and the reason is
   in Part 3. And drive the walk from the collection table, so the directories checked are exactly
   the ones the loader routes — same single-walk rule as the conformance test above, same reason.
-  This check REPLACES the per-kind allowlists. It does not sit beside them.
+  This check REPLACES the per-kind allowlists. It does not sit beside them — one instance has now
+  deleted all four of its mechanisms in favour of this one walk, so the replacement is a thing that
+  happened rather than a thing being recommended. Two carve-outs survive the collapse, and both are
+  about a file's CONTENTS rather than its presence: a rule that one companion's frontmatter uses a
+  fixed decision vocabulary, and the eval/scenario body checks. Those are not layout, and moving
+  them into a layout declaration is how that declaration starts growing a second reference
+  contract. And exclude dotfiles from the listing before you hand it over: editor and OS state is
+  not something a kind failed to declare, and it is the one exclusion the declaration cannot state
+  for itself.
 - site/tests/frontmatter-schema.test.ts — a negative-fixture table: each broken frontmatter
   asserts the SPECIFIC issue path+message it must raise, with a positive baseline per type. A
   rule with no negative fixture is a rule you are only hoping is enforced.
