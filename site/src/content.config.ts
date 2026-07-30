@@ -13,6 +13,13 @@ const docs = defineCollection({
     description: z.string().optional(),
     section: z.enum(['pattern', 'case', 'instances', 'blog']),
     order: z.number().optional(),
+    // Path (relative to content/) of a plain-text file rendered verbatim in a <pre>
+    // after the page body — for pages whose payload is literal instructions, not prose.
+    instructions: z.string().optional(),
+    // Names a GENERATED payload rendered after the page body, built from the instances'
+    // vendored manifests (src/data/instances/). Same shape of field as `instructions`:
+    // the page frame is prose, the payload is not hand-maintained.
+    catalog: z.enum(['kinds', 'tags']).optional(),
     // blog
     date: z.coerce.date().optional(),
     // instance profiles

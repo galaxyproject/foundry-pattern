@@ -1,31 +1,32 @@
 // Pre-build lint for wiki-links in content/**.md.
 //
-// The runtime resolver (src/lib/remark-wiki-links.ts) degrades gracefully on
-// two mistakes, which means neither one fails the build on its own and both
-// have shipped unnoticed:
+// The renderer degrades gracefully on two mistakes, which means neither one fails the
+// build on its own and both have shipped unnoticed:
 //
-//   1. A [[link]] wrapped across a newline. The resolver's regex is
-//      /\[\[([^\]\n]+)\]\]/g — it excludes newlines, so a wrapped link never
-//      matches and renders as literal "[[...]]" brackets in the prose.
-//   2. A [[target]] that resolves to no page. The resolver renders it as bold
-//      text (a deliberate "visible but not a dead anchor" fallback), so a
-//      typo'd slug reads as emphasis and never errors.
+//   1. A [[link]] wrapped across a newline. The grammar excludes newlines by design, so a
+//      wrapped link never matches and renders as literal "[[...]]" brackets in the prose.
+//   2. A [[target]] that resolves to no page. The transform renders it bold (a deliberate
+//      "visible but not a dead anchor" fallback), so a typo'd slug reads as emphasis.
 //
-// This check turns both into build failures. It mirrors the resolver: it skips
-// code (which the mdast pipeline never linkifies) and normalizes targets the
-// same way. Slug rules are duplicated from src/lib/slug.ts — keep them in sync;
-// the pair is small and stable (strip a leading 1–2 digit order prefix only).
+// This check turns both into build failures. It shares the GRAMMAR with the renderer —
+// `slugify` and `parseWikiLink` come from @galaxy-foundry/wiki-links, so a target cannot be
+// normalized one way here and another way there. It does NOT share the scanner: catching
+// mistake 1 requires deliberately matching across newlines, which the package's scan regex
+// excludes, so the regex below is wider than the real grammar on purpose.
+//
+// `deprefix` is duplicated from src/lib/slug.ts rather than imported: this script runs
+// under whatever Node the deploy action provides, which may predate TypeScript stripping.
+// It is the site's own map rule, not a shared one, and it is one regex.
 
 import fs from 'node:fs';
 import path from 'node:path';
+
+import { parseWikiLink, slugify } from '@galaxy-foundry/wiki-links';
 
 const CONTENT_DIR = path.resolve(new URL('../../content', import.meta.url).pathname);
 
 /** Strip a leading one/two-digit order prefix (mirrors slug.ts deprefix). */
 const deprefix = (s) => s.replace(/^\d{1,2}-/, '');
-/** Slug/target normalization (mirrors remark-wiki-links.ts normalize). */
-const normalize = (s) =>
-  s.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
 function walk(dir, out) {
   for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -36,7 +37,12 @@ function walk(dir, out) {
 }
 
 /** Blank out fenced blocks and inline code so [[ ]] inside them is ignored,
- *  preserving newlines so reported line numbers stay accurate. */
+ *  preserving newlines so reported line numbers stay accurate.
+ *
+ *  This mirrors the transform, which rewrites text nodes only — a backtick means the
+ *  syntax, not a link. Note the consequence: a backticked [[target]] naming a page that
+ *  does not exist is invisible to BOTH surfaces, so it renders as dead monospace and is
+ *  reported by nothing. If you mean a link, do not wrap it. */
 function stripCode(src) {
   const blankNonNewline = (m) => m.replace(/[^\n]/g, ' ');
   return src
@@ -47,10 +53,9 @@ function stripCode(src) {
 const files = [];
 walk(CONTENT_DIR, files);
 
-// Valid targets: the de-prefixed, normalized basename of every content file.
-const slugs = new Set(
-  files.map((f) => normalize(deprefix(path.basename(f, '.md')))),
-);
+// Valid targets: the de-prefixed basename of every content file, keyed exactly as the
+// renderer keys its map.
+const slugs = new Set(files.map((f) => slugify(deprefix(path.basename(f, '.md')))));
 
 const lineOf = (src, idx) => src.slice(0, idx).split('\n').length;
 const errors = [];
@@ -69,10 +74,16 @@ for (const file of files) {
       errors.push(`${rel}:${line}  line-wrapped link (renders as literal [[…]]): [[${flat}]]`);
       continue;
     }
-    const rawTarget = (inner.includes('|') ? inner.slice(0, inner.indexOf('|')) : inner).trim();
-    const page = rawTarget.includes('#') ? rawTarget.slice(0, rawTarget.indexOf('#')) : rawTarget;
-    if (!slugs.has(normalize(page))) {
-      errors.push(`${rel}:${line}  unresolved target (renders as silent bold): [[${rawTarget}]]`);
+    const link = parseWikiLink(inner);
+    // A payload that parses to nothing (`[[ ]]`) is left as written by the transform too.
+    if (!link) continue;
+    const slug = slugify(link.target);
+    // An empty slug never resolves — `[[...]]` and `[[***]]` slugify to ''. The transform
+    // refuses these rather than prefix-matching every key, so they are genuinely unresolved.
+    if (slug.length === 0 || !slugs.has(slug)) {
+      errors.push(
+        `${rel}:${line}  unresolved target (renders as silent bold): [[${link.target}${link.anchor}]]`,
+      );
     }
   }
 }

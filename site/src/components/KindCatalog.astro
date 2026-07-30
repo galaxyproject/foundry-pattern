@@ -1,0 +1,110 @@
+---
+import {
+  loadInstances,
+  kindRows,
+  layerDisagreements,
+  sharedRequiredFields,
+} from "../lib/instances";
+
+const instances = loadInstances();
+const rows = kindRows(instances);
+const shared = rows.filter((r) => r.shared);
+const local = rows.filter((r) => !r.shared);
+const disagreements = layerDisagreements(rows);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<div class="not-prose mt-8">
+  <div class="rounded-lg border p-4 text-sm" style="border-color: var(--rule); background: var(--graphite)">
+    <strong>Generated</strong> from each instance's own schemas. Every required-metadata table
+    below is derived from that instance's zod definitions, not transcribed — so a kind that
+    changes upstream changes here, and cannot quietly disagree.
+    <ul class="mt-2 space-y-0.5" style="color: var(--muted)">
+      {instances.map((i) => (
+        <li>
+          <a href={`${base}/instances/${i.slug}/`}>{i.title}</a> —
+          <code>{i.manifest.source.repo}</code> @ <code>{i.manifest.source.revision}</code>,
+          {" "}{i.manifest.kinds.length} kinds
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  {disagreements.length > 0 && (
+    <p class="mt-4 rounded-lg border p-4 text-sm" style="border-color: var(--ember); color: var(--muted)">
+      <strong style="color: var(--ember)">Drift:</strong> {disagreements.join(", ")} —
+      declared <code>layer: substrate</code> by an instance, but not declared by every
+      instance. The table below reflects what the instances actually declare.
+    </p>
+  )}
+
+  <h2 class="mt-10 text-2xl font-bold" style="font-family: var(--font-display)">
+    Substrate kinds
+  </h2>
+  <p class="mt-2 text-sm" style="color: var(--muted)">
+    Declared by <em>every</em> instance. This is the empirical definition — a kind is substrate
+    because two independently-motivated domains both reached for it, not because someone
+    labelled it so. These are what a new Foundry starts from.
+  </p>
+
+  {shared.map((row) => (
+    <section class="mt-6 rounded-lg border p-5" style="border-color: var(--rule)">
+      <h3 class="text-xl font-semibold" style="font-family: var(--font-display); color: var(--ember)">
+        <code>{row.kind}</code>
+      </h3>
+      <dl class="mt-3 space-y-3 text-sm">
+        {row.present.map((i) => (
+          <div>
+            <dt class="font-semibold">{i.title}</dt>
+            <dd class="mt-0.5" style="color: var(--muted)">{row.by[i.slug]!.summary}</dd>
+            <dd class="mt-1">
+              <span style="color: var(--muted)">requires</span>{" "}
+              {row.by[i.slug]!.fields
+                .filter((f) => f.required)
+                .map((f) => <code class="mr-1">{f.name}</code>)}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      {sharedRequiredFields(row).length > 0 && (
+        <p class="mt-3 border-t pt-3 text-sm" style="border-color: var(--rule); color: var(--muted)">
+          <strong>Required by both:</strong>{" "}
+          {sharedRequiredFields(row).map((f) => <code class="mr-1">{f}</code>)}
+        </p>
+      )}
+    </section>
+  ))}
+
+  <h2 class="mt-12 text-2xl font-bold" style="font-family: var(--font-display)">
+    Instance-specific kinds
+  </h2>
+  <p class="mt-2 text-sm" style="color: var(--muted)">
+    Declared by one instance only. These are the extensions — what each domain had to add on
+    top of the substrate, and the honest measure of how much a second instance actually shared.
+  </p>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2">
+    {instances.map((instance) => (
+      <div>
+        <h3 class="text-lg font-semibold" style="font-family: var(--font-display)">
+          {instance.title}
+        </h3>
+        {local
+          .filter((row) => row.by[instance.slug])
+          .map((row) => (
+            <div class="mt-3 rounded-lg border p-4" style="border-color: var(--rule)">
+              <code style="color: var(--ember)">{row.kind}</code>
+              <p class="mt-1 text-sm" style="color: var(--muted)">
+                {row.by[instance.slug]!.summary}
+              </p>
+              <p class="mt-2 text-sm">
+                <span style="color: var(--muted)">requires</span>{" "}
+                {row.by[instance.slug]!.fields
+                  .filter((f) => f.required)
+                  .map((f) => <code class="mr-1">{f.name}</code>)}
+              </p>
+            </div>
+          ))}
+      </div>
+    ))}
+  </div>
+</div>
