@@ -18,16 +18,26 @@ different stack may reasonably have none of them. Mixing the two makes the patte
 requires decisions it does not, which is the failure mode the [[anatomy-of-an-instance|Anatomy]]
 page exists to prevent.
 
-So there are **three tiers of vocabulary** in a Foundry, and Part 1 of the worked example tells a
-new instance to pin them in this order:
+Vocabulary reaches a Foundry from three places, and Part 1 of the worked example says to pin them
+in this order:
 
-1. **The pattern's terms** — [[glossary]]. Inherited by every instance, copied verbatim.
-2. **The stack's terms** — this page. Inherited by every instance on this stack.
-3. **The domain's terms** — yours, coined corpus-first, in your own glossary.
+1. **The pattern's terms** — [[glossary]]. Every instance carries them, copied verbatim.
+2. **The stack's terms** — this page. Every instance sharing this stack carries them.
+3. **The domain's terms** — yours, coined corpus-first, once a real note needs one.
 
-If two pages disagree about a term on this page, this page wins; if a term here ever turns out to
-hold for Foundries on any stack, it should be promoted to the pattern glossary rather than copied
-into it.
+**That is an order of derivation, not a filing scheme.** The pattern site keeps two glossary pages
+because the two sets have different audiences and different lifetimes — a term here can be revised
+by a stack decision that has no bearing on a Foundry built some other way. An *instance* is under
+no such pressure, and should keep one cohesive glossary its readers can learn the domain from.
+Record where a term came from per entry, the way a kind declares its `layer` rather than living in
+a separate directory of substrate kinds; a reader arriving at your glossary is trying to learn your
+subject, not audit its supply chain.
+
+What the provenance is *for* is narrower than a section heading: an inherited term must keep its
+inherited definition, and a term you coined must not be able to pass as one the pattern handed you.
+
+If two pages disagree about a term on this page, this page wins. If a term here ever turns out to
+hold for Foundries on any stack, promote it to the pattern glossary rather than copying it there.
 
 ---
 

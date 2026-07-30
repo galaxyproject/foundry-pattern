@@ -27,15 +27,14 @@ base, rendered by Part 2's render-vault-doc helper) that the rest of the corpus 
   copy its definitions, do not re-invent them):
       Knowledge Base (KB), Mold, Reference, Cast, Casting, Skill artifact, Target, Provenance.
   Use these EXACT headwords so a term means the same thing in every instance.
-- THEN the STACK terms — a second inherited tier, and the one an instance is most likely to get
-  wrong by re-coining. Adopting this checklist's stack means adopting its vocabulary for how a
-  corpus is typed and laid out, pinned in the pattern site's Astro-Stack Glossary:
+- THEN the STACK terms, because adopting a stack means adopting its words. This one brings eight,
+  pinned in the pattern site's Astro-Stack Glossary and inherited exactly as the eight above are —
+  copied, not re-coined:
       Note, Kind, Shape, Companion, Collection, Kind context, Kind manifest, Tag/Facet.
-  THREE TIERS, and keep them scoped apart in your glossary exactly as you keep your domain terms
-  apart from both: the pattern's terms hold for a Foundry on ANY stack, the stack's terms hold
-  for the ones sharing this one, and yours hold for you. Hoisting a stack term into the pattern
-  tier is the same error as hoisting your domain jargon into either — it makes the pattern look
-  like it demands a decision it does not.
+  This is the tier an instance is likeliest to get wrong, and the reason is that these terms feel
+  like yours: you will type `kind` fifty times a day in your own repository, and re-deriving what
+  it means locally is the natural thing to do. It is also the tier that does not hold for a Foundry
+  on another stack, so it is not the pattern's to demand.
   Note / Kind / Companion define each other in that order — a note declares a kind, a kind fixes
   whether its notes are files or directories, and only a directory-shaped kind can have
   companions. Pin all three or none: `companion` used before `note` is pinned means "some file
@@ -50,8 +49,18 @@ base, rendered by Part 2's render-vault-doc helper) that the rest of the corpus 
   concrete realization.
 - One word per concept; retire the rivals. Resolve singular/plural, capitalization, and
   half-synonym drift here before it spreads.
-- Scope the shared substrate terms separately from the terms your domain coins. Do not hoist
-  domain jargon into the shared set.
+- ONE GLOSSARY, ordered for a reader learning YOUR domain — not partitioned by where each term
+  came from. Terms arrive from three places (the pattern, your stack, your own coinage), but that
+  is PROVENANCE, and provenance is a property of an ENTRY rather than a reason to split the page.
+  Record it per term the way a kind records `layer` instead of living in a separate directory of
+  substrate kinds: one marker, and a consumer asking what transferred computes the answer instead
+  of trusting your headings. A reader meeting your vocabulary for the first time needs it grouped
+  by MEANING; they did not arrive wanting a tour of which upstream supplied what.
+  The marker still carries everything the older "keep them scoped apart" rule was actually after:
+  an inherited term keeps its inherited DEFINITION, and a term you coined must not be able to pass
+  as one the pattern handed you. Both hold wherever the entry sits on the page. What you must not
+  do is redefine an inherited term to mean something local — that is the real failure, and moving
+  it to a different section was never what prevented it.
 - Make the glossary the tie-breaker: where two pages disagree, the glossary wins — state it
   outright. Casting copies glossary entries VERBATIM, never condensed.
 

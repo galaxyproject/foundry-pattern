@@ -86,10 +86,13 @@ decisions, but decisions *this* implementation made, which a Foundry on another 
 reasonably answer differently or not face at all. They are pinned in the
 [[astro-stack-glossary]], deliberately apart from the [[glossary]].
 
-That gives an instance three tiers to keep scoped apart in its own glossary: the pattern's terms,
-inherited by everyone; this stack's terms, inherited by everyone sharing it; and the domain's
-terms, which are yours alone. Part 1 below starts there, before any machinery, because a term
-hoisted into the wrong tier makes the pattern look like it demands a decision it does not.
+An instance therefore inherits vocabulary from two places before coining anything of its own: the
+pattern's terms, which every Foundry carries, and this stack's, which only the ones sharing it do.
+That is worth *recording* per term — an inherited word has to keep its inherited meaning — but it
+is not a reason to partition an instance's glossary into three sections. A Foundry's glossary
+should read as one cohesive vocabulary for the domain it teaches; where each term came from is a
+property of the entry, the same way a kind declares its `layer` rather than living in a separate
+directory of substrate kinds. Part 1 below starts there, before any machinery.
 
 ## How to read the checklist below
 
