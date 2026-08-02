@@ -266,15 +266,27 @@ that a note is well-formed.
   legibility is a substrate concern.
 - ASTRO 7 RUNS NO REMARK OR REHYPE PLUGIN UNLESS YOU ASK. It renders markdown with Sätteri, a Rust
   pipeline, and `markdown.remarkPlugins` — the astro ≤6 spelling, and the one every tutorial still
-  shows — is simply not consulted. It does not warn. The failure is a site that builds clean with
-  every `[[Target]]` rendered as literal text and every `$…$` as literal dollars, which is why the
-  wiring above names `markdown.processor` instead: opting the unified pipeline back in explicitly.
-  For this stack that is not a nicety — `[[wiki-links]]` is one of the six installed packages, and
-  Part 4's link check asserts against a grammar the renderer would no longer be applying.
-  `compressHTML: true` is a second pin of the same shape: 7 defaults it to 'jsx', which drops the
-  whitespace between inline elements that sit on their own source lines, so prose silently loses
-  spaces around links. Both are places where the SILENT default changed, and both are worth a
-  comment in the config saying so — a future reader deleting either sees no test go red.
+  shows — is not the wiring any more, which is why the block above names `markdown.processor`
+  instead: opting the unified pipeline back in explicitly. For this stack that is not a nicety —
+  `[[wiki-links]]` is one of the six installed packages, and Part 4's link check asserts against a
+  grammar the renderer would no longer be applying.
+  This entry USED to say the legacy spelling was silently ignored, leaving a site that built clean
+  with every `[[Target]]` rendered as literal text. Measured against 7.1.6 while bringing the third
+  repo onto the stack, that is wrong, and wrong in the reassuring direction: there is a shim. With
+  `@astrojs/markdown-remark` absent the build FAILS and tells you to install it; with it present the
+  plugins are migrated onto a unified processor and you get a deprecation warning. Either way you
+  are told. Write `markdown.processor` because it is the form the shim is asking for, not out of
+  fear of a silent break.
+- `compressHTML: true` is the pin in this part that DOES fail silently, and it is the one to spend
+  the paranoia on. 7 defaults it to 'jsx', which drops the whitespace between inline elements that
+  sit on their own source lines. Removing the pin on a finished site builds clean and glues prose
+  together on every page — nav rendering as `The PatternThe CaseInstances`, and the spaces around
+  inline links gone. Nothing goes red. Worth a comment in the config saying so, because a future
+  reader deleting it gets no other signal.
+  Both pins share a lesson bigger than either: ACCEPT A BUMP ON THE RENDERED PAGE, NOT THE BUILD.
+  A green `astro build` is evidence about the build, and these are defaults that change the OUTPUT.
+  Diff the rendered text against the pre-bump output — normalize whitespace and compare, so a
+  glued word shows up as a changed token — and count the resolved `[[link]]` anchors on both sides.
 - Declare routes in the page router site/src/pages/<collection>/[...slug].astro (+ index.astro
   per collection), and name each route AFTER ITS COLLECTION KEY, so the key IS the route and
   there is no mapping to keep. The collection table (Part 3) is then the only list of
