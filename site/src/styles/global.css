@@ -256,18 +256,33 @@ article.prose::before {
   text-decoration-color: var(--link);
 }
 
-/* Pagefind search widget — themed to the foundry dark steel */
-.pagefind-ui {
-  --pagefind-ui-primary: var(--ember);
-  --pagefind-ui-text: var(--steel);
-  --pagefind-ui-background: var(--iron);
-  --pagefind-ui-border: var(--rule);
-  --pagefind-ui-tag: var(--graphite);
-  --pagefind-ui-border-width: 1px;
-  --pagefind-ui-border-radius: 10px;
-  --pagefind-ui-font: var(--font-body);
+/* Pagefind search widget — themed to the foundry dark steel.
+   astro-pagefind 2 replaced pagefind-ui with the @pagefind/component-ui web components, which
+   read `--pf-*`; the old `--pagefind-ui-*` names now style nothing.
+   `data-pf-theme="dark"` is the package's own hook and is what the site is actually buying here:
+   it picks the dark half of the package's defaults for the ~15 vars below that are NOT overridden
+   (skeleton, shadows, error colours), which would otherwise render light-on-dark. The overrides
+   then ride on the same selector, where `html` qualifies it past the package's own (0,1,0). */
+html[data-pf-theme='dark'] {
+  --pf-font: var(--font-body);
+  --pf-background: var(--iron);
+  --pf-text: var(--steel);
+  --pf-text-secondary: var(--ash);
+  --pf-text-muted: var(--ash);
+  --pf-border: var(--rule);
+  --pf-border-focus: var(--ember);
+  /* Focus draws a ring AND a border. Mapping only the border leaves the ring on the package's
+     default blue, which reads as a second accent on the one element wearing the first. */
+  --pf-outline-focus: var(--ember);
+  --pf-border-radius: 10px;
+  --pf-hover: var(--graphite);
+  --pf-mark: var(--ember);
 }
-.pagefind-ui ::placeholder {
-  color: var(--ash);
+/* Colour already comes from `--pf-text-muted`; this is only here for the opacity. Firefox's UA
+   sheet fades placeholders to 0.54 and the package never resets it, so `--ash` would arrive
+   dimmer there than anywhere else. Class selectors, not `pagefind-input` — that element belongs
+   to the modal, and the searchbox builds a bare input of its own. */
+.pf-input::placeholder,
+.pf-searchbox-input::placeholder {
   opacity: 1;
 }
