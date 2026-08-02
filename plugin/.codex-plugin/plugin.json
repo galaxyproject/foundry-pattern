@@ -1,7 +1,7 @@
 {
   "name": "foundry-review",
   "version": "0.1.0",
-  "description": "Generic, infrastructure-agnostic skills for reviewing Foundry sites.",
+  "description": "Generic, infrastructure-agnostic skills for reviewing a Foundry's rendered pages and its design records.",
   "author": {
     "name": "John Chilton",
     "email": "jmchilton@gmail.com",
@@ -14,8 +14,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Foundry Review",
-    "shortDescription": "Review a Foundry site's rendered pages against source",
-    "longDescription": "Generic skills for reviewing any Foundry site: check that each source is captured and rendered faithfully for both humans and agents — clean markup, working links, surfaced metadata — without assuming a particular site's infrastructure.",
+    "shortDescription": "Review a Foundry's rendered pages and design records",
+    "longDescription": "Generic skills for reviewing any Foundry: check that each source is captured and rendered faithfully for both humans and agents — clean markup, working links, surfaced metadata — and that its design records still hold their scope against the shared record map. Assumes no particular instance's infrastructure.",
     "developerName": "The Foundry Pattern",
     "category": "Developer Tools",
     "capabilities": ["Read"],
@@ -23,7 +23,9 @@
     "defaultPrompt": [
       "Review the content pages changed on this branch for render fidelity.",
       "Check this rendered page against its source note.",
-      "Does the rendered site surface the metadata each source declares?"
+      "Does the rendered site surface the metadata each source declares?",
+      "I changed the caster — which design record owns that?",
+      "Review the design records changed on this branch against the record map."
     ]
   }
 }

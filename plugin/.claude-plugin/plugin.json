@@ -1,6 +1,6 @@
 {
   "name": "foundry-review",
-  "description": "Generic, infrastructure-agnostic skills for reviewing Foundry sites — capture/render fidelity, working links, metadata surfacing, human- AND agent-readable output.",
+  "description": "Generic, infrastructure-agnostic skills for reviewing a Foundry — capture/render fidelity of its pages, and the scope, voice, and staleness of its design records.",
   "version": "0.1.0",
   "author": {
     "name": "John Chilton",

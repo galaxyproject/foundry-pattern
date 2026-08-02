@@ -432,6 +432,10 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   The CONTENT is instance-owned: one Foundry may have a package graph and caster while a younger
   one has one Astro application and an explicit casting gap. A record that keeps resisting its own
   boundary is telling you something about the taxonomy, not only about the record.
+  The full map — every record's scope and exclusions, the change that obliges an edit to each, and
+  the reverse index from a change to the record that owns it — is the pattern's Design Records page
+  (`content/pattern/design-records.md`). Route a change through that index instead of opening every
+  record to find where a sentence goes.
 
 - GIVE EACH ARCHITECTURE RECORD AN EXCLUSION RULE. `code-architecture.md` does not enumerate note
   kinds or reproduce the file tree. `content-model.md` does not explain package dependencies.
