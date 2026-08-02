@@ -195,8 +195,10 @@ FIVE THINGS THAT WILL BITE:
 
 - Declare the dependency in the package that IMPORTS it — INCLUDING site/. A package resolving a
   shipped YAML asset relative to import.meta.url, reached only through a LINKED workspace package,
-  gets inlined into an SSR chunk by Vite, and the path then resolves against site/dist/chunks/
-  instead of node_modules. It passes every test and every typecheck, and fails at `astro build`.
+  gets inlined into an SSR chunk by Vite, and the path then resolves against the chunk directory
+  — site/dist/.prerender/chunks/ on 7.1.6 — instead of node_modules. It passes every test and
+  every typecheck, and fails at `astro build`. The Part 2 anchoring rule is the same mechanism
+  seen from the consumer's side; this is the half that bites while you are packaging.
 - kind-manifest pins `zod` as a PEER dependency at ^4, because the deriver reads `_zod.def.type` —
   zod INTERNALS, since zod exposes no public reflection API and the alternative is the hand-written
   field table this mechanism exists to prevent. Three consequences, the last of which is what a
@@ -342,6 +344,35 @@ that a note is well-formed.
   bypass validation. `content/meta/*.md` is a validated `meta` collection, with only the named
   loose docs skipped. The failure mode to avoid is a hand-written route registry standing in for a
   collection: it omits real pages silently, and no schema or drift check ever reports the gap.
+- EVERY SITE MODULE THAT READS A FILE OUTSIDE site/ ANCHORS ON `root` FROM `astro:config/server`,
+  never on a `../` count from its own `import.meta.url`. Give that one line its own module,
+  src/lib/repo-root.ts, because the import resolves only inside an Astro build; anything worth
+  testing outside one takes a directory rather than finds one.
+  `astro build` collapses pages, components and lib modules alike into a single chunk directory.
+  Measured on 7.1.6 by printing `import.meta.url` from all three positions into a built page: all
+  three read site/dist/.prerender/chunks/, four levels below the repo root. So a hop count written
+  against a source path is right afterwards only where that source is four deep too — and nothing
+  in the file tells you which it is. One instance had it both ways at once. Its Mold pages sat at
+  src/pages/molds/, four deep, and were right by that coincidence. A components file and a lib
+  file sat three deep and were not: the components file reported "eval.md not written yet" on all
+  47 Mold pages while 33 had one, and the lib file rendered `Pipelines 0 / Shared skills 0 /
+  Casts 0` against 54 committed skills, dropping 54 pages from a build that reported 316 and
+  passed. Both are the failure this part keeps warning about — a green build and a wrong page —
+  but arriving as an EMPTY LIST, which the rendered-text diff above does not catch either: the
+  elements were never emitted, so there is nothing on the other side to compare. Count what a page
+  should list, not just what it says.
+  FIX THE RULE, NOT THE MODULE. That instance did fix the components file, and wrote the whole
+  diagnosis into a comment atop the module it created to hold the anchor — then made the identical
+  mistake one directory over, because the next author had no way to know that module existed. A
+  test that walks site/src and fails any module combining `import.meta.url` with a literal `..` is
+  ten lines and is the only version of this that survives an author who has not read the comment.
+  Strip comments before scanning, or the module explaining the bug is your first false positive.
+  Exempt an upward search that walks one `dirname` at a time until it finds what it wants: that is
+  depth-tolerant by construction, and it is how you read an installed package's own version.
+  `path.resolve('../content')` is a different and lesser hazard — cwd is not a build-time property,
+  so it survives bundling and fails only if the build is invoked from outside site/. Keep it where
+  the module is loaded before `astro:config/server` would resolve, content.config.ts imports in
+  particular, and say in the file that this is why.
 - Dev: `pnpm run dev` (astro dev). Build: `astro build --force`.
 
 
@@ -996,7 +1027,8 @@ Parts 2–4 are the substrate, and they now arrive in three grades rather than o
               the signature your callers already use.
   MECHANICAL  Re-stood-up rather than installed, because it is wiring rather than a format: the
               site/ Astro app, the one-schema-two-consumers arrangement, the types/ directory
-              layout, the vitest validator, the ci.yml/deploy.yml workflows.
+              layout, the vitest validator, the ci.yml/deploy.yml workflows, the repo-root anchor
+              and the test that enforces it.
   YOURS       The halves the packages deliberately decline. Which kinds exist and what each
               requires; your facet vocabulary; your reference `kinds`; your link map; your
               license COHERENCE rules; your base envelope, ported honestly.
@@ -1004,6 +1036,13 @@ Parts 2–4 are the substrate, and they now arrive in three grades rather than o
 The middle grade is where the next packages come from. If you find yourself writing something in
 the MECHANICAL column for the second time in a second instance, that is the signal — and only the
 second time, never the first.
+The repo-root anchor is the entry to watch, and the reason it is not already a package is worth
+being pedantic about: it exists in two instances because it was PORTED from one to the other, not
+because two authors arrived at it. That is a copy, and a copy is evidence that this code is
+duplicated, not that the design generalizes. It is also three lines wrapping an import that only
+Astro can resolve, so a package would ship the wrapper and not the knowledge. The knowledge is
+the bullet in Part 2. Should a third instance write the anchor before reading that bullet, the
+evidence changes and so should this line.
 
 Part 1 and Parts 5–8 are the domain — but even the vocabulary starts from a shared spine: the
 eight substrate terms in Part 1 are inherited from the pattern glossary and the eight stack terms
