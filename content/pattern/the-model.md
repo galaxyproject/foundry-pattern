@@ -53,7 +53,9 @@ A Mold composes these into one coherent declaration of an action. Authoritative 
 
 ## Cast
 
-**Casting** is the compilation step that turns a Mold into a target-specific artifact. It runs **deterministic-first, LLM-second** — that ordering is a trust ordering. Deterministic tooling assembles the artifact body, copies verbatim references, builds sidecars, and writes provenance; an LLM is invoked only where it adds value, on the reference kinds explicitly marked for condensation, and every LLM-produced fragment is recorded. The skill body itself is never hand-maintained: if a cast looks under-instructed, you fix the Mold and re-cast.
+**Casting** is the compilation step that turns a Mold into a target-specific artifact. It runs **deterministic-first, LLM-second** — that ordering is a trust ordering. Deterministic tooling assembles the artifact body, copies verbatim references, builds sidecars, and writes provenance; an LLM may run only after that, only on the reference kinds a Mold explicitly marks for condensation, and every LLM-produced fragment is recorded. The skill body itself is never hand-maintained: if a cast looks under-instructed, you fix the Mold and re-cast.
+
+What the pattern fixes is the ordering, not the mix — and how far the deterministic half reaches is a domain question. The answer both current instances arrived at is: all the way. Neither has a live condensed reference. The [[galaxy-workflow-foundry]] built the LLM phase, ran it, and retired it once every condensation it had turned out to be a verbatim passthrough; the [[statistical-genomics-foundry]] declined the capacity before building it, since its size problem was solved by load policy rather than by rewriting. So "LLM-second" is at present a second half that is empty, which is worth saying plainly rather than implying a mixed pipeline neither instance runs. The ordering still earns its keep: a cast with nothing generated in it is byte-stable, and byte-stability is what makes the drift check a hash comparison instead of a judgement call.
 
 Casting is the **integration boundary**. The artifact it produces is:
 
