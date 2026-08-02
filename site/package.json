@@ -9,7 +9,7 @@
     "sync:instances": "node scripts/sync-instance-data.mjs",
     "check:instances": "node scripts/sync-instance-data.mjs --check",
     "prebuild": "node scripts/check-wiki-links.mjs",
-    "build": "astro build",
+    "build": "astro build --force",
     "preview": "astro preview",
     "test": "vitest run",
     "typecheck": "astro check",
