@@ -19,8 +19,9 @@ PART 1 — DEFINE THE VOCABULARY FIRST
 
 A Foundry names things that did not exist before it, and the glossary is the KB's highest
 fan-in reference — the casting model grounds on it, and a human learns the domain from it.
-Pin it first, in one glossary: content/meta/glossary.md (a loose doc, outside every collection
-base, rendered by Part 2's render-vault-doc helper) that the rest of the corpus answers to.
+Pin it first, in one glossary: content/meta/glossary.md (the deliberate loose-doc exception
+inside the design-record directory, excluded by name from the `meta` collection and rendered by
+Part 2's render-vault-doc helper) that the rest of the corpus answers to.
 
 - Bootstrap it with the SHARED SUBSTRATE TERMS before coining a single domain term. Every
   Foundry glossary carries these eight, inherited from the pattern glossary (the authority —
@@ -81,8 +82,9 @@ REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal
   Validator     vitest ^3.2.4
 
   Layout        repo root holds site/ and content/ as siblings; paths under content/ resolve
-                from the site/ cwd as '../content/…'. content/meta/ holds cross-cutting docs
-                that are NOT collection entries (glossary, an ops log).
+                from the site/ cwd as '../content/…'. content/meta/ holds flat `meta` design
+                records; glossary.md is excluded by name and an ops log may remain a second
+                explicit loose-doc exception.
 
   This table and the substrate table below are the single source of truth for packages +
   versions. The parts below name MODULES and WIRING, not packages — they do not re-list
@@ -332,11 +334,14 @@ that a note is well-formed.
       scanning, so a backticked link naming a note that never existed renders as dead monospace
       and is reported by nothing — both surfaces blind at once. One instance accumulated 63 of
       them across 12 files. Put the rule in your authoring guide, not just in the transform.
-- Render loose docs that live OUTSIDE any collection (the glossary, an ops log) through the
+- Render explicit loose docs that live OUTSIDE any collection (the glossary, an ops log) through the
   shared helper src/lib/render-vault-doc.ts (resolves [[links]], renders via src/lib/marked.ts,
   injects #term anchors) from a dedicated page — e.g. site/src/pages/glossary.astro reading
-  content/meta/glossary.md. Under content/meta/, so no collection base globs it and the
-  validator skips it.
+  content/meta/glossary.md. Exclude each one BY NAME from the collection that otherwise claims its
+  directory; sharing `content/meta/` is a filing decision, not a reason for every file there to
+  bypass validation. `content/meta/*.md` is a validated `meta` collection, with only the named
+  loose docs skipped. The failure mode to avoid is a hand-written route registry standing in for a
+  collection: it omits real pages silently, and no schema or drift check ever reports the gap.
 - Dev: `pnpm run dev` (astro dev). Build: `astro build --force`.
 
 
@@ -360,6 +365,51 @@ purpose, a required metadata set, and a worked example, and those three belong b
 
 Adding a kind is adding a directory plus one barrel line. Nothing else is edited, and a reader who
 wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line union.
+
+- AUTHOR THE `meta` DESIGN-RECORD KIND FIRST, beside the domain kinds. Design records accumulate
+  whether or not you planned for them, and the ones sitting outside a collection are the ones that
+  go stale unseen. Route them like any other note. The shared shape is:
+    * `kind: 'meta'`, `layer: 'substrate'`, `shape: 'file'`, `companions: []`;
+    * flat files under `content/meta/*.md`, excluding `glossary.md` and any other explicit loose
+      document by name in the collection pattern;
+    * `title`, `record_kind: foundation | infrastructure`, and integer `order` in addition to the
+      honest lifecycle envelope your instance can support;
+    * one design-record index sorted by `(record_kind, order)`, with a test rejecting duplicate
+      order values within a shelf.
+  A design record is about the Foundry rather than the domain it knows. It is not a Mold reference
+  and is never cast merely because it lives under `content/`.
+
+- SEED A SMALL ARCHITECTURE SET WITH ONE PURPOSE PER RECORD. The SPLIT is the rule: no catch-all
+  architecture document, and every record able to say what it does not own. The five names below
+  are the shared default, not a proven taxonomy — adopt them so a contributor can move between
+  Foundries without relearning where to look, and if your instance has a concern these five do not
+  cover, add a record and say so in the map. Do this after enough implementation exists to describe
+  truthfully; a greenfield scaffold may say explicitly that a package, caster, or fixture layer
+  does not exist, but must not document planned machinery as current. Use these paths and
+  questions:
+    * `content/meta/architecture.md` — the SHORT MAP: how do the major pieces and boundaries fit,
+      and which focused record should a reader open next? Aim for an orientation pass, not an
+      encyclopedia.
+    * `content/meta/code-architecture.md` — what implementation components exist, what does each
+      own, how do dependencies flow, and which cross-component contracts must hold?
+    * `content/meta/content-model.md` — what kinds of knowledge exist, and how do notes, metadata,
+      tags, references, links, and companions represent them?
+    * `content/meta/build-and-validation.md` — how does authored source become checked, generated,
+      cast (if implemented), rendered, and kept current?
+    * `content/meta/repository-layout.md` — where do authored, generated, vendored, external, and
+      temporary files live, and who owns each lifecycle?
+  The CONTENT is instance-owned: one Foundry may have a package graph and caster while a younger
+  one has one Astro application and an explicit casting gap. A record that keeps resisting its own
+  boundary is telling you something about the taxonomy, not only about the record.
+
+- GIVE EACH ARCHITECTURE RECORD AN EXCLUSION RULE. `code-architecture.md` does not enumerate note
+  kinds or reproduce the file tree. `content-model.md` does not explain package dependencies.
+  `build-and-validation.md` owns flows and gates, not every module. `repository-layout.md` owns
+  placement, not conceptual rationale. `architecture.md` summarizes and links rather than
+  restating all four. Domain concepts keep their more specific homes — glossary, positioning,
+  guiding principles, Mold contract, casting semantics, corpus, or the domain's external-check
+  record. When a focused record grows hard to scan, split the concern it is mixing; do not repair
+  it by growing the map.
 
 - BIND THE CONTRACT TO YOUR CONTEXT ONCE, in types/context.ts, and your kind files never mention
   the generic again:
