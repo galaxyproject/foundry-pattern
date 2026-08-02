@@ -21,14 +21,16 @@ In order of preference:
 2. <https://raw.githubusercontent.com/galaxyproject/foundry-pattern/main/content/pattern/design-records.md>.
 3. The rendered page on whatever host the pattern site is published to.
 
-If neither is reachable, say so in the report and run the rules below anyway — most of them
-do not need the map. Do not invent a record's boundaries; an unavailable map is a stated
+If none is reachable, say so in the report and run the rules below anyway — most of them do
+not need the map. Do not invent a record's boundaries; an unavailable map is a stated
 limitation, not something to fill in.
 
 Then recover the **instance's** actual record set, which is what you are reviewing: list
 `content/meta/`, read the `meta` kind definition, and read the instance's architecture map.
-Never assume the shared map's record set is present. A core record that is missing, and a
-record that is present but unmapped, are both findings.
+Never assume the shared map's record set is present. A **core** record that is missing is a
+finding. A record the map does not name is **not** — the map's contract is open, and every
+instance is expected to have records of its own. Review those against the rules like any
+other, and check they are not describing machinery that does not exist.
 
 ## Step 1 — pick targets
 
@@ -86,14 +88,26 @@ exists is checkable in seconds, and a stale claim is the most expensive kind to 
    about one of them — decide which and say so. Do **not** ask for a scope preamble on a
    record that has none; routing is the map's job.
 
+10. **No record is an inventory.** Where the corpus already enumerates something — the Molds
+    that exist, the kinds defined, the tags registered, the casts committed — the record
+    describes the shape and lets the generated surface hold the list. A restated list goes
+    stale the moment the list changes, and a reader cannot tell which copy is current. This
+    is the highest-yield check in the review: transcribed inventories are the single largest
+    source of stale design-record prose.
+
 ### Per-record checks
 
 - **the map** — over its length budget? Does any fact appear here *and* in a focused record?
   Is every focused record linked?
+- **the Mold record** — does it list the Molds that exist? It should own the bucketing axes,
+  the Mold-versus-reference boundary, and the direction — which Molds are intended and why.
+  Aspirational Molds are fine here, because nothing else tracks them; built ones are not.
 - **code architecture** — is every component named by a path a reader can open? Are the
   deliberate absences stated? A stack diagram implies its layers are the whole stack.
-- **content model** — does every row of the kind table resolve to a real kind directory? A
-  verb like *runs*, *generates*, or *copies* belongs to build-and-validation.
+- **content model** — a verb like *runs*, *generates*, or *copies* belongs to
+  build-and-validation. If it transcribes a kind table, every row must still resolve to a real
+  kind directory — and note it against rule 10, since a generated kind manifest usually
+  already carries that list.
 - **build and validation** — is any generated artifact introduced without naming both its
   producer and its check in the same breath? An artifact with no check must say so.
 - **repository layout** — does every line inside a tree fence carry a lifecycle annotation?
@@ -111,7 +125,7 @@ Tag each finding:
 - **should-fix** — scope or voice violation; content sitting in the wrong record.
 - **nit** — local wording, list shape, table shape.
 
-Close with the state of the map itself: core records missing, present-but-unmapped records,
-and any boundary the instance is quietly disagreeing with. A boundary two instances keep
-disagreeing about is feedback on the shared map, not a defect in either instance — report it
-as such. Do not fix anything unless asked.
+Close with the state of the map itself: core records missing, and any boundary the instance is
+quietly disagreeing with. A boundary two instances keep disagreeing about is feedback on the
+shared map, not a defect in either instance — report it as such. Records the map does not name
+are expected, not reportable. Do not fix anything unless asked.
