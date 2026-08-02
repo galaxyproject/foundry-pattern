@@ -271,12 +271,15 @@ that a note is well-formed.
   `[[wiki-links]]` is one of the six installed packages, and Part 4's link check asserts against a
   grammar the renderer would no longer be applying.
   This entry USED to say the legacy spelling was silently ignored, leaving a site that built clean
-  with every `[[Target]]` rendered as literal text. Measured against 7.1.6 while bringing the third
-  repo onto the stack, that is wrong, and wrong in the reassuring direction: there is a shim. With
-  `@astrojs/markdown-remark` absent the build FAILS and tells you to install it; with it present the
-  plugins are migrated onto a unified processor and you get a deprecation warning. Either way you
-  are told. Write `markdown.processor` because it is the form the shim is asking for, not out of
-  fear of a silent break.
+  with every `[[Target]]` rendered as literal text. Measured against 7.1.6 while bringing the
+  pattern repo itself onto the stack, that is wrong, and wrong in the reassuring direction: there
+  is a shim. With `@astrojs/markdown-remark` absent the build FAILS and names the package to
+  install. With it present, and `markdown.processor` either unset or already a unified one, the
+  plugins are moved onto it and you get a deprecation warning. Either way you are told. Write
+  `markdown.processor` because it is the form the shim is asking for, not out of fear of a silent
+  break. The one arrangement that still loses plugins quietly is setting `processor: satteri(…)`
+  and leaving `remarkPlugins` beside it: the shim will not migrate onto a non-unified processor,
+  so you get a warning and no plugins. Do not spell both.
 - `compressHTML: true` is the pin in this part that DOES fail silently, and it is the one to spend
   the paranoia on. 7 defaults it to 'jsx', which drops the whitespace between inline elements that
   sit on their own source lines. Removing the pin on a finished site builds clean and glues prose
@@ -285,8 +288,13 @@ that a note is well-formed.
   reader deleting it gets no other signal.
   Both pins share a lesson bigger than either: ACCEPT A BUMP ON THE RENDERED PAGE, NOT THE BUILD.
   A green `astro build` is evidence about the build, and these are defaults that change the OUTPUT.
-  Diff the rendered text against the pre-bump output — normalize whitespace and compare, so a
-  glued word shows up as a changed token — and count the resolved `[[link]]` anchors on both sides.
+  Keep the pre-bump dist/, then diff the rendered TEXT of every page against it: strip the tags,
+  collapse runs of whitespace, compare. A glued word merges two tokens into one, so it shows up as
+  a changed line. Count the resolved `[[link]]` anchors on both sides too — equal counts is the
+  check the processor migration actually needs.
+  Strip each tag to the EMPTY STRING, not to a space. Replacing `</a>` with a space re-supplies
+  the very whitespace compressHTML dropped, and the comparison passes clean on a site whose every
+  page has visibly run together — which is this bullet's own failure mode, found by running it.
 - Declare routes in the page router site/src/pages/<collection>/[...slug].astro (+ index.astro
   per collection), and name each route AFTER ITS COLLECTION KEY, so the key IS the route and
   there is no mapping to keep. The collection table (Part 3) is then the only list of
