@@ -54,46 +54,36 @@ exists is checkable in seconds, and a stale claim is the most expensive kind to 
 
 ### Rules
 
-1. **The shelf is a voice contract.** `foundation` records may argue and narrate;
-   `infrastructure` records are present-tense and contract-shaped. Argument in an
-   infrastructure record, or a dispatch table filling most of a foundation record, means the
-   record is doing two jobs. Split the concern; do not repair it by growing the map.
+Independent of each other; check whichever the record gives you reason to.
 
-2. **Existence before behavior; one tense per claim.** Present indicative means it exists
-   now. Deferred machinery is named as deferred, in one inventory, not sprinkled through the
-   prose. Two sentences in one record must never give opposite answers about whether
-   something is built.
+- **No record is an inventory.** Where the corpus already enumerates something — the Molds
+  that exist, the kinds defined, the tags registered, the casts committed — the record
+  describes the shape and lets the generated surface hold the list. A restated list goes stale
+  the moment the list changes, and a reader cannot tell which copy is current. This is the
+  highest-yield check in the review: transcribed inventories are the single largest source of
+  stale design-record prose.
 
-3. **"Should" only where a reader can act on it.** Facts about the system take the present
-   indicative. Design intent takes *X does Y because Z*. Reserve `should` for instructions.
+- **The shelf is a voice contract.** `foundation` records may argue and narrate;
+  `infrastructure` records are present-tense and contract-shaped. Argument in an
+  infrastructure record, or a dispatch table filling most of a foundation record, means the
+  record is doing two jobs. Split the concern; do not repair it by growing the map.
 
-4. **A prohibition names the failure it prevents.** One clause is enough. An unexplained
-   prohibition reads as taste and gets relitigated by the next author.
+- **Existence before behavior; one tense per claim.** Present indicative means it exists now.
+  Deferred machinery is named as deferred, in one inventory, not sprinkled through the prose.
+  Two sentences in one record must never give opposite answers about whether something is
+  built.
 
-5. **Number only what is ordered.** A numbered list promises sequence. A set of independent
-   checks gets bullets and a lead-in saying they are independent.
+- **A prohibition names the failure it prevents.** One clause is enough. An unexplained
+  prohibition reads as taste and gets relitigated by the next author.
 
-6. **A table cell is a value, not a paragraph.** A cell needing a *because* or a second
-   example is prose — and usually prose another record owns, so the fix is often a link.
+- **Number only what is ordered.** A numbered list promises sequence. A set of independent
+  checks gets bullets and a lead-in saying they are independent.
 
-7. **Define a token at first use, or link its owner.** The tokens a reader cannot guess are
-   exactly the ones introduced casually and defined a hundred lines later.
+- **A table cell is a value, not a paragraph.** A cell needing a *because* or a second example
+  is prose — and usually prose another record owns, so the fix is often a link.
 
-8. **Every cross-reference names the *current* owner.** A split moves content while the
-   records that were not split keep citing where it used to be. Check each link against the
-   map, not against whether the target file happens to exist.
-
-9. **A record may state its own scope or change trigger; it may not be the only place they
-   are written.** Where a record's self-description and the map disagree, that is a finding
-   about one of them — decide which and say so. Do **not** ask for a scope preamble on a
-   record that has none; routing is the map's job.
-
-10. **No record is an inventory.** Where the corpus already enumerates something — the Molds
-    that exist, the kinds defined, the tags registered, the casts committed — the record
-    describes the shape and lets the generated surface hold the list. A restated list goes
-    stale the moment the list changes, and a reader cannot tell which copy is current. This
-    is the highest-yield check in the review: transcribed inventories are the single largest
-    source of stale design-record prose.
+- **Define a token at first use, or link its owner.** The tokens a reader cannot guess are
+  exactly the ones introduced casually and defined a hundred lines later.
 
 ### Per-record checks
 
@@ -106,8 +96,8 @@ exists is checkable in seconds, and a stale claim is the most expensive kind to 
   deliberate absences stated? A stack diagram implies its layers are the whole stack.
 - **content model** — a verb like *runs*, *generates*, or *copies* belongs to
   build-and-validation. If it transcribes a kind table, every row must still resolve to a real
-  kind directory — and note it against rule 10, since a generated kind manifest usually
-  already carries that list.
+  kind directory — and note it against the no-inventory rule, since a generated kind manifest
+  usually already carries that list.
 - **build and validation** — is any generated artifact introduced without naming both its
   producer and its check in the same breath? An artifact with no check must say so.
 - **repository layout** — does every line inside a tree fence carry a lifecycle annotation?
