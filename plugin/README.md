@@ -1,9 +1,9 @@
 # foundry-review
 
-Generic, infrastructure-agnostic skills for **reviewing a Foundry site** — checking that each
-source is captured and rendered faithfully for both humans and agents. These make no assumptions
-about a particular site's stack; they recover how to run and route the site from the project's
-own docs.
+Generic, infrastructure-agnostic skills for **reviewing a Foundry** — its rendered pages against
+their sources, and its design records against the shared record map. These make no assumptions
+about a particular instance's stack; they recover how to run and route the site, and which
+records the instance actually has, from the project's own docs.
 
 This plugin root is dual-runtime: `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`
 both expose the same `skills/` directory.
@@ -34,3 +34,7 @@ refreshing the plugin if the skills do not appear.
 - **review-content-accessibility** — review rendered content pages against their source files:
   capture/render fidelity, clean markup, working links, surfaced metadata, human- AND
   agent-readability. Not a content-correctness review.
+- **review-design-docs** — review `content/meta/*.md` for scope, voice, and staleness against
+  the shared record map. The map itself is content, not skill: the skill fetches
+  [Design Records](../content/pattern/design-records.md) rather than restating it, so the
+  taxonomy lives once.
