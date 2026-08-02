@@ -79,7 +79,7 @@ REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal
   Search        astro-pagefind ^2.0.1 (integration) + pagefind ^1.5.2 (dev)
   Schema        zod ^4.4.3  (import `z` from 'zod', NOT from 'astro:content')
   YAML          js-yaml ^4.1.0 + @types/js-yaml ^4.0.9
-  Validator     vitest ^3.2.4
+  Validator     vitest ^4.1.10
 
   Layout        repo root holds site/ and content/ as siblings; paths under content/ resolve
                 from the site/ cwd as '../content/…'. content/meta/ holds flat `meta` design
