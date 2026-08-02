@@ -1,5 +1,9 @@
-import { defineCollection, z } from 'astro:content';
+// `z` comes from 'zod', not from 'astro:content', whose re-export astro 7 deprecates. It is
+// also the major that matters: the re-export was zod 3, while the installed @galaxy-foundry
+// packages peer on zod ^4, so importing it directly is what keeps ONE zod in the tree.
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'zod';
 import { entryToId } from './lib/slug';
 
 const docs = defineCollection({
@@ -25,7 +29,7 @@ const docs = defineCollection({
     // instance profiles
     instance_number: z.number().optional(),
     check: z.string().optional(),
-    upstream: z.string().url().optional(),
+    upstream: z.url().optional(),
   }),
 });
 

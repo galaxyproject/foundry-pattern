@@ -1,12 +1,12 @@
 ---
 import Base from "../layouts/Base.astro";
-import Search from "astro-pagefind/components/Search";
+import Search from "astro-pagefind/components/Search.astro";
 ---
 <Base title="Search" description="Search the Foundry Pattern site.">
   <div class="max-w-3xl mx-auto">
     <p class="kicker">Search</p>
     <h1 class="text-4xl font-bold mt-2 mb-6 leading-[1.04]">Search the site</h1>
-    <Search id="search" className="pagefind-ui" uiOptions={{ showSubResults: true, showImages: false }} />
+    <Search className="pagefind-ui" searchboxOptions={{ 'show-sub-results': true }} />
     <p class="mt-6 text-sm" style="color: var(--muted)">
       Full-text search is generated at build time; it works on the deployed site and in
       <code>npm run preview</code>, not in the dev server.
