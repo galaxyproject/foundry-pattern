@@ -20,7 +20,7 @@
     "@fontsource/atkinson-hyperlegible": "^5.2.8",
     "@galaxy-foundry/kind-manifest": "^0.4.0",
     "@galaxy-foundry/tag-registry": "^0.1.0",
-    "@galaxy-foundry/wiki-links": "^0.2.0",
+    "@galaxy-foundry/wiki-links": "^0.3.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "4.3.3",
     "astro": "^7.1.6",

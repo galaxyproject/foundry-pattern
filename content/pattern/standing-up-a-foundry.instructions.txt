@@ -109,7 +109,7 @@ different bracket-stripping and different resolution order. Both findings argue 
 All six now ship from jmchilton/foundry-lib under the @galaxy-foundry scope, and an instance
 INSTALLS them:
 
-  @galaxy-foundry/license-policy      ^0.1.1  the license → redistribution table + loader
+  @galaxy-foundry/license-policy      ^0.2.0  the license → redistribution table + loader
   @galaxy-foundry/kind-manifest       ^0.4.0  the manifest format: reader + zod-shape deriver,
                                               and the LAYOUT vocabulary a manifest carries
   @galaxy-foundry/kind-schema         ^0.5.0  the kind contract: what a kind IS, how one is
@@ -117,7 +117,7 @@ INSTALLS them:
                                               the companion check
   @galaxy-foundry/reference-contract  ^0.1.0  the four vocabularies every instance inherits
   @galaxy-foundry/tag-registry        ^0.1.0  the meta_tags.yml format and its accessors
-  @galaxy-foundry/wiki-links          ^0.1.0  the [[Target]] grammar, resolver, remark transform
+  @galaxy-foundry/wiki-links          ^0.3.0  the [[Target]] grammar, resolver, remark transform
 
 Every one of these was, in an earlier version of this checklist, an instruction to COPY a file
 and mirror any change by hand across repositories. Each of those instructions is now a
