@@ -97,17 +97,22 @@ REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal
 
 THE SHARED SUBSTRATE — INSTALL IT, DO NOT COPY IT
 
-Six pieces of a Foundry are not yours to author. Both existing instances wrote each of them
-independently, and comparing the results found the same thing twice in two different ways. Some
+Seven pieces of a Foundry are not yours to author. Both existing instances wrote each of them
+independently, and comparing the results found the same thing twice in three different ways. Some
 were one file living in two places — the kind-manifest reader and deriver were character-for-
 character identical apart from quote style, test suites included; the license table differed only
 by a header telling you to mirror it; the kind CONTRACT itself agreed line for line down to the
 reasons in the comments, which is the strongest form this evidence takes — two authors reaching
-the same design AND the same justification for it. The others had DRIFTED while staying nominally
+the same design AND the same justification for it. Others had DRIFTED while staying nominally
 the same: three byte-identical copies of `slugify` inside a single repo, each surrounded by
-different bracket-stripping and different resolution order. Both findings argue for the same fix.
-All six now ship from jmchilton/foundry-lib under the @galaxy-foundry scope, and an instance
-INSTALLS them:
+different bracket-stripping and different resolution order. The last, the reading shell, was
+neither: it started as a copy-paste with a dozen small disagreements and was made identical ON
+PURPOSE, one value at a time, over several passes — the container measure, the search input width,
+the active-link treatment, a copyright year. Every one of those turned out to be an artifact of the
+copy rather than a decision either instance had taken. That is a third kind of evidence, and the
+most actionable: the disagreements were not defensible, and finding that out is what made the piece
+movable. All three findings argue for the same fix. All seven now ship from jmchilton/foundry-lib
+under the @galaxy-foundry scope, and an instance INSTALLS them:
 
   @galaxy-foundry/license-policy      ^0.2.0  the license → redistribution table + loader
   @galaxy-foundry/kind-manifest       ^0.4.0  the manifest format: reader + zod-shape deriver,
@@ -116,6 +121,8 @@ INSTALLS them:
                                               assembled, path→kind routing, the kind.md loader,
                                               the companion check
   @galaxy-foundry/reference-contract  ^0.1.0  the four vocabularies every instance inherits
+  @galaxy-foundry/site-kit            ^0.1.0  the reading shell: document skeleton, header with
+                                              derived navigation, footer
   @galaxy-foundry/tag-registry        ^0.1.0  the meta_tags.yml format and its accessors
   @galaxy-foundry/wiki-links          ^0.3.0  the [[Target]] grammar, resolver, remark transform
 
@@ -167,6 +174,23 @@ have either a dependency dictating your domain or a copy that drifts:
                       loss of byte-stable output that makes a --check gate possible at all —
                       which you decline with `narrow: { modes: [...] }` until a Mold needs it.
                       A narrowed group is AUTHORED, so it rejoins the dead-vocabulary check.
+  site-kit            Ships the MARKUP and the one rule inside it — which nav destination is
+                      active, derived from the reader's path rather than declared per entry. You
+                      keep the IDENTITY: both names, the description, the repository, the list of
+                      destinations, and how many of them fit on the bar before the rest go under
+                      "More". That last one is a number set by measurement, not taste — one
+                      instance's wordmark is 75px and the other's 279px, so one bar holds five
+                      links and the other six.
+                      Ships NO CSS. It writes Tailwind utility classes and NAMES six custom
+                      properties and three classes — the surface and text colours, the accent, the
+                      grid background, the skip link, the active-nav treatment — which your
+                      stylesheet defines. The palette is the part of a reading surface that is
+                      genuinely an instance's, and the kit is careful not to take it.
+                      Ships ONE value it does NOT take a prop for: the width of the reading
+                      column. Both instances had converged on it before the shell moved, and
+                      handing a settled value back out as a parameter re-opens a decision nobody
+                      needs to take twice. If your instance genuinely needs a different measure,
+                      that is evidence worth reporting rather than a prop worth adding.
   tag-registry        Ships the format and its three rules (see Part 4). Ships NO VOCABULARY:
                       facets are the browse axes of one domain — one Foundry groups by
                       target/tool/cli, another by family/role/domain — and there is no useful
@@ -191,8 +215,13 @@ files untouched. Re-export only a TYPE a caller must name to build an options ob
 re-exporting the package's whole API is a name list that drifts from the package's, and one more
 place to look.
 
-FIVE THINGS THAT WILL BITE:
+SIX THINGS THAT WILL BITE:
 
+- A package can install correctly and still not work, if something other than the module resolver
+  has to find its files. site-kit is the case in this set: Tailwind does not scan node_modules, so
+  its markup contributes no CSS until your stylesheet points at it explicitly. Part 2 has the line
+  and the assertion that proves it. Treat the shape as general — when a package ships anything a
+  BUILD TOOL rather than an IMPORT has to reach, expect a silent default and go looking for it.
 - Declare the dependency in the package that IMPORTS it — INCLUDING site/. A package resolving a
   shipped YAML asset relative to import.meta.url, reached only through a LINKED workspace package,
   gets inlined into an SSR chunk by Vite, and the path then resolves against the chunk directory
@@ -245,8 +274,24 @@ N=1 is how you ship a shared decision nobody has taken. What the evidence has so
 as instructive as what it let in: the base note envelope (one instance carries thirteen fields,
 the other one — Part 3 says why that gap is honest), the kind schemas (only `mold` and `pattern`
 are common to both instances at all, and even those differ threefold in size), and the license
-coherence rules above. If you are the third instance, the parts where you diverge are evidence
-about the substrate; report them rather than papering over them.
+coherence rules above.
+
+Three more, now that the shell has gone the other way and the contrast is legible:
+
+  the link map        Declined on purpose, and named as such in the package that could have taken
+                      it. What a note is addressable BY is domain — one instance keys by basename
+                      plus a Mold's name plus a tool/command pair, the other by a dashed id.
+  the note components 22 files and 3,290 lines against 2 and 85. Not drift: the two corpora are
+                      different shapes, so the things that render them are too. The shell is the
+                      counter-example that makes this one convincing — the SAME two repos did
+                      converge, unprompted, on the chrome around those components.
+  the palette         Six custom properties and three class names, which the shell now NAMES
+                      without shipping. Genuinely an instance's, and the one piece of the reading
+                      surface where nothing yet checks that both halves agree — a token an
+                      instance forgets to define renders unstyled rather than failing.
+
+If you are the third instance, the parts where you diverge are evidence about the substrate;
+report them rather than papering over them.
 
 
 PART 2 — STAND UP THE READING SURFACE
@@ -255,24 +300,32 @@ The corpus renders to a static Astro site under site/. Stand it up first (empty 
 glossary): it is where every later artifact is read, and `astro build` is the fastest signal
 that a note is well-formed.
 
-- `pnpm create astro@latest site` — static output. Pin the base once in site/astro.config.mjs:
+- `pnpm create astro@latest site` — static output. Bind the base to a NAME in
+  site/astro.config.mjs, and use the name everywhere else in that file:
     const base = '/<foundry-name>';
     export default defineConfig({ site: 'https://<user>.github.io', base, … });
-  Reuse `import.meta.env.BASE_URL` everywhere a URL is built; never re-hardcode the base.
+  Outside the config, reuse `import.meta.env.BASE_URL`; never re-hardcode the base. Inside it that
+  variable does not exist yet, which is the whole reason for the `const` — and one instance skipped
+  it, writing the literal `'/foundry'` twice, once as the config's `base` and once in the options it
+  hands the wiki-link plugin. Two copies of a string that MUST agree, and only one of them is the
+  one anybody would think to change.
 - Wire the stack's render deps into astro.config.mjs (packages/versions: the table above):
     markdown.processor = unified({          // from '@astrojs/markdown-remark'
-      remarkPlugins: [remarkMath, [remarkWikiLinks, { base }]],
-      rehypePlugins: [rehypeKatex],
+      remarkPlugins: [[remarkWikiLinks, { base }], …your domain plugins],
     })
     compressHTML = true
-    vite.plugins += tailwind();   integrations += [pagefind()]
+    vite.plugins += tailwindcss()    // @tailwindcss/vite
+    integrations += [pagefind()]     // astro-pagefind
+  Only the wiki-link plugin is common to both instances. What sits beside it is domain: one adds
+  remark-math + rehype-katex because its corpus is full of estimators, the other adds citation and
+  vendored-MyST transforms because its corpus quotes upstream sources. Take the shape, not the list.
   Set the body font to Atkinson-Hyperlegible — a human reader is one of the two audiences, so
   legibility is a substrate concern.
 - ASTRO 7 RUNS NO REMARK OR REHYPE PLUGIN UNLESS YOU ASK. It renders markdown with Sätteri, a Rust
   pipeline, and `markdown.remarkPlugins` — the astro ≤6 spelling, and the one every tutorial still
   shows — is not the wiring any more, which is why the block above names `markdown.processor`
   instead: opting the unified pipeline back in explicitly. For this stack that is not a nicety —
-  `[[wiki-links]]` is one of the six installed packages, and Part 4's link check asserts against a
+  `[[wiki-links]]` is one of the seven installed packages, and Part 4's link check asserts against a
   grammar the renderer would no longer be applying.
   This entry USED to say the legacy spelling was silently ignored, leaving a site that built clean
   with every `[[Target]]` rendered as literal text. Measured against 7.1.6 while bringing the
@@ -296,6 +349,14 @@ that a note is well-formed.
   collapse runs of whitespace, compare. A glued word merges two tokens into one, so it shows up as
   a changed line. Count the resolved `[[link]]` anchors on both sides too — equal counts is the
   check the processor migration actually needs.
+  THE STYLESHEET IS OUTPUT TOO, and the markup diff will not show you it changed. Moving the shell
+  into a package left all 374 pages of one instance and all 213 of the other byte-identical, while
+  the emitted CSS had gained a rule for a class no page carries — because a COMMENT in the layout
+  described something as invisible, and Tailwind scans source text, comments included. Diff the
+  built stylesheet as a set of rules, not as a file: the filename carries a content hash and Astro's
+  scoped-style ids change whenever a component changes path, so both differ for reasons that are
+  not differences. Normalize those two, then compare. The same pass is what proves a shell swap
+  changed nothing, which no test in either repo could have told you.
   Strip each tag to the EMPTY STRING, not to a space. Replacing `</a>` with a space re-supplies
   the very whitespace compressHTML dropped, and the comparison passes clean on a site whose every
   page has visibly run together — which is this bullet's own failure mode, found by running it.
@@ -314,8 +375,51 @@ that a note is well-formed.
   rendered, and every link into them silently did not. Pin the rule with a test asserting
   `src/pages/<key>` exists for every key, and that every collection carrying notes reaches the
   link map — the two halves that were free to disagree.
-- Add the shared UI once: site/src/layouts/Base.astro + site/src/components/{Header,Footer,
-  SourceMeta,TagChips}.astro (SourceMeta surfaces provenance/license on every source note).
+- INSTALL the reading shell — @galaxy-foundry/site-kit — rather than writing one. What you write
+  is site/src/layouts/Base.astro, and it is a COMPOSITION POINT of about fifteen lines: it hands
+  SiteShell your identity plus `import.meta.env.BASE_URL` and `Astro.url.pathname`, and receives
+  the document skeleton, the header with its derived navigation, and the footer. Keep every page
+  importing that layout; nothing else in your repo should know the shell is a package.
+    The identity is one object in site/src/lib/site-identity.ts — short name, full name,
+  description, repository, nav destinations, and how many stay on the bar. Write it out as DATA.
+  Both instances previously carried the active-link rule as a per-entry closure, sixteen copies
+  across the two of them, and a closure cannot be handed to a shared component or asserted on
+  without building a site. Fifteen of the sixteen were the same single line.
+    READ THE ENVIRONMENT IN YOUR FILE, NOT THE PACKAGE'S. The base and the pathname are props for
+  a reason: under vitest `import.meta.env.BASE_URL` is mirrored into `process.env` as `/`, and a
+  child `astro build` prefers it over your config — so a suite that lets the shell read the
+  environment asserts against a site nobody is shipping, and builds clean while doing it.
+- POINT TAILWIND AT THE PACKAGE, AND ASSERT THAT YOU DID. Tailwind 4 does not scan node_modules,
+  so add to your stylesheet:
+    @source "../../node_modules/@galaxy-foundry/site-kit/src";
+  Without it every utility the shell writes is missing from the emitted CSS. The build is green,
+  every page renders, and the site has no layout. THE LINE CANNOT BE VERIFIED BY READING IT: a
+  misspelled path resolves to nothing and Tailwind says nothing — `site-kitt` builds exactly as
+  cleanly as the correct spelling. So assert on the OUTPUT: pick a utility the kit names and your
+  repo does not, and check it has a rule in the built stylesheet. Both instances use `min-h-dvh`.
+    If your tests live inside the Vite root, exclude them — `@source not "../../tests"` — or the
+  test that names the canary is what puts the class in the CSS, and it cannot fail. One instance
+  found that by deleting the class from the layout and watching the assertion pass.
+- The PALETTE stays yours. The kit ships no CSS; it names custom properties and classes your
+  stylesheet defines. Nothing checks that you defined them all, so a token you forget renders as
+  an unstyled element rather than an error.
+- The components that render your NOTES are yours: 22 components and 3,290 lines in one instance
+  against 2 and 85 in the other, with not one NAME in common. The nearest pair — the box that
+  surfaces a note's provenance and license — takes a note entry plus the link map in one and eleven
+  flat fields in the other.
+    That is the honest contrast with the shell, but do not read it as "nothing here is shared". Both
+  instances render a tag chip linking to `<base>/tags/<tag>/`, which is plainly the same problem
+  twice. It is not a package, and the reason is the test the shell had to pass: NEITHER INSTANCE HAS
+  CONVERGED WITH ITSELF YET. `.tag` means the tag chip in one repo and a generic metadata pill —
+  source, version, license — in the other, whose tag chips use inline utilities instead. One of them
+  renders the same subject-tag chip two ways, with the class on a nested span in one place and on
+  the anchor in the other, which is a different hover and a different underline for one thing.
+  Convergence is a PRECONDITION, not a consequence: settle what a name means inside each repo, make
+  each repo agree with itself, and only then compare across them. A shared component chosen from
+  among live disagreements is one instance's accident, promoted.
+    Size is the other half of the judgement. A tag chip is one line of markup and an href; the shell
+  was some 250 lines across three files with a derivation rule worth fourteen tests. Duplication is
+  necessary evidence for extracting something, never sufficient.
 - Resolve wiki-links ([[Target]]) with @galaxy-foundry/wiki-links, in BOTH the renderer and the
   validator. The package owns the grammar, the exact resolver and the tree walk; you supply the
   MAP — a thin src/lib/wiki-links.ts adapter returning whatever shape your callers already pass
@@ -1023,30 +1127,48 @@ INHERITED vs. SUPPLIED
 
 Parts 2–4 are the substrate, and they now arrive in three grades rather than one:
 
-  INSTALLED   The six @galaxy-foundry packages. Not re-implemented, not copied, not mirrored —
+  INSTALLED   The seven @galaxy-foundry packages. Not re-implemented, not copied, not mirrored —
               a dependency. This is the license-policy table, the kind-manifest format and its
               deriver, the kind CONTRACT and its assembly and routing, the four inherited
-              reference vocabularies, the meta_tags.yml format, and the [[Target]] grammar.
-              Standing them up is one install plus a composition point per package, each keeping
-              the signature your callers already use.
+              reference vocabularies, the meta_tags.yml format, the [[Target]] grammar, and the
+              reading shell. Standing them up is one install plus a composition point per package,
+              each keeping the signature your callers already use.
   MECHANICAL  Re-stood-up rather than installed, because it is wiring rather than a format: the
               site/ Astro app, the one-schema-two-consumers arrangement, the types/ directory
               layout, the vitest validator, the ci.yml/deploy.yml workflows, the repo-root anchor
-              and the test that enforces it.
+              and the test that enforces it. The shell used to sit here and no longer does — it is
+              the first thing to graduate out of this column, and the route it took is the one this
+              column exists to describe.
   YOURS       The halves the packages deliberately decline. Which kinds exist and what each
               requires; your facet vocabulary; your reference `kinds`; your link map; your
-              license COHERENCE rules; your base envelope, ported honestly.
+              license COHERENCE rules; your base envelope, ported honestly; your site's identity
+              and its palette; and the components that render your notes.
 
 The middle grade is where the next packages come from. If you find yourself writing something in
 the MECHANICAL column for the second time in a second instance, that is the signal — and only the
-second time, never the first.
-The repo-root anchor is the entry to watch, and the reason it is not already a package is worth
+second time, never the first. The shell is the worked example, and the sequence is worth copying:
+the two copies were compared VALUE BY VALUE first, every disagreement was either defended or
+removed IN PLACE, and only once the two files were byte-identical did either move. By then the
+extraction was a file move, and adoption changed no rendered page in either instance. A shared
+component that still has to reconcile two live disagreements is a shared decision nobody has
+taken.
+
+The repo-root anchor is the NEXT entry to watch, and the reason it is not already a package is worth
 being pedantic about: it exists in two instances because it was PORTED from one to the other, not
 because two authors arrived at it. That is a copy, and a copy is evidence that this code is
 duplicated, not that the design generalizes. It is also three lines wrapping an import that only
 Astro can resolve, so a package would ship the wrapper and not the knowledge. The knowledge is
 the bullet in Part 2. Should a third instance write the anchor before reading that bullet, the
 evidence changes and so should this line.
+
+One candidate is further along than either and is worth naming so it is not mistaken for settled:
+`import.meta.env.BASE_URL.replace(/\/$/, '')`, the strip that turns a base into an href prefix,
+appears 56 times across the two instances — 38 and 18 — in components, pages and lib modules alike.
+That is the slugify shape: one rule, many copies, every copy free to drift. site-kit already ships
+the function, because the shell needed it. What is NOT decided is whether a package whose remit is
+the reading shell should become the place every component reaches for a utility; the alternative is
+one composition point per instance, which is what this checklist tells you to do for every other
+package. Decide that before importing it 56 times.
 
 Part 1 and Parts 5–8 are the domain — but even the vocabulary starts from a shared spine: the
 eight substrate terms in Part 1 are inherited from the pattern glossary and the eight stack terms
