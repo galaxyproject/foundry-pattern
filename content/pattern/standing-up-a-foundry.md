@@ -1,6 +1,6 @@
 ---
 title: "One Worked Example: the Astro Stack"
-description: How one concrete stack — Astro, zod, six installed packages — resolves each of the pattern's invariants into a named decision, and what building a second instance on it corrected.
+description: How one concrete stack — Astro, zod, seven installed packages — resolves each of the pattern's invariants into a named decision, and what building a second instance on it corrected.
 section: pattern
 order: 7
 instructions: pattern/standing-up-a-foundry.instructions.txt
@@ -17,7 +17,7 @@ This page is the checklist that picks — standing up a Foundry on one stack, co
 way down to commands. Every step below resolves one abstract commitment into a
 specific decision — a named package, a path, a command — for **one** stack: a static Astro site
 deployed to GitHub Pages, Markdown content in a `content/` tree beside it, TypeScript and zod
-for the frontmatter contract, a vitest validator, and six installed `@galaxy-foundry/*`
+for the frontmatter contract, a vitest validator, and seven installed `@galaxy-foundry/*`
 packages. Both current instances run that stack, which is what makes this a worked example
 rather than a proposal.
 
