@@ -398,9 +398,9 @@ that a note is well-formed.
   ways of getting it wrong build green. Reading it unstripped is CORRECT at a domain root, where
   the strip does nothing — so dev and any root deploy confirm the bug, and only a sub-path deploy
   shows the doubled slash. A stripper that trims one character too many renders no error either,
-  just links that land somewhere else. Two instances wrote that one line 38 and 18 times before
-  it was one, and no rendered page changed when it became one — which is exactly why nothing but
-  an assertion on the source would have stopped the 57th.
+  just links that land somewhere else. A page that computes the base inline renders byte-for-byte
+  what an imported one does, so no diff of the built site will ever show you the next copy; only
+  a rule read off the source will.
     READ THE ENVIRONMENT IN YOUR FILE, NOT THE PACKAGE'S. The base and the pathname are props for
   a reason: under vitest `import.meta.env.BASE_URL` is mirrored into `process.env` as `/`, and a
   child `astro build` prefers it over your config — so a suite that lets the shell read the
@@ -622,10 +622,9 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   a file is REQUIRED; a required-file constant cannot say a file is FORBIDDEN; and none of the four
   was reachable from the kind whose layout it described, so a catalog rendering that kind could
   report neither. That is the shape of the argument for one declaration: not that four is more than
-  one, but that each of the four could express a different HALF of the same fact.
-  That instance has since carried this out, and the collapse is the confirmation: all four are
-  gone, replaced by one walk handing `checkCompanions` a directory listing. Do not add the
-  kind-level declaration BESIDE the allowlists — a fifth copy is the drift you are removing.
+  one, but that each of the four could express a different HALF of the same fact. One walk handing
+  `checkCompanions` a directory listing replaces all four. Do not add the kind-level declaration
+  BESIDE the allowlists — a fifth copy is the drift you are removing.
 - `companions: []` MEANS NONE, and an absent key is not an option. "Not modelled" versus "none,
   enforced" is a distinction invisible to a reader and unrenderable in a catalog without
   misreporting one of the two, so the open-set half is said out loud instead:
@@ -1152,9 +1151,7 @@ Parts 2–4 are the substrate, and they now arrive in three grades rather than o
   MECHANICAL  Re-stood-up rather than installed, because it is wiring rather than a format: the
               site/ Astro app, the one-schema-two-consumers arrangement, the types/ directory
               layout, the vitest validator, the ci.yml/deploy.yml workflows, the repo-root anchor
-              and the test that enforces it. The shell used to sit here and no longer does — it is
-              the first thing to graduate out of this column, and the route it took is the one this
-              column exists to describe.
+              and the test that enforces it.
   YOURS       The halves the packages deliberately decline. Which kinds exist and what each
               requires; your facet vocabulary; your reference `kinds`; your link map; your
               license COHERENCE rules; your base envelope, ported honestly; your site's identity
@@ -1177,25 +1174,18 @@ Astro can resolve, so a package would ship the wrapper and not the knowledge. Th
 the bullet in Part 2. Should a third instance write the anchor before reading that bullet, the
 evidence changes and so should this line.
 
-One candidate went the whole way, and how it was decided is the transferable part.
-`import.meta.env.BASE_URL.replace(/\/$/, '')`, the strip that turns a base into an href prefix,
-appeared 56 times across the two instances — 38 and 18 — in components, pages and lib modules
-alike, and site-kit already shipped the function because the shell needed it. The open question was
-whether a package whose remit is the reading shell should become the place every component reaches
-for a utility, when this checklist tells you to keep ONE composition point per package.
+The test to apply to a candidate is not "how many copies" but "does a package already answer this
+question for its own purposes." If it does, the copies are drift waiting to happen and the
+composition point is where you absorb them. If it does not, count copies all you like; you still
+have a shared decision nobody has taken.
 
-It did not have to be answered, because the premise was wrong. The base is not a utility the shell
-happens to carry: the shell must resolve its nav against a base, so the definition is part of its
-contract, and the 56 lines were not copies of a helper but 56 private answers standing beside an
-authoritative one. Nothing was visible while they agreed — which is the whole danger, since the
-first one to stop agreeing points half a page somewhere the other half does not. And the
-composition-point rule survived intact: neither instance imports the kit 56 times. Each has one
-`lib/site-base.ts` beside its `site-identity.ts`, and everything else imports from there.
-
-The test to apply to the next candidate is not "how many copies" but "does a package already
-answer this question for its own purposes." If it does, the copies are drift waiting to happen and
-the composition point is where you absorb them. If it does not, count copies all you like; you
-still have a shared decision nobody has taken.
+The base rule is the worked example. site-kit ships `shellBase` because the shell has to resolve
+its nav against a base, so the 56 instance-side copies of that strip — 38 and 18 — were never
+copies of a helper: they were private answers standing beside an authoritative one, invisible for
+exactly as long as they agreed, and the first to stop agreeing points half a page somewhere the
+other half does not. Absorbing them cost no composition point. Neither instance imports the kit 56
+times; each has one `lib/site-base.ts` beside its `site-identity.ts`, and everything else imports
+from there.
 
 Part 1 and Parts 5–8 are the domain — but even the vocabulary starts from a shared spine: the
 eight substrate terms in Part 1 are inherited from the pattern glossary and the eight stack terms
