@@ -288,10 +288,13 @@ Three more, now that the shell has gone the other way and the contrast is legibl
   the link map        Declined on purpose, and named as such in the package that could have taken
                       it. What a note is addressable BY is domain — one instance keys by basename
                       plus a Mold's name plus a tool/command pair, the other by a dashed id.
-  the note components 22 files and 3,290 lines against 2 and 85. Not drift: the two corpora are
-                      different shapes, so the things that render them are too. The shell is the
-                      counter-example that makes this one convincing — the SAME two repos did
-                      converge, unprompted, on the chrome around those components.
+  the note components The things that render a Mold's phases or a paper's provenance are domain,
+                      and the two corpora are different shapes. This row used to read "22 files and
+                      3,290 lines against 2 and 85, no name in common", which OVERSTATED it: one
+                      instance put per-type rendering in components behind one route and the other
+                      put it in the routes, so a count of components was partly measuring where the
+                      code sat. The components are still yours. The route that CHOOSES among them
+                      is not, and has since converged.
   the palette         Six custom properties and three class names, which the shell now NAMES
                       without shipping. Genuinely an instance's, and the one piece of the reading
                       surface where nothing yet checks that both halves agree — a token an
@@ -367,11 +370,31 @@ that a note is well-formed.
   Strip each tag to the EMPTY STRING, not to a space. Replacing `</a>` with a space re-supplies
   the very whitespace compressHTML dropped, and the comparison passes clean on a site whose every
   page has visibly run together — which is this bullet's own failure mode, found by running it.
-- Declare routes in the page router site/src/pages/<collection>/[...slug].astro (+ index.astro
-  per collection), and name each route AFTER ITS COLLECTION KEY, so the key IS the route and
-  there is no mapping to keep. The collection table (Part 3) is then the only list of
-  collections in the repo, and everything that needs to know where a note lives — the Astro
-  loader, the validator walk, the drift checks, the wiki-link map — reads it.
+- Declare ONE detail route, site/src/pages/[collection]/[...slug].astro, and take its route segment
+  from `entry.collection` — so the collection key IS the route, by construction rather than by
+  everyone remembering. Keep an index.astro per collection; a browse page is a page, and they
+  differ. The collection table (Part 3) is then the only list of collections in the repo, and
+  everything that needs to know where a note lives — the Astro loader, the validator walk, the
+  drift checks, the wiki-link map — reads it.
+    ONE ROUTE, and this bullet said the opposite until an instance with six of them was measured.
+  A detail page is a small pile of decisions — index the body for search, show the tags, link back
+  to the browse page, pick the field the title comes from — and per-collection files answer them
+  per collection. Nothing compares the answers, and the failure is not a broken page: it is a page
+  that is locally complete and quietly missing one of the things a reader expects, which from
+  inside its own file looks exactly like a page with nothing wrong. That instance had five
+  collections carrying tags and one rendering chips; four fifths of its corpus appeared on tag
+  pages its own pages never mentioned.
+    What genuinely differs per collection is small enough to be DATA — there it was two fields,
+  whether a reader can go up from here and whether the page states the note's own title and
+  summary. Kind-specific furniture dispatches in the route on `entry.collection`, which is what the
+  other instance had always done on a note's `type`.
+    THE TYPE ARGUMENT FOR SEPARATE ROUTES IS WORTH TESTING BEFORE YOU BELIEVE IT. If you keep each
+  kind's frontmatter shape precise — Part 3 says why you should — a single route looks like it must
+  widen them. It does not. A `.map` over the collection list produces a homogeneous array and
+  collapses every shape to the widest common type; the six `getCollection` calls SPREAD into one
+  array stay a union, `entry.collection` discriminates it, and every branch typechecks. Measured at
+  zero `astro check` errors across six collections. A constraint that would justify divergence is
+  worth an hour of proving before it is worth a year of copies.
   "Recover the mapping from the router, not a parallel table" was the instruction here before,
   and it was the wrong half of a true idea: ONE table is right, recovering it from the router is
   not, because a router cannot tell you which files are notes. What happened instead is what
@@ -379,9 +402,16 @@ that a note is well-formed.
   carried a `{ dir, route }` list inside its wiki-link map builder: five rows where the table had
   six. The missing row was `experiments`, which had a real `/experiments/<id>` page and twelve
   notes, and resolved from no `[[link]]` at all. Nothing failed. The route existed, the notes
-  rendered, and every link into them silently did not. Pin the rule with a test asserting
-  `src/pages/<key>` exists for every key, and that every collection carrying notes reaches the
-  link map — the two halves that were free to disagree.
+  rendered, and every link into them silently did not. Pin the rule with a test asserting that the
+  detail route derives its segment from the entry it is rendering, that every collection has a row
+  in whatever per-collection table the route reads, and that every collection carrying notes
+  reaches the link map — the halves that are free to disagree.
+    A DIRECTORY CHECK IS NOT THE SAME RULE. `src/pages/<key>` exists for every key was the pin
+  while each collection had its own route, and it worked because the directory was HOW the key
+  reached the URL. Under one route the key travels through a param, so that is what the test has
+  to read; the old assertion would still pass against a route pointing every collection at one
+  path. When you replace a mechanism, re-derive the assertion from the new mechanism rather than
+  keeping the one that used to imply it.
 - INSTALL the reading shell — @galaxy-foundry/site-kit — rather than writing one. What you write
   is site/src/layouts/Base.astro, and it is a COMPOSITION POINT of about fifteen lines: it hands
   SiteShell your identity plus your base and `Astro.url.pathname`, and receives the document
@@ -419,17 +449,23 @@ that a note is well-formed.
 - The PALETTE stays yours. The kit ships no CSS; it names custom properties and classes your
   stylesheet defines. Nothing checks that you defined them all, so a token you forget renders as
   an unstyled element rather than an error.
-- The components that render your NOTES are yours: 22 components and 3,290 lines in one instance
-  against 2 and 85 in the other, with not one NAME in common. The nearest pair — the box that
-  surfaces a note's provenance and license — takes a note entry plus the link map in one and eleven
-  flat fields in the other.
-    That is the honest contrast with the shell, but do not read it as "nothing here is shared". Both
-  instances render a tag chip linking to `<base>/tags/<tag>/`, which is plainly the same problem
-  twice. It is not a package, and the reason is the test the shell had to pass: NEITHER INSTANCE HAS
-  CONVERGED WITH ITSELF YET. `.tag` means the tag chip in one repo and a generic metadata pill —
-  source, version, license — in the other, whose tag chips use inline utilities instead. One of them
-  renders the same subject-tag chip two ways, with the class on a nested span in one place and on
-  the anchor in the other, which is a different hover and a different underline for one thing.
+- The components that render your NOTES are yours. The nearest pair the two instances have — the
+  box that surfaces a note's provenance and license — takes a note entry plus the link map in one
+  and eleven flat fields in the other, because one instance authors its corpus and the other
+  derives it from books and papers it must attribute. That is domain, and it should stay split.
+    DO NOT READ IT AS "NOTHING HERE IS SHARED", and be careful how you measure. The count that used
+  to stand here — 22 components against 2, no name in common — was comparing a repo that renders
+  per note TYPE from components against one that rendered per COLLECTION from routes. Same job,
+  different place, and a diff of component names reports that as no overlap at all.
+    Both instances render a tag chip linking to `<base>/tags/<tag>/`, which was plainly the same
+  problem twice, and neither had converged with ITSELF: `.tag` named the chip in one repo and a
+  provenance pill — source, version, license — in the other, whose chips were inline utilities
+  touching `.tag` never. One rendered the same chip two ways, the class on a nested span in one
+  place and on the anchor in the other, which is a different hover for one thing.
+    Both are one rule now, in each stylesheet, and the interesting part is where it did NOT go. Not
+  into the shell's package, which ships no chip concept: converging two instances is not the same
+  act as extracting from them, and doing the first buys you the right to ask the second. Ask it
+  separately every time.
   Convergence is a PRECONDITION, not a consequence: settle what a name means inside each repo, make
   each repo agree with itself, and only then compare across them. A shared component chosen from
   among live disagreements is one instance's accident, promoted.
@@ -1174,10 +1210,38 @@ Astro can resolve, so a package would ship the wrapper and not the knowledge. Th
 the bullet in Part 2. Should a third instance write the anchor before reading that bullet, the
 evidence changes and so should this line.
 
+SURVEY BY THE QUESTION ANSWERED, NOT BY THE FILENAME. This is the step before the test below, and
+it is the one that goes wrong quietly. Comparing two instances file by file finds everything they
+wrote under the same name and nothing else — it cannot see one job split across a different NUMBER
+of files, and it cannot see two files doing one job under two names. "Which file decides what a
+note's detail page looks like" found one file in one instance and six in the other, which no
+directory listing of either would ever suggest was a finding. Ask what a file ANSWERS, then go
+looking for whoever else answers it.
+
 The test to apply to a candidate is not "how many copies" but "does a package already answer this
 question for its own purposes." If it does, the copies are drift waiting to happen and the
 composition point is where you absorb them. If it does not, count copies all you like; you still
 have a shared decision nobody has taken.
+
+A PACKAGE CAN DOCUMENT A RULE IT DOES NOT SHIP, and then every consumer builds it. The tag registry
+owns the rule that a tag belongs to the facet whose values DECLARE it, never to whatever precedes
+its slash — and says so, listing "browse by declaring facet" among the rules that moved into it.
+What it ships is the lookup. Turning the lookup into a browse surface — the tags in use, grouped,
+in declared order, empty facets dropped, no bucket for a tag no facet declared — was left to the
+caller, so every caller wrote it, and one instance wrote it twice. Those were not copies of code:
+they were one decision taken privately in three places, agreeing only because nothing had ever made
+them disagree. When you find yourself implementing a rule a package's own documentation claims,
+that gap IS the candidate, and it belongs in that package rather than in whichever one is nearest.
+The counts stayed local, because what counts as a tagged thing is genuinely per-corpus; everything
+above the counts was the same question.
+
+A STRUCTURAL FIX OUTRANKS A CHECK WHENEVER ONE IS AVAILABLE. A check has to be maintained, walks
+only the list it knows to walk, and passes for the wrong reason more often than it fails for the
+right one. Collapsing six detail routes into one did not make the rule "every tagged collection
+renders chips" pass — it removed the shape of the failure, because a question with one answering
+site cannot have five answers. Prefer that, and when it happens, rewrite the rule to read the new
+structure rather than deleting it: it is now cheap, and it is what tells the next author the
+collapse is load-bearing.
 
 The base rule is the worked example. site-kit ships `shellBase` because the shell has to resolve
 its nav against a base, so the 56 instance-side copies of that strip — 38 and 18 — were never
