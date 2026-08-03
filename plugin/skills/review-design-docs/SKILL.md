@@ -63,6 +63,15 @@ Independent of each other; check whichever the record gives you reason to.
   highest-yield check in the review: transcribed inventories are the single largest source of
   stale design-record prose.
 
+- **A disclaimer is a bug report.** A record that opens by warning you about its own contents
+  — *this is the old planning list*, *this section is superseded*, *treat the below as
+  historical* — has already diagnosed itself, and writing the warning was cheaper than doing
+  the fix. Report it as a finding; the author wrote it for you. The trap is that the hedge
+  reads as honesty and buys the record a pass, so review slides past the one place someone
+  already flagged. Tell it from a scope statement by what the sentence is about: *the
+  machinery is not built yet* describes the subject and belongs there; *this text is out of
+  date* describes the record, and is work.
+
 - **The shelf is a voice contract.** `foundation` records may argue and narrate;
   `infrastructure` records are present-tense and contract-shaped. Argument in an
   infrastructure record, or a dispatch table filling most of a foundation record, means the
