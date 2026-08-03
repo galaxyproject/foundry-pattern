@@ -256,6 +256,238 @@ article.prose::before {
   text-decoration-color: var(--link);
 }
 
+/* Model page — the four-part machine and its running example. */
+.model-machine {
+  position: relative;
+  margin: 2rem 0 3rem;
+  padding: 1.25rem;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    var(--soot);
+  background-size: 1.25rem 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 30px 60px -45px rgba(226, 85, 43, 0.72);
+}
+
+.model-machine::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  content: "";
+  background: var(--molten);
+}
+
+.model-machine-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7.5rem minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+.model-machine-source,
+.model-machine-artifact,
+.model-machine-provenance {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: var(--iron);
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.model-machine-source > strong,
+.model-machine-mold > strong,
+.model-machine-artifact > strong,
+.model-machine-provenance > strong {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  line-height: 1.15;
+}
+
+.model-machine-source > span:last-of-type,
+.model-machine-mold > span:last-of-type,
+.model-machine-artifact > span:last-of-type,
+.model-machine-provenance > span:last-of-type {
+  color: var(--ash);
+  font-size: 0.72rem;
+}
+
+.model-machine-label {
+  color: var(--ember);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.model-machine-mold {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 0.9rem;
+  padding: 0.8rem 0.9rem;
+  background: var(--graphite);
+  border-left: 3px solid var(--ember);
+}
+
+.model-machine-cast {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--ember);
+  font-family: var(--font-display);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.model-machine-cast span {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+}
+
+.model-machine-cast b {
+  margin: 0.2rem 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(226, 85, 43, 0.75);
+}
+
+.model-machine-cast small {
+  color: var(--ash);
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.model-machine-output {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.model-machine-artifact {
+  border-color: var(--ember);
+}
+
+.model-machine-provenance {
+  border-style: dashed;
+}
+
+.model-machine figcaption {
+  padding: 1rem 0.35rem 0;
+  color: var(--ash);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.model-parts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 0.65rem;
+}
+
+.model-parts > div {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.25rem 0.75rem;
+  padding: 1rem;
+  background: var(--iron);
+}
+
+.model-parts span {
+  grid-row: 1 / span 2;
+  padding-top: 0.15rem;
+  color: var(--ember);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+
+.model-parts strong {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.model-parts p {
+  margin: 0;
+  color: var(--ash);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.model-example {
+  position: relative;
+  margin: 2rem 0 3rem;
+  padding: 1rem 1.15rem 1rem 1.35rem;
+  background: var(--soot);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--ember);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.model-example > span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--ember);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.model-example p {
+  margin: 0;
+  color: var(--steel);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.model-example code {
+  color: var(--glow);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+@media (max-width: 42rem) {
+  .model-machine-flow,
+  .model-parts {
+    grid-template-columns: 1fr;
+  }
+
+  .model-machine-cast {
+    flex-direction: row;
+    gap: 0.65rem;
+    padding: 0.15rem 0;
+  }
+
+  .model-machine-cast b {
+    transform: rotate(90deg);
+  }
+
+  .model-machine-cast small {
+    text-align: left;
+  }
+}
+
 /* Pagefind search widget — themed to the foundry dark steel.
    astro-pagefind 2 replaced pagefind-ui with the @pagefind/component-ui web components, which
    read `--pf-*`; the old `--pagefind-ui-*` names now style nothing.
