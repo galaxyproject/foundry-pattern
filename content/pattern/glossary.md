@@ -29,13 +29,13 @@ Grouped by theme.
 
 **Mold** — the unit of the KB: an abstract, typed *reference manifest* describing one action. Its frontmatter declares the references it depends on (other KB pages, schemas, CLI manual pages, prompts, examples); its body is a procedural skeleton tying them together. Molds are abstract source artifacts, independent of any agent runtime.
 
-**Reference** — a typed dependency a Mold declares. The *kind* discriminator controls how casting treats it, so resolving references is per-kind dispatch, not "follow every link the same way." (A **reference** kind, which is not the same vocabulary as the **note** kinds in the [[astro-stack-glossary]]; the two words collide and the pages that use both should say which they mean.) Common kinds: `pattern` (LLM-condensed prose), `schema` (copied verbatim), `cli-command` (cast to a structured sidecar), `prompt` (inlined), `example` (copied), `eval` (Foundry-only, never packaged).
+**Reference** — a typed dependency a Mold declares. The *kind* discriminator controls how casting treats it, so resolving references is per-kind dispatch, not "follow every link the same way." (A **reference** kind, which is not the same vocabulary as the **note** kinds in the [[astro-stack-glossary]]; the two words collide and the pages that use both should say which they mean.) Common kinds: `pattern` (prose reference), `schema` (copied verbatim), `cli-command` (cast to a structured sidecar), `prompt` (inlined), `example` (copied), `eval` (Foundry-only, never packaged). What each kind's dispatch *does* is the instance's to declare, not the pattern's to fix.
 
 ## Compilation
 
 **Cast** *(verb)* — produce a self-contained artifact from a Mold via the casting process. *(noun)* — one casting result for a (Mold, target) pair.
 
-**Casting** — the compilation step that turns a Mold into a skill artifact: deterministic tooling first, LLM condensation second, in that order of trust. The *integration boundary* — artifacts come out condensed, isolated, and frozen, with no links back. See [[skills-package-not-source]].
+**Casting** — the compilation step that turns a Mold into a skill artifact: deterministic tooling first, LLM condensation second, in that order of trust. The ordering is the invariant; how far the deterministic half reaches is the instance's answer to give, and today no instance runs a live condensation (see [[the-model]]). The *integration boundary* — artifacts come out condensed, isolated, and frozen, with no links back. See [[skills-package-not-source]].
 
 **Skill artifact** — the compiled output of casting: self-contained, condensed, frozen against the source revision, no links back, no runtime dependency on the KB. `SKILL.md` (or any skill file) is therefore a **compile target**, never the authoring surface.
 
@@ -43,7 +43,7 @@ Grouped by theme.
 
 **Source format vs packaging format** — the central distinction of [[skills-package-not-source|The Case]]. The dominant pattern treats the skill as the *source* (a human-plus-LLM authors `SKILL.md`, which *is* the record). The Foundry Pattern makes the skill a *package* cast from a curated KB. Restating canonical knowledge is a commodity; traceable, provenance-backed knowledge is not.
 
-**Provenance** — a record (`_provenance.json`) emitted beside every cast artifact: which Mold revision, which model version, which references resolved, which checks ran. The durable, universal non-commodity asset — present in every instance; the answer to "which specific claim is real and where it came from."
+**Provenance** — a record (`_provenance.json`) emitted beside every cast artifact: which Mold revision, which references resolved, which checks ran, and the model and prompt identity behind any fragment a model produced. The durable, universal non-commodity asset — present in every instance; the answer to "which specific claim is real and where it came from."
 
 **Compile-time grounding with provenance** — the bet that distinguishes the pattern from the field's default of *attach KB, retrieve at runtime*. A deterministic pipeline casts selected KB slices into target artifacts, provenance is recorded, and drift becomes mechanically detectable. Runtime fetch augments, never replaces, compiled grounding.
 

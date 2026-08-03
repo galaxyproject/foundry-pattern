@@ -35,7 +35,7 @@ Each Mold declares its dependencies as typed references. Every reference carries
 
 - a **kind** — which resolver and casting behavior applies;
 - a **load policy** — `upfront` (always present) or `on-demand` (fetched only when a stated trigger fires);
-- a **transform mode** — copied verbatim, or condensed.
+- a **transform mode** — copied verbatim, condensed, or cast to a structured sidecar.
 
 The load policy is **progressive disclosure** made explicit: upfront references are the always-loaded core; on-demand references sit behind triggers so the action carries only what a given run needs. The Mold author decides, per reference, what is core and what is contingent.
 
@@ -53,7 +53,9 @@ A Mold composes these into one coherent declaration of an action. Authoritative 
 
 ## Cast
 
-**Casting** is the compilation step that turns a Mold into a target-specific artifact. It runs **deterministic-first, LLM-second** — that ordering is a trust ordering. Deterministic tooling assembles the artifact body, copies verbatim references, builds sidecars, and writes provenance; an LLM is invoked only where it adds value, on the reference kinds explicitly marked for condensation, and every LLM-produced fragment is recorded. The skill body itself is never hand-maintained: if a cast looks under-instructed, you fix the Mold and re-cast.
+**Casting** is the compilation step that turns a Mold into a target-specific artifact. It runs **deterministic-first, LLM-second** — that ordering is a trust ordering. Deterministic tooling assembles the artifact body, copies verbatim references, builds sidecars, and writes provenance; an LLM may run only after that, only on the reference kinds a Mold explicitly marks for condensation, and every LLM-produced fragment is recorded. The skill body itself is never hand-maintained: if a cast looks under-instructed, you fix the Mold and re-cast.
+
+What the pattern fixes is the ordering, not the mix — and how far the deterministic half reaches is a domain question. The [[galaxy-workflow-foundry]] has answered it: all the way. Every condensation it performed proved to be a verbatim passthrough, so its 47 Molds cast end to end with nothing generated. The [[statistical-genomics-foundry]] has not answered it, because it has no caster yet — it declined the capacity up front, on the judgement that its size problem is solved by load policy rather than by rewriting, which is a design commitment rather than a result. So "LLM-second" is at present a second half that one instance emptied and the other never opened, which is worth saying plainly rather than implying a mixed pipeline neither runs. The ordering still earns its keep: a cast with nothing generated in it is byte-stable, and byte-stability is what makes the drift check a hash comparison instead of a judgement call.
 
 Casting is the **integration boundary**. The artifact it produces is:
 
