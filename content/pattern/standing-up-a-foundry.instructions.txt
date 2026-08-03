@@ -403,12 +403,23 @@ that a note is well-formed.
 - The PALETTE stays yours. The kit ships no CSS; it names custom properties and classes your
   stylesheet defines. Nothing checks that you defined them all, so a token you forget renders as
   an unstyled element rather than an error.
-- The components that render your NOTES are yours, and the two instances agree on almost nothing
-  here: 22 components and 3,290 lines against 2 and 85, with not one NAME in common. The nearest
-  pair — the box that surfaces a note's provenance and license — takes a note entry plus the link
-  map in one instance and eleven flat fields in the other. This is the honest
-  contrast with the shell: the chrome around a corpus converged because it is the same problem
-  twice, and the rendering of the corpus did not because it is not.
+- The components that render your NOTES are yours: 22 components and 3,290 lines in one instance
+  against 2 and 85 in the other, with not one NAME in common. The nearest pair — the box that
+  surfaces a note's provenance and license — takes a note entry plus the link map in one and eleven
+  flat fields in the other.
+    That is the honest contrast with the shell, but do not read it as "nothing here is shared". Both
+  instances render a tag chip linking to `<base>/tags/<tag>/`, which is plainly the same problem
+  twice. It is not a package, and the reason is the test the shell had to pass: NEITHER INSTANCE HAS
+  CONVERGED WITH ITSELF YET. `.tag` means the tag chip in one repo and a generic metadata pill —
+  source, version, license — in the other, whose tag chips use inline utilities instead. One of them
+  renders the same subject-tag chip two ways, with the class on a nested span in one place and on
+  the anchor in the other, which is a different hover and a different underline for one thing.
+  Convergence is a PRECONDITION, not a consequence: settle what a name means inside each repo, make
+  each repo agree with itself, and only then compare across them. A shared component chosen from
+  among live disagreements is one instance's accident, promoted.
+    Size is the other half of the judgement. A tag chip is one line of markup and an href; the shell
+  was some 250 lines across three files with a derivation rule worth fourteen tests. Duplication is
+  necessary evidence for extracting something, never sufficient.
 - Resolve wiki-links ([[Target]]) with @galaxy-foundry/wiki-links, in BOTH the renderer and the
   validator. The package owns the grammar, the exact resolver and the tree walk; you supply the
   MAP — a thin src/lib/wiki-links.ts adapter returning whatever shape your callers already pass
@@ -1149,6 +1160,15 @@ duplicated, not that the design generalizes. It is also three lines wrapping an 
 Astro can resolve, so a package would ship the wrapper and not the knowledge. The knowledge is
 the bullet in Part 2. Should a third instance write the anchor before reading that bullet, the
 evidence changes and so should this line.
+
+One candidate is further along than either and is worth naming so it is not mistaken for settled:
+`import.meta.env.BASE_URL.replace(/\/$/, '')`, the strip that turns a base into an href prefix,
+appears 56 times across the two instances — 38 and 18 — in components, pages and lib modules alike.
+That is the slugify shape: one rule, many copies, every copy free to drift. site-kit already ships
+the function, because the shell needed it. What is NOT decided is whether a package whose remit is
+the reading shell should become the place every component reaches for a utility; the alternative is
+one composition point per instance, which is what this checklist tells you to do for every other
+package. Decide that before importing it 56 times.
 
 Part 1 and Parts 5–8 are the domain — but even the vocabulary starts from a shared spine: the
 eight substrate terms in Part 1 are inherited from the pattern glossary and the eight stack terms
