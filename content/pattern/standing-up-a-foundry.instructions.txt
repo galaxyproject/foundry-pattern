@@ -169,8 +169,9 @@ have either a dependency dictating your domain or a copy that drifts:
                       Ships no collection TABLE either — that names your directories.
   reference-contract  Ships used_at / load / modes / evidence. You keep `kinds` — exactly the half
                       that varies by domain. Inherit the four whole: a term you have not used YET
-                      is inheritance, not drift. Treat `modes` as deterministic placement rules
-                      such as verbatim, inline, bundled, and sidecar. Narrow the group to the modes
+                      is inheritance, not drift. `modes` ships exactly two deterministic placement
+                      rules — verbatim and sidecar — and a term is in that list because some
+                      instance wrote the renderer that performs it. Narrow the group to the modes
                       your targets implement; the validator must reject anything the caster cannot
                       reproduce byte for byte. A narrowed group is AUTHORED, so it rejoins the
                       dead-vocabulary check.

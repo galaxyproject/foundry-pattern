@@ -29,7 +29,7 @@ Grouped by theme.
 
 **Mold** — the unit of the KB: an abstract, typed *reference manifest* describing one action. Its frontmatter declares the references it depends on (other KB pages, schemas, CLI manual pages, prompts, examples); its body is a procedural skeleton tying them together. Molds are abstract source artifacts, independent of any agent runtime.
 
-**Reference** — a typed dependency a Mold declares. The *kind* discriminator controls how casting treats it, so resolving references is per-kind dispatch, not "follow every link the same way." (A **reference** kind, which is not the same vocabulary as the **note** kinds in the [[astro-stack-glossary]]; the two words collide and the pages that use both should say which they mean.) Common kinds: `pattern` (prose reference), `schema` (copied verbatim), `cli-command` (cast to a structured sidecar), `prompt` (inlined), `example` (copied), `eval` (Foundry-only, never packaged). What each kind's dispatch *does* is the instance's to declare, not the pattern's to fix.
+**Reference** — a typed dependency a Mold declares. The *kind* discriminator controls how casting treats it, so resolving references is per-kind dispatch, not "follow every link the same way." (A **reference** kind, which is not the same vocabulary as the **note** kinds in the [[astro-stack-glossary]]; the two words collide and the pages that use both should say which they mean.) Common kinds: `pattern` (prose reference), `schema` (copied verbatim), `cli-command` (cast to a structured sidecar), `prompt` (copied verbatim), `example` (copied verbatim), `eval` (Foundry-only, never packaged). What each kind's dispatch *does* is the instance's to declare, not the pattern's to fix.
 
 ## Compilation
 

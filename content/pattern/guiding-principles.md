@@ -117,7 +117,7 @@ Show people and agents the right knowledge at the right time. Preserve navigable
 
 **Why it matters.** Flattening every reference, schema, example, and rationale into one prompt makes rich knowledge harder to navigate and consumes attention before it is useful. Minimalism is not the goal; deliberate disclosure is.
 
-**Requires:** a visible path from journey to action to supporting evidence, plus declared load and placement policies that distinguish up-front material from on-demand references and inlined content from bundled or sidecar material.
+**Requires:** a visible path from journey to action to supporting evidence, plus declared load and placement policies that distinguish up-front material from on-demand references, and material carried verbatim from material built into a sidecar.
 
 ### Portable Artifacts Over Platform Fashion
 

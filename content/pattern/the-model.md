@@ -96,7 +96,9 @@ Every declared reference carries three decisions:
 
 - a **kind** — which resolver and casting rules apply;
 - a **load policy** — `upfront` or `on-demand`, with a trigger for the latter;
-- a **placement mode** — inlined, bundled, or carried as a sidecar where the target permits it.
+- a **placement mode** — `verbatim`, or `sidecar` where the target permits it.
+
+*Placement*, not transformation: both modes carry the reference unchanged, one as its own bytes and one as a structured artifact built from them. That is why a cast is reproducible byte for byte, and it is the whole of the vocabulary a Mold may draw from — a mode exists when some instance has written the renderer that performs it.
 
 Common reference kinds include KB pages, schemas, CLI manual pages, prompts, and examples. Their different shapes are why the manifest is typed rather than a flat list of links.
 
@@ -138,9 +140,9 @@ For `summarize-source`, a record might look like this:
   "mold": { "id": "summarize-source", "revision": 4, "content_hash": "sha256:9f1c…" },
   "target": { "id": "agent-skill", "revision": 2 },
   "references": [
-    { "id": "input-schema", "placement": "bundled",
+    { "id": "input-schema", "mode": "verbatim",
       "src_hash": "sha256:71a0…", "dst_hash": "sha256:71a0…" },
-    { "id": "domain-pattern", "placement": "inline",
+    { "id": "domain-pattern", "mode": "verbatim",
       "src_hash": "sha256:0a5e…", "dst_hash": "sha256:0a5e…" }
   ],
   "checks": ["static-validation", "references-resolved"]
