@@ -1,6 +1,6 @@
 ---
 title: The Model
-description: The Foundry machine — an inspectable Knowledge Base, Molds that select one action, a deterministic-first Cast, and provenance beside every output.
+description: The Foundry machine — an inspectable Knowledge Base, Molds that select one action, a deterministic Cast, and provenance beside every output.
 section: pattern
 order: 2
 ---
@@ -24,18 +24,18 @@ A Foundry keeps authorship and distribution separate. People maintain a rich, in
     <div class="model-machine-cast" aria-hidden="true">
       <span>03 · cast</span>
       <b>&rarr;</b>
-      <small>deterministic first<br />LLM second</small>
+      <small>deterministic<br />compilation</small>
     </div>
     <div class="model-machine-output">
       <div class="model-machine-artifact">
         <span class="model-machine-label">target artifact</span>
         <strong>Frozen skill</strong>
-        <span>condensed · isolated · portable</span>
+        <span>scoped · isolated · portable</span>
       </div>
       <div class="model-machine-provenance">
         <span class="model-machine-label">04 · lineage record</span>
         <strong>Provenance</strong>
-        <span>revision · model · refs · checks</span>
+        <span>revision · target · refs · checks</span>
       </div>
     </div>
   </div>
@@ -65,7 +65,7 @@ A Foundry keeps authorship and distribution separate. People maintain a rich, in
   <div>
     <span>04</span>
     <strong>Provenance</strong>
-    <p>The separate record of the source, transformations, and checks.</p>
+    <p>The separate record of the source, resolved inputs, and checks.</p>
   </div>
 </div>
 
@@ -82,13 +82,13 @@ The **Knowledge Base (KB)** is the source of truth: a human-readable corpus auth
 
 Calling that structure *executable* is a claim the build enforces. Every typed reference must resolve, controlled tags must exist in their registry, and generated indexes and deterministic renders are regenerated and diffed. A Mold whose source fails these checks cannot be cast. The same structure that helps a person navigate the knowledge therefore gives the compiler something it can verify.
 
-The glossary is the highest-fan-in part of the KB. It pins coined terms once so people and models use the same vocabulary; casting copies those definitions verbatim rather than condensing them. The full rationale belongs in the [[glossary]], and defining that vocabulary is one of the first steps in [[setting-up-a-foundry]].
+The glossary is the highest-fan-in part of the KB. It pins coined terms once so people and models use the same vocabulary; casting carries those definitions verbatim. The full rationale belongs in the [[glossary]], and defining that vocabulary is one of the first steps in [[setting-up-a-foundry]].
 
 In the running example, the KB owns the input schema and domain pattern that `summarize-source` will use. If either changes, the source changes in one inspectable place.
 
 ## 2. Mold
 
-A **Mold** describes one action. It is an abstract, typed reference manifest plus a procedural skeleton: which knowledge the action needs, when each dependency should be loaded, how it may be transformed, and what the action does with it. A Mold is source, independent of any agent runtime.
+A **Mold** describes one action. It is an abstract, typed reference manifest plus a procedural skeleton: which knowledge the action needs, when each dependency should be loaded, how it should be packaged, and what the action does with it. A Mold is source, independent of any agent runtime.
 
 The boundary is procedural. A repeatable decision-and-handoff worth executing as a unit becomes a Mold; a fact, convention, or contract that an action can cite stays a reference. One Mold may be substantial, but it should still describe one coherent unit of work—not an entire journey and not a dust of fragments.
 
@@ -96,7 +96,7 @@ Every declared reference carries three decisions:
 
 - a **kind** — which resolver and casting rules apply;
 - a **load policy** — `upfront` or `on-demand`, with a trigger for the latter;
-- a **transform mode** — copied verbatim, condensed, or carried as a sidecar where the target permits it.
+- a **placement mode** — inlined, bundled, or carried as a sidecar where the target permits it.
 
 Common reference kinds include KB pages, schemas, CLI manual pages, prompts, and examples. Their different shapes are why the manifest is typed rather than a flat list of links.
 
@@ -104,11 +104,11 @@ For `summarize-source`, the input schema loads up front because every run needs 
 
 ## 3. Cast
 
-**Casting** compiles a Mold into a target-specific artifact. It runs **deterministic first, LLM second**—an ordering of trust. Deterministic tooling resolves references, copies verbatim material, builds sidecars, renders the artifact, and writes provenance. A model is invoked only for reference kinds explicitly marked for condensation, and every fragment it produces is recorded.
+**Casting** deterministically compiles a Mold into a target-specific artifact. Tooling resolves typed references, selects the material the Mold declares, copies or places it according to its kind and target, renders the artifact, and writes provenance. The same source, Mold, and target produce the same bytes.
 
 The artifact crosses an integration boundary. It comes out:
 
-- **condensed** — limited to what this action needs;
+- **scoped** — limited to what this action declares;
 - **isolated** — with links resolved away and no runtime dependency on the KB;
 - **frozen** — tied to one source revision rather than silently following future edits.
 
@@ -118,15 +118,15 @@ The skill body is therefore never hand-maintained. If it is under-instructed, fi
 
 A **Target** is an output format: one agent's skill format, a generic skill bundle, or another frozen package. Casting is parameterized by target, so one Mold may produce several artifacts without forking the knowledge that feeds them. A new runtime should require a new target configuration, not a rewrite of the KB.
 
-In the running example, the Cast resolves the `summarize-source` dependencies, copies its schema exactly, condenses the domain pattern if requested, and emits a self-contained skill for the selected target.
+In the running example, the Cast resolves the `summarize-source` dependencies, copies its schema exactly, places the selected domain pattern according to the target rules, and emits a self-contained skill for the selected target.
 
 ## 4. Provenance
 
 Every Cast emits **Provenance** beside the artifact. The consumer does not load it as instruction; it is the lineage record. It names:
 
 - the **Mold revision** and content hash;
-- the **model version** and prompt identity for any model-produced fragment;
-- the **references resolved**, with source and destination hashes and who transformed them;
+- the **target identity** and configuration;
+- the **references resolved**, with their source, destination, placement, and hashes;
 - the **checks run** at cast time.
 
 That record makes drift mechanically detectable. Re-hash the Mold and its sources, compare them with the record, and a stale artifact announces itself. It also answers the forensic question a bare skill cannot: *where did this particular claim come from?*
@@ -136,13 +136,12 @@ For `summarize-source`, a record might look like this:
 ```json
 {
   "mold": { "id": "summarize-source", "revision": 4, "content_hash": "sha256:9f1c…" },
-  "model": "<model>@<version>",
+  "target": { "id": "agent-skill", "revision": 2 },
   "references": [
-    { "id": "input-schema",   "transform": "verbatim",
-      "src_hash": "sha256:71a0…", "dst_hash": "sha256:71a0…", "by": "deterministic" },
-    { "id": "domain-pattern", "transform": "condensed",
-      "src_hash": "sha256:0a5e…", "dst_hash": "sha256:c43b…", "by": "llm",
-      "prompt": "condense-pattern@v3" }
+    { "id": "input-schema", "placement": "bundled",
+      "src_hash": "sha256:71a0…", "dst_hash": "sha256:71a0…" },
+    { "id": "domain-pattern", "placement": "inline",
+      "src_hash": "sha256:0a5e…", "dst_hash": "sha256:0a5e…" }
   ],
   "checks": ["static-validation", "references-resolved"]
 }
@@ -151,7 +150,7 @@ For `summarize-source`, a record might look like this:
 Three useful tests fall straight out of it:
 
 - **Verbatim material proves itself.** `src_hash == dst_hash` shows that the schema was copied unchanged.
-- **Transformed material names its author.** A changed hash is paired with the model and prompt that produced the destination.
+- **The build is reproducible.** Re-casting the same Mold for the same target yields the same artifact bytes and content-derived hashes.
 - **Drift and forensics share one index.** Compare hashes to find staleness; follow the same entries to find a claim's source.
 
 The pattern requires re-checkable lineage, not this exact filename or encoding. Both existing instances use `_provenance.json`; another instance may encode the same guarantee differently.

@@ -131,7 +131,7 @@
         {
           "file": "casting.md",
           "requirement": "optional",
-          "purpose": "Per-Mold condensation prompts, read by `/cast` when a reference casts condensed.",
+          "purpose": "Per-Mold casting metadata, read by `/cast` while assembling the target artifact.",
           "disposition": "cast-input"
         },
         {

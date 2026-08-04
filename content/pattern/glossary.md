@@ -35,15 +35,15 @@ Grouped by theme.
 
 **Cast** *(verb)* — produce a self-contained artifact from a Mold via the casting process. *(noun)* — one casting result for a (Mold, target) pair.
 
-**Casting** — the compilation step that turns a Mold into a skill artifact: deterministic tooling first, LLM condensation second, in that order of trust. The ordering is the invariant; how far the deterministic half reaches is the instance's answer to give, and today no instance runs a live condensation (see [[the-model]]). The *integration boundary* — artifacts come out condensed, isolated, and frozen, with no links back. See [[skills-package-not-source]].
+**Casting** — the deterministic compilation step that turns a Mold into a skill artifact. It resolves typed references, places their contents according to kind and target, renders the artifact, and emits provenance. The *integration boundary* — artifacts come out scoped, isolated, and frozen, with no links back. See [[skills-package-not-source]].
 
-**Skill artifact** — the compiled output of casting: self-contained, condensed, frozen against the source revision, no links back, no runtime dependency on the KB. `SKILL.md` (or any skill file) is therefore a **compile target**, never the authoring surface.
+**Skill artifact** — the compiled output of casting: self-contained, scoped to one action, frozen against the source revision, no links back, no runtime dependency on the KB. `SKILL.md` (or any skill file) is therefore a **compile target**, never the authoring surface.
 
 **Target** — the format a cast produces (e.g. an Anthropic Agent Skill, a generic skill format, a baked-in web bundle). One Mold may cast to several targets; the KB stays the source of truth.
 
 **Source format vs packaging format** — the central distinction of [[skills-package-not-source|The Case]]. The dominant pattern treats the skill as the *source* (a human-plus-LLM authors `SKILL.md`, which *is* the record). The Foundry Pattern makes the skill a *package* cast from a curated KB. Restating canonical knowledge is a commodity; traceable, provenance-backed knowledge is not.
 
-**Provenance** — a record (`_provenance.json`) emitted beside every cast artifact: which Mold revision, which references resolved, which checks ran, and the model and prompt identity behind any fragment a model produced. The durable, universal non-commodity asset — present in every instance; the answer to "which specific claim is real and where it came from."
+**Provenance** — a record (`_provenance.json`) emitted beside every cast artifact: which Mold revision, which target, which references resolved, which checks ran. The durable, universal non-commodity asset — present in every instance; the answer to "which specific claim is real and where it came from."
 
 **Compile-time grounding with provenance** — the bet that distinguishes the pattern from the field's default of *attach KB, retrieve at runtime*. A deterministic pipeline casts selected KB slices into target artifacts, provenance is recorded, and drift becomes mechanically detectable. Runtime fetch augments, never replaces, compiled grounding.
 
