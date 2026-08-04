@@ -47,13 +47,13 @@ The principles fall into three families. The first keeps knowledge grounded, the
 
 Grounding prevents a Foundry from becoming an articulate account of its authors' assumptions. Authority, licensing, and evidence determine what the knowledge base may claim and carry.
 
-### Source Authority Beats Local Copies
+### Upstream Authority, Local Synthesis
 
-Keep knowledge near the project that owns it. A Foundry adds value by connecting, explaining, and operationalizing upstream knowledge—not by silently becoming its canonical home.
+A Foundry creates useful local derivatives: summaries, selected excerpts, manual pages, vendored schemas, and generated fixtures. The discipline is not to avoid them, but to keep their authority honest. Upstream owns the facts and behavior; the Foundry owns the selection, framing, connections, and operational guidance it adds.
 
-**Why it matters.** A local mirror creates another copy that can drift. Citing by URL stays fresh but may be unstable; quoting a fixed excerpt is stable to read but can go stale; pinning by hash, commit, or DOI is stable and drift-detectable but frozen until it is deliberately updated. No choice removes the tradeoff.
+**Why it matters.** Every local artifact freezes or transforms its source. It becomes dangerous when it can pass as current upstream truth or when nobody can tell how it should be refreshed. Refusing local derivatives would leave the knowledge base unable to act; treating them as canonical makes drift invisible.
 
-**Requires:** cite rather than mirror by default, pin what must remain stable, and review the dependency when an upstream source changes.
+**Requires:** choose deliberately among a citation, an authored derivative, a pinned snapshot, and a working cache. Declare the source and transformation; attach versions, hashes, licenses, and sync checks where exact content is carried; keep temporary corpora separate from authored knowledge; and state plainly when freshness depends on manual review.
 
 ### Redistributed Content Carries Its License
 
@@ -129,13 +129,13 @@ Keep core knowledge independent of any agent runtime, editor, model vendor, or o
 
 ## One Reinforcing System
 
-These are not nine independent virtues. Source authority and corpus-grounding establish what may be claimed; licensing controls what may be carried; provenance explains what a cast used; deterministic tools and domain checks make that lineage meaningful. Self-documentation gives people a map of the system, progressive disclosure makes its depth navigable, and portable artifacts let the knowledge outlive a runtime.
+These are not independent virtues. Upstream authority and corpus-grounding establish what may be claimed; licensing controls what may be carried; provenance explains what a cast used; deterministic tools and domain checks make that lineage meaningful. Self-documentation gives people a map of the system, progressive disclosure makes its depth navigable, and portable artifacts let the knowledge outlive a runtime.
 
 **Actionable Knowledge, Not Passive Notes** is the spine: it turns an inspectable source into something that can drive work. **The Knowledge Base Documents Itself** keeps that spine intelligible as the Foundry grows. The pattern works when each layer keeps its job—upstream owns the facts, the Foundry owns its synthesis and casting source, the domain's check owns the verdict, cast artifacts own execution, and harnesses own orchestration.
 
 ## See Also
 
-- [[principles-in-action]] — how the two current Foundries enact each principle.
+- [[principles-in-action]] — how current Foundries enact each principle.
 - [[anatomy-of-an-instance]] — the invariant substrate and the domain-specific extension surface.
 - [[the-model]] — Knowledge Base, Mold, Cast, and provenance as the structural realization of these principles.
 - [[design-records]] — the map a Foundry keeps of its own design.
