@@ -1,77 +1,165 @@
 ---
 title: Principles in Action
-description: The principles incarnated — how current Foundries' setup and implementation decisions enact each one. The one Pattern page that goes concrete on purpose.
+description: How current Foundries turn the shared principles into concrete rules, records, checks, and deliberately deferred machinery.
 section: pattern
 order: 4
 ---
 
 # Principles in Action
 
-[[guiding-principles|Guiding Principles]] states the pressures domain-free, on purpose. This page does the opposite, also on purpose: it is the one Pattern page that goes *concrete*, showing each principle as a decision a current instance actually made — a validator rule, a directory that deliberately doesn't exist, a field in a record. Where the principles page says what holds, this one says what got built.
+[[guiding-principles|Guiding Principles]] states the commitments without tying them to a domain. This page shows what those commitments make two Foundries do: which rules they enforce, which artifacts they keep, and which machinery they have deliberately not built.
 
-The examples sit at different levels of maturity, and the difference is load-bearing here. The [[galaxy-workflow-foundry]] has an implemented validator and cast layer, so most of its examples are enforced in code. The [[statistical-genomics-foundry]] has a substantial typed corpus and design substrate but no cast layer yet, so its examples distinguish implemented authoring rules from deferred casting rules. Reading the instances together is the point: the decision they *share* is the principle; the decision each makes *differently* is the [[anatomy-of-an-instance|extension]].
+The comparison is intentionally uneven. The [[galaxy-workflow-foundry]] has a working cast layer and runtime validation path. The [[statistical-genomics-foundry]] has a substantial typed corpus and authored Molds, but no caster or cast artifacts yet. **Implemented** means the behavior is observable in the repository today; **partial** means a real source-side mechanism exists but a later layer is deferred; **designed** means the contract exists without an implementation. Inheritance alone never counts as implementation.
 
-## Upstream Authority, Local Synthesis
+<figure class="not-prose principles-action-matrix" aria-labelledby="principles-action-caption" data-pagefind-ignore>
+  <div class="principles-action-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Principle</th>
+          <th scope="col">Galaxy Workflow Foundry</th>
+          <th scope="col">Statistical Genomics Foundry</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Upstream authority</th>
+          <td><span>Implemented</span>Citations, derivatives, snapshots, and caches have distinct roles.</td>
+          <td><span>Implemented</span>Source notes declare identity, license, attribution, and transformation posture.</td>
+        </tr>
+        <tr>
+          <th scope="row">Licensing</th>
+          <td><span>Implemented</span>Shared policy drives source validation, casting, and provenance.</td>
+          <td><span>Partial</span>Source validation is live; cast-time enforcement awaits a caster.</td>
+        </tr>
+        <tr>
+          <th scope="row">Corpus first</th>
+          <td><span>Implemented</span><a href="https://github.com/galaxyproject/iwc">IWC exemplars</a> ground patterns, Molds, and verification work.</td>
+          <td><span>Implemented</span>Good methods and cautionary counterexamples ground referee Molds.</td>
+        </tr>
+        <tr>
+          <th scope="row">Reproducibility</th>
+          <td><span>Implemented</span>Cast provenance and drift checks expose every packaged dependency.</td>
+          <td><span>Partial</span>Source recovery is reproducible; cast provenance remains designed.</td>
+        </tr>
+        <tr>
+          <th scope="row">Deterministic tools</th>
+          <td><span>Implemented</span>Build, cast, and workflow checks fail mechanically.</td>
+          <td><span>Partial</span>Corpus checks run; empirical runtime gates are authored but not cast.</td>
+        </tr>
+        <tr>
+          <th scope="row">Actionable knowledge</th>
+          <td><span>Implemented</span>Molds compile into skills with explicit artifact contracts.</td>
+          <td><span>Partial</span>Referee Molds exist as source; no runtime bundles exist yet.</td>
+        </tr>
+        <tr>
+          <th scope="row">Self-documentation</th>
+          <td><span>Implemented</span>Glossary, design records, kind docs, and catalogs map the system.</td>
+          <td><span>Implemented</span>The same map records both working and deferred machinery.</td>
+        </tr>
+        <tr>
+          <th scope="row">Progressive disclosure</th>
+          <td><span>Implemented</span>Reference load policy survives into generated skills.</td>
+          <td><span>Partial</span>Load policy is typed in source; no cast exercises it yet.</td>
+        </tr>
+        <tr>
+          <th scope="row">Portability</th>
+          <td><span>Implemented</span>One portable skill tree is exposed through thin runtime manifests.</td>
+          <td><span>Designed</span>Source and casting contract are runtime-neutral; artifacts are deferred.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <figcaption id="principles-action-caption">
+    The shared commitment is the principle. Its implementation point—and an honest deferred boundary—belongs to the instance.
+  </figcaption>
+</figure>
 
-Instance #1 uses all four source relationships deliberately. **Citations** point pattern pages to IWC workflows without committing an exemplar mirror. **Authored derivatives** turn the parts of a CLI interface a Mold needs into local manual pages, while each page retains its `upstream:` URL and the executable CLI remains the authority on behavior. **Pinned snapshots** carry schemas, prompts, specifications, and other exact bytes the Foundry or a cast needs; `vendored_upstreams.yml` records the source, pinned revision, framing note, license, and—where generation is required—the build command. **Working caches** support corpus surveys under `workflow-fixtures/`, but their generated contents are gitignored and invisible to the knowledge base, site, and casts. The boundary is not whether bytes are local; it is whether each local artifact declares its role and lifecycle.
+## Keep knowledge grounded
 
-Instance #2 is local-synthesis-heavy by design. Paper and tutorial notes are committed, substantial derivatives, but their typed metadata names the source URL or DOI, access date, license, attribution, and transformation posture (`own-words-summary` or license-aware quotation). Multi-chapter books make the separation especially visible: a manifest identifies each upstream chapter, raw HTML lives only in a gitignored staging directory, `SHA256SUMS` pins what was read, and the committed chapter notes are the Foundry's own synthesis. A citation preserves access to authority; a pin makes the input recoverable; the derivative is the value the Foundry takes responsibility for maintaining.
+### Upstream Authority, Local Synthesis
 
-## Redistributed Content Carries Its License
+**Galaxy — implemented.** The repository distinguishes four source relationships. Citations point to [IWC workflows](https://github.com/galaxyproject/iwc) without mirroring them. Authored CLI pages retain their upstream URL while adding local operational guidance. Vendored schemas and specifications are pinned in `vendored_upstreams.yml`. Survey corpora live in gitignored working caches, outside the knowledge base and its casts.
 
-Both instances built this from a single shared decision table — `license-policy.yml`, materialized from [the shared policy issue](https://github.com/galaxyproject/foundry-pattern/issues/4), mapping a normalized license id to a redistribution policy (`verbatim-ok` vs `own-words-only`), the casting modes each permits, and whether a `license_file` must accompany the carry. Both repos keep a byte-for-byte copy of its rows, each marked a cross-repo mirror in a header comment, because divergence would make the principle mean two different things. Instance #1 enforces the table at cast time. Its `license` frontmatter went from a flat SPDX enum to an `anyOf` of the enum *plus* a `^LicenseRef-<slug>$` escape hatch — a test asserts the enum stays in lockstep with the table's keys — and a missing or unknown id resolves to the default row: own-words-only and a flagged defect, the default-deny substrate. Casting is the gate: an own-words-only license may not be carried `verbatim` or `sidecar`, and each redistributed ref's `license_file` content-hash is stamped into `_provenance.json` (schema bumped to v3, now carrying `license` / `license_file` / `license_file_hash` per ref), so the license of every redistributed byte joins the lineage. The vendored CWL v1.2 Apache-2.0 text lives under `LICENSES/` with its presence validated, and a `LicenseBox` component plus `/licenses/<id>` pages foreground it.
+**Statistical genomics — implemented.** Paper, tutorial, and book notes are substantial local syntheses, but their metadata records the source, access, license, attribution, and whether the note paraphrases or quotes. Multi-chapter books add manifests and checksums; raw source material remains staging input rather than committed knowledge.
 
-Instance #2 has no cast layer yet, so it cannot make casting refuse anything — and rather than fake a gate it lacks, it enforces at the two layers it owns. `content.config.ts` refines `license` to the same enum-or-`LicenseRef` grammar; all 24 source notes were migrated to normalized ids, with nuance an id can't encode (PREPRINT-vs-published, access provenance) pushed into `attribution` rather than the license string. The table then drives *mechanically* what used to be author judgment: the LGPL (copyleft) DESeq2 vignette is paraphrased own-words so copyleft does not leak into the KB — while the functional strings the carve-out protects (the exact full-rank error message, `alpha=0.1`, parameter and function names) stay verbatim as facts — and the three CC-BY notes keep their verbatim quotes *with* the required notice, vendoring the CC-BY-4.0 text under `LICENSES/`. `SourceMeta.astro` derives a policy chip and a copyleft chip straight from the id; provenance is deferred, honestly, until the cast layer exists rather than retrofitted onto a record that isn't emitted yet. So the extension is *where the shared table is enforced*: instance #1 makes it a cast-time refusal with the license written into provenance; instance #2, lacking a cast, makes it a schema constraint and a mechanical own-words-vs-verbatim authoring rule. Same grammar, same rows, same default-deny — different enforcement point, chosen by each instance's maturity.
+**What the contrast shows.** Local bytes are not the failure. Ambiguous authority is. Each artifact needs an explicit relationship to its source and a lifecycle that matches that relationship.
 
-## Reproducibility At Every Layer
+### Redistributed Content Carries Its License
 
-In instance #1 the unit of reproducibility is the cast's `_provenance.json`: the Mold revision, its content hash, the target, the commit, and a refs array sorted by `(kind, src)` so two casts diff cleanly. Copied references carry `src_hash == dst_hash` — the equality *is* the proof nothing was paraphrased — and the casting command's `--check` mode re-derives every hash and the deterministic render, exiting non-zero on any drift. The same drift discipline covers generated indexes: the dashboard and index pages are generated, committed, and string-compared against regeneration in CI. Identity is content-hash-plus-commit with no semver; re-casting is the migration path.
+**Galaxy — implemented.** The repository installs the shared `@galaxy-foundry/license-policy` decision table instead of maintaining a local mirror. Its own schema checks local license coherence; casting then rejects disallowed placement modes and records the license lineage of redistributed references in provenance.
 
-Instance #2 inherits this and is explicit that provenance is "not to be lightened." Its one domain-specific addition is the reproducibility decision that matters most for its field: provenance must record *which empirical checks the referee ran* — which null, which simulation, which calibration, which negative control — so a certified result carries the evidence of *how* it was refereed, not merely *that* it was. It also runs a "recoverability" discipline on its own notes: blind-author from sources, flag `[GAP]` where the notes fall short, never fill from memory.
+**Statistical genomics — partial.** It installs the same policy and applies it during source authoring and validation. License identifiers are typed, required notices and license texts accompany reusable quotations, and own-words-only sources must remain authored derivatives. With no caster, there is no cast-time refusal or cast provenance yet.
 
-## Deterministic Tools Do Deterministic Work
+**What the contrast shows.** A shared package answers what a license permits. Each instance still owns the rules that connect that policy to its content and to every output layer it actually implements.
 
-This is where the two instances diverge most, and by design. Instance #1's external check is *the rails*: the `gxwf` CLI parses and validates the workflow format, and the Foundry deliberately keeps no parallel prose "caveat catalog" for the failure modes a parser already catches — they are delegated to the tool, run *inline* in an author→validate→fix loop, not as terminal cleanup. (The exact checks live in the upstream CLI; the Foundry calls it, it does not reimplement it.) The Foundry's *own* deterministic instrument is its build validator: Ajv against a typed `meta_schema.yml`, then layered cross-file passes that resolve every typed reference per kind. Casting is deterministic too: reference resolution, verbatim copies, sidecars, and the whole skill render are mechanical. A bundle is byte-identical on re-cast, which lets CI run the drift gate as a hash comparison over all 47 Molds.
+### Corpus-First, Not Invention-First
 
-Instance #2 keeps the principle's *soul* — never let the model be the only judge of its own work — and changes its *form* completely, because its work has no parser. "Deterministic work" becomes the field's empirical instruments: permutation under the null, simulation under known truth, negative controls, calibration. Its check splits in two — *critique* (reason about known invalidity patterns; fast, but still model reasoning, so necessary-not-sufficient) and *calibrate* (construct and run the empirical test — the part that is not self-certification) — and the strong form of its gate requires at least one calibrate pass, "because critique is reasoning, and reasoning is what we don't trust." No CLI ships for "is this method valid," so the check becomes a *deliverable the Foundry constructs* rather than a tool it calls — and it runs at the cast skill's runtime, keeping casting itself deterministic and read-only.
+**Galaxy — implemented.** IWC workflows ground conversion patterns and Molds. References carry an evidence posture; hypotheses require a verification plan, and schemas are expected to reach cast-validated status. Generated workflow skeletons make broad inspection cheap before maintainers read selected exemplars deeply.
 
-## Progressive Disclosure Over Context Flooding
+**Statistical genomics — implemented.** Its corpus is deliberately bipolar: established methods supply positive evidence, while invalidity patterns such as double-dipping and confounding supply counterexamples a referee must recognize. Molds now draw on that corpus; the taxonomy grows from the work rather than preceding it.
 
-Instance #1 makes disclosure a property of every reference: each carries `used_at`, a `load` policy (`upfront` / `on-demand`), and a placement mode such as `verbatim` or `sidecar`; an on-demand reference without a trigger draws a validator warning. A live Mold shows it — its output schema loads upfront while six research notes sit behind distinct triggers ("when considering existence-only, size-only, image-only … patterns"). Those triggers ride into provenance and into the rendered skill, which splits a `Load Upfront` section from a `Load On Demand` one and writes each trigger as a "Use when …" line. Where the work is a journey, pipelines disclose it: the dashboard leads with pipelines as the primary task surface, and each Mold shows which pipelines it appears in.
+**What the contrast shows.** Corpus-first does not prescribe one corpus shape. It requires abstractions and checks to be earned from the evidence the domain needs—including negative evidence when recognizing failure is part of the job.
 
-Instance #2 inherits this layer essentially unchanged and — honestly — has made no net-new disclosure decision of its own yet; the load-policy machinery carries over from the parent intact. Worth stating plainly rather than inventing a difference where there isn't one.
+## Make knowledge trustworthy and actionable
 
-## Portable Artifacts Over Platform Fashion
+### Reproducibility At Every Layer
 
-A Mold in instance #1 is a typed reference manifest plus a procedural skeleton — explicitly "not a Claude-specific skill." Target behavior is *data, not code*: a `_target.yml` per target declares the destination directory, extension, and allowed modes per reference kind, and casting reads it. The Claude cast is the only built target, and it cleanly doubles as a Claude plugin root — a `.claude-plugin` marketplace namespacing the skills — but the source stays vocabulary-neutral: wiki-links are resolved away and the word "Mold" is rewritten to "skill" only at cast time, never in the source. Reference content is target-agnostic and reused across casts; a new runtime is "a new cast target or harness, not a rewrite." (Web and generic targets are scaffolded but unbuilt — the explicit decision is to prove the Claude path first.)
+**Galaxy — implemented.** Every cast carries `_provenance.json`: Mold identity, commit and content hash, target, resolved references, hashes, licenses, and artifact contracts. Its [casting record](https://github.com/galaxyproject/foundry/blob/main/content/meta/casting.md) defines stable ordering and deterministic regeneration so CI can report drift instead of asking a reviewer to infer it from generated text.
 
-Instance #2 inherits this whole layer — Mold → Cast → provenance and the cross-resolving validator — verbatim, and exercises one target (Claude). Its only adaptation is which reference kind dominates: `research` notes are "our heaviest kind," and the structured-schema kind the parent leans on is demoted.
+**Statistical genomics — partial.** The source pipeline is recoverable today: source identities, access records, book manifests and checksums, generated frontmatter, typed validation, and blind-regeneration gaps are inspectable. Its [build record](https://github.com/jmchilton/statistical-genomics-foundry/blob/main/content/meta/build-and-validation.md) describes what runs, while its [casting record](https://github.com/jmchilton/statistical-genomics-foundry/blob/main/content/meta/casting.md) defines provenance for a layer it accurately labels unimplemented.
 
-## Actionable Knowledge, Not Passive Notes
+**What the contrast shows.** Reproducibility is not a single file format. It is the ability to recover how each existing derivative was produced without claiming lineage for a derivative that does not yet exist.
 
-Instance #1 keeps the rich graph *and* makes it executable. The KB is wiki-linked and resolves through a single shared module used by both the validator and the site — no parallel implementation to drift. A Mold's manifest plus its `input_artifacts` / `output_artifacts` make an action's dependency surface machine-readable, and the validator enforces that every consumed artifact has a producer Mold and that producers agree on its schema. Casting packages the declared parts of that graph into a frozen bundle with no links back, adding deterministic operational sections — when-to-use, inputs, outputs, required tools, validation, procedure. And it keeps the two roles separate: author-facing meta-content (changelog, open questions) is kept out of the runtime body, because "anything in the body is runtime instruction."
+### Deterministic Tools Do Deterministic Work
 
-Instance #2's whole reason to exist is one *sharpening* of this principle: a *do* step may not certify itself. It splits its catalog into Family A (frame, design-review, pick an established method, run reproducibly) and Family B (audit validity, construct the empirical check), and makes the gate obligation an invariant — "a Family-A protocol may not terminate in self-certification; it must hand off to a Family-B referee whose verdict gates certification." The referee is itself a Mold — authored knowledge cast into a skill, a *deliverable* rather than infrastructure — and its evals are reframed to match: the highest-value test is catch-the-planted-flaw ("any analysis where feature selection and inference share data must be flagged as double-dipping, never passed"). A referee with no "must catch X" property, the spec says, isn't refereeing. The flagship Mold (`audit-method-validity`) is named and sequenced first — but not yet authored.
+**Galaxy — implemented.** Typed schemas, cross-file resolution, hashing, copying, cast rendering, and drift detection are mechanical. At runtime, `gxwf` parses and validates workflow structure inside the author–validate–fix loop; the Foundry does not replace those checks with a prose catalog of possible mistakes.
 
-## The Knowledge Base Documents Itself
+**Statistical genomics — partial.** Deterministic tests already validate the corpus, kinds, references, licenses, generated book metadata, and reading site. For method validity, authored referee Molds require external empirical evidence—permutation, simulation, calibration, or negative controls. Those procedures become runtime gates only after casting exists.
 
-Both instances learned that making domain knowledge inspectable is not enough: the Foundry must also explain its own vocabulary, boundaries, and machinery. Each now keeps one authoritative glossary under `content/meta/`, rendered for readers and copied verbatim into casts. An entry records whether its definition came from the pattern, the shared stack, or the domain, but the glossary is organized for someone learning the subject rather than by that supply chain. Where another page disagrees with it, the glossary wins.
+**What the contrast shows.** “Deterministic” describes the instrument, not every question a Foundry asks. Mechanical questions get pass/fail tools; judgment-heavy questions must still end in evidence outside the reasoning that produced the answer.
 
-The same convergence produced a typed `meta` kind for design records. Instance #1 exposed the failure directly: design documents outside the content model were listed in a hand-written site array, and two existing records were absent from that list and rendered nowhere. Both instances now route `content/meta/` records through the same schema, validation, and site machinery as domain notes. A short architecture map points to focused records for the content model, code, build and validation, and repository layout; each record states what it owns and what it excludes. Kind definitions carry their own documentation and minimal example, while generated manifests and catalogs enumerate what exists so design prose does not become a second, stale inventory. The result is a Foundry that carries its own map, even where instance #2 must truthfully mark casting machinery as not yet built.
+### Actionable Knowledge, Not Passive Notes
 
-## Corpus-First, Not Invention-First
+**Galaxy — implemented.** A Mold declares one action, its references, and the artifacts it consumes and produces. Validation checks that artifact producers and schemas agree. Deterministic casting packages that dependency surface into an executable skill while keeping evals and maintainer notes out of the runtime bundle.
 
-Instance #1 enforces corpus-first in the validator rather than trusting it as posture. Every reference carries an `evidence` label — `hypothesis` / `corpus-observed` / `cast-validated` — and a `hypothesis` reference that lacks a `verification` field is an error; a schema reference marked hypothesis draws a warning, because the schema is the cast contract and should be cast-validated. The grounding scan is tiered and documented — grep the corpus, read ~120 stripped "skeletons" (median ~6 KB, sized to fit in context), then selectively read whole workflows. Stub discipline is checked too: a Mold whose body is still a stub yet already declares references draws a warning, because casting would bundle references with no procedure to apply them. Taxonomy is demand-driven — tag families "bloom as patterns surface real cross-cutting needs."
+**Statistical genomics — partial.** Its Molds already turn corpus knowledge into procedures for doing analyses and auditing their validity. The flagship `audit-method-validity` and more specific referee Molds now exist as typed source with scenarios and evals. They are inspectable instructions, but they are not yet generated runtime skills.
 
-Instance #2 makes corpus-first load-bearing in a way the parent never needed, and adds the one piece with *no parent analog*: a **bipolar corpus**. The parent's IWC corpus is all positive exemplars; a referee grounded only in good examples can't recognize a bad one, so this instance pairs established-good methods with cautionary-bad ones — named invalidity patterns (double-dipping, confounding, naive multiple-testing, invented methods) with their signatures and remedies. It holds the same stub discipline under a sharper motto — "we must not become the thing we referee" — weights `hypothesis`-evidence references as exactly where its own invention-risk lives, and explicitly refuses to mint a role taxonomy before content exists: the construct/critique/calibrate split stays cheap tags until six-to-ten real Molds show it self-organizing, to be dropped if a third of them straddle.
+**What the contrast shows.** Structured source can become actionable before delivery is finished, but the page should distinguish an authored procedure from a packaged artifact an agent can invoke.
 
-## How The Principles Connect
+## Make knowledge legible and durable
 
-Read the examples by instance and the contrast becomes the whole argument of [[the-diff]]. Read through the Galaxy Workflow Foundry and you see a built system where every principle has become a validator rule or a casting step — source relationships are kept distinct as citations, derivatives, snapshots, or caches; reproducibility is a hash comparison; a redistributed byte's license is a cast-time refusal; corpus-first is an `evidence` enum the build enforces. Read through the Statistical Genomics Foundry and you see the same principles re-derived for a domain where correctness can't be parsed: the same provenance, the same accountable-derivative discipline, the same stub discipline — but the deterministic check becomes an empirical referee, and the all-positive corpus grows a second, cautionary pole. What stayed identical *across* the instances is the [[anatomy-of-an-instance|substrate]]; what each domain decided *differently* is its extension. The principles are what made both sets of decisions the *same kind* of decision.
+### The Knowledge Base Documents Itself
+
+**Both — implemented.** Each repository keeps an authoritative glossary under `content/meta/`, typed design records with explicit ownership boundaries, documentation and examples beside its knowledge kinds, and generated catalogs for inventories. These records pass through the same validation and reading machinery as domain content.
+
+The second instance makes the benefit especially visible: its build record says exactly what runs today, while its casting record opens by saying no caster exists. Self-documentation is not self-promotion; it gives a maintainer enough of a map to tell architecture from aspiration.
+
+### Progressive Disclosure Over Context Flooding
+
+**Galaxy — implemented.** References declare when they are used, whether they load up front or on demand, and the trigger for deferred loading. Casting preserves those decisions in the generated skill, separating essential instructions from supporting schemas, manuals, patterns, and research.
+
+**Statistical genomics — partial.** The source contract already narrows and validates the same load vocabulary, with research notes carrying most of the depth behind on-demand triggers. Because there are no casts, the runtime disclosure behavior remains unexercised.
+
+**What the contrast shows.** Progressive disclosure begins as a property of source references, but it becomes real only when a reader or runtime can follow that policy.
+
+### Portable Artifacts Over Platform Fashion
+
+**Galaxy — implemented.** Molds and references remain runtime-neutral. A deterministic target adapter produces one portable Agent Skills tree; thin Claude and Codex plugin manifests expose that same tree without duplicating the skills. Adding another artifact shape would require a target adapter, not a rewrite of the knowledge base.
+
+**Statistical genomics — designed.** Its Molds, references, and casting contract avoid runtime-specific vocabulary, but it has no `casts/` tree or target adapter. Portability is therefore an architectural constraint on its source, not yet a demonstrated output property.
+
+**What the contrast shows.** Portability does not require many targets. It requires a clean boundary: target language enters during deterministic casting, and until that boundary runs, portability remains a testable promise rather than a shipped feature.
+
+## What the Comparison Establishes
+
+The instances do not need identical machinery to share the pattern. They need the same accountability: grounded sources, explicit transformation, enforceable contracts, honest status, and evidence outside self-certification. Galaxy demonstrates the full source-to-cast path. Statistical Genomics demonstrates that the same substrate can organize a different corpus and a different kind of external check—even while its cast layer remains visibly unfinished.
+
+That difference is evidence, not an embarrassment. The pattern is strongest where it lets a reader distinguish what was inherited, what the domain changed, what is working, and what is still only designed.
 
 ## See Also
 
 - [[guiding-principles]] — the same principles, stated domain-free.
-- [[the-diff]] — the two instances' decisions held side by side.
-- [[anatomy-of-an-instance]] — substrate vs. extension, the split these contrasts trace.
+- [[the-diff]] — the substrate and extension decisions held side by side.
+- [[anatomy-of-an-instance]] — the boundary between shared structure and domain machinery.
 - [[the-model]] — the parts these decisions configure.

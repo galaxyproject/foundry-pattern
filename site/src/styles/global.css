@@ -548,7 +548,175 @@ article.prose::before {
   font-size: 0.88em;
 }
 
+/* Principles in Action — comparison first, detail second. */
+.principles-action-matrix {
+  position: relative;
+  contain: inline-size;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 2rem 0 3rem;
+  overflow: hidden;
+  background: var(--soot);
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 30px 60px -48px rgba(226, 85, 43, 0.65);
+}
+
+.principles-action-matrix::before {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 1;
+  height: 3px;
+  content: "";
+  background: var(--molten);
+}
+
+.principles-action-scroll {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.principles-action-matrix table {
+  width: 100%;
+  min-width: 42rem;
+  border-collapse: collapse;
+  color: var(--steel);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.principles-action-matrix th,
+.principles-action-matrix td {
+  padding: 0.75rem 0.8rem;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.principles-action-matrix tr > :last-child {
+  border-right: 0;
+}
+
+.principles-action-matrix tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.principles-action-matrix thead th {
+  padding-top: 1rem;
+  color: var(--ink);
+  background: var(--iron);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.principles-action-matrix thead th:first-child,
+.principles-action-matrix tbody th {
+  width: 24%;
+}
+
+.principles-action-matrix tbody th {
+  color: var(--ink);
+  background: rgba(38, 43, 50, 0.72);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.principles-action-matrix tbody td {
+  width: 38%;
+}
+
+.principles-action-matrix td span {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--glow);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.principles-action-matrix figcaption {
+  padding: 0.85rem 1rem 1rem;
+  color: var(--ash);
+  border-top: 1px solid var(--rule);
+  font-size: 0.7rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
 @media (max-width: 42rem) {
+  .principles-action-matrix table {
+    min-width: 0;
+  }
+
+  .principles-action-matrix thead {
+    display: none;
+  }
+
+  .principles-action-matrix tbody,
+  .principles-action-matrix tr,
+  .principles-action-matrix th,
+  .principles-action-matrix td {
+    display: block;
+    width: 100%;
+  }
+
+  .principles-action-matrix tbody tr {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .principles-action-matrix tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .principles-action-matrix tbody th,
+  .principles-action-matrix tbody td {
+    width: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .principles-action-matrix tbody tr:last-child td:last-child,
+  .principles-action-matrix tbody td:last-child {
+    border-bottom: 0;
+  }
+
+  .principles-action-matrix tbody th {
+    padding-top: 0.9rem;
+    padding-bottom: 0.55rem;
+    color: var(--ink);
+    background: var(--graphite);
+    font-size: 0.82rem;
+  }
+
+  .principles-action-matrix tbody td::before {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--ash);
+    font-family: var(--font-display);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .principles-action-matrix tbody td:nth-of-type(1)::before {
+    content: "Galaxy Workflow Foundry";
+  }
+
+  .principles-action-matrix tbody td:nth-of-type(2)::before {
+    content: "Statistical Genomics Foundry";
+  }
+
   .principles-loop-flow {
     grid-template-columns: 1fr;
   }
