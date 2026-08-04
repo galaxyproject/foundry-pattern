@@ -7,7 +7,7 @@ order: 3
 
 # Guiding Principles
 
-A Foundry turns a body of working knowledge into something people can inspect and agents can act on. These principles keep that knowledge trustworthy as the domain, the corpus, and the surrounding tools change. They are domain-free on purpose: every Foundry inherits the commitments, then decides how its own domain will honor them.
+A Foundry turns a body of working knowledge into something people can inspect and agents can act on. These principles keep that knowledge trustworthy as the domain, the corpus, and the surrounding tools change. Every Foundry inherits the same domain-free commitments and realizes them differently.
 
 <figure class="not-prose principles-loop" aria-labelledby="principles-loop-caption" data-pagefind-ignore>
   <div class="principles-loop-flow">
