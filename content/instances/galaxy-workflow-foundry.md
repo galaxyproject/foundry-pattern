@@ -30,7 +30,7 @@ This is the simpler end of [[anatomy-of-an-instance|the external check]]'s range
 
 ## Targets
 
-Casts to skill artifacts (Anthropic Agent Skill / generic skill targets). Cast skills are condensed, isolated, and frozen against the Foundry revision they came from — no runtime dependency on the Foundry, no wiki-links to chase from inside a skill. Casting is the integration boundary, with provenance recorded beside every artifact.
+Casts to skill artifacts (Anthropic Agent Skill / generic skill targets). Cast skills are scoped, isolated, and frozen against the Foundry revision they came from — no runtime dependency on the Foundry, no wiki-links to chase from inside a skill. Casting is the deterministic integration boundary, with provenance recorded beside every artifact.
 
 ## Status
 

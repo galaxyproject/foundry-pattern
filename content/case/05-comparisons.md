@@ -50,7 +50,7 @@ KB is wiki-like in its readability; the casting step is what a wiki lacks.
 
 A bundle of hand-authored skills executes well and packages clean — it is good
 at exactly the artifact layer it targets, and especially valuable for weaker
-models that benefit from a condensed, ready-to-run restatement. The cost is
+models that benefit from a focused, ready-to-run restatement. The cost is
 above and below that layer. A skill bundle tends to compress away the evidence
 and design rationale that makes a skill maintainable; the same content reappears
 across skills with subtle drift; patterns get re-derived per skill; and there is
@@ -118,7 +118,7 @@ runtime.
   task relevance, not KB size.
 - **Diverges:** Agent Skills treats `SKILL.md` as the *authoring* surface. The
   Foundry Pattern treats it as a *compile target* with `_provenance.json` back
-  to the Mold revision, references, prompt, and model. A Foundry casts *into*
+  to the Mold revision, target, resolved references, and checks. A Foundry casts *into*
   this format as one target, not as its source of truth. (This is the precise
   inversion the flagship essay [[skills-package-not-source]] is about.)
 

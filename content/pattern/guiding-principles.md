@@ -27,7 +27,7 @@ The Foundry's own authored content carries the Foundry's own license, and the tw
 
 ## Reproducibility At Every Layer
 
-Producing knowledge is itself a scientific act. A result is only useful if a maintainer can recover how it was derived, which assumptions it inherited, and which checks were applied. Reproducibility here is broader than rerunning the final artifact: it includes the [[glossary|provenance]] of every derived artifact — which Mold was cast, which model and prompt produced it, which references resolved, which checks ran. The goal is not perfect immutability but *accountable change*: when a Mold, package, or cast changes, the reason and the dependency path should be recoverable.
+Producing knowledge is itself a scientific act. A result is only useful if a maintainer can recover how it was derived, which assumptions it inherited, and which checks were applied. Reproducibility here is broader than rerunning the final artifact: it includes the [[glossary|provenance]] of every derived artifact — which Mold was cast, which target produced it, which references resolved, which checks ran. The goal is not perfect immutability but *accountable change*: when a Mold, package, or cast changes, the reason and the dependency path should be recoverable.
 
 (This is why casts emit provenance in both instances, and why each treats validation as part of the authoring loop rather than a final cleanup step.)
 
@@ -39,7 +39,7 @@ The *soul* of the principle is constant — do not let the model be the only jud
 
 ## Progressive Disclosure Over Context Flooding
 
-Agents — and the humans reading over them — should see the right knowledge at the right time. A Foundry should not flatten every reference, schema, example, and rationale into one prompt just because the information exists. Molds disclose the action; typed references disclose the dependency surface; load policy distinguishes up-front material from on-demand; casting mode decides copied vs. condensed vs. inlined vs. sidecar; and where a domain composes ordered journeys, those disclose the journey.
+Agents — and the humans reading over them — should see the right knowledge at the right time. A Foundry should not flatten every reference, schema, example, and rationale into one prompt just because the information exists. Molds disclose the action; typed references disclose the dependency surface; load policy distinguishes up-front material from on-demand; placement mode decides inlined vs. bundled vs. sidecar; and where a domain composes ordered journeys, those disclose the journey.
 
 The goal is not minimalism but *navigable depth*: a human browses from journey to Mold to reference, and an agent moves from action to supporting evidence without dragging the whole library into every step. This principle is the connective tissue of the whole loop — it is what keeps the source record rich without forcing every runtime artifact to carry every page.
 
@@ -49,7 +49,7 @@ The agentic landscape will keep changing. A Foundry should not bind its core kno
 
 ## Actionable Knowledge, Not Passive Notes
 
-A passive knowledge base explains but cannot make an agent act. A standalone skill acts but compresses away the evidence and rationale that make a task maintainable. A Foundry keeps both: the source preserves the rich graph — references, schemas, citations, rationale — while Molds identify which knowledge a concrete task needs and casting condenses it into executable artifacts. This is the central wager: a knowledge base becomes more useful when its structure makes it executable, and a skill becomes more trustworthy when its source stays inspectable.
+A passive knowledge base explains but cannot make an agent act. A standalone skill acts but leaves little room for the evidence and rationale that make a task maintainable. A Foundry keeps both: the source preserves the rich graph — references, schemas, citations, rationale — while Molds identify which knowledge a concrete task needs and casting packages it into executable artifacts. This is the central wager: a knowledge base becomes more useful when its structure makes it executable, and a skill becomes more trustworthy when its source stays inspectable.
 
 ## Corpus-First, Not Invention-First
 

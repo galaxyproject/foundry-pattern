@@ -7,7 +7,7 @@ up a Foundry" page stays stack-agnostic; this one names packages, versions, path
 Nothing here is the only way to satisfy the pattern — it is the one worked example.
 
 Order of work: the glossary comes FIRST (Part 1) — it is the KB's highest fan-in reference
-and the surface the casting model grounds on, so pin it before anything answers to it. Then
+and the shared vocabulary every cast carries, so pin it before anything answers to it. Then
 the engineering substrate (Parts 2–4: reading surface, frontmatter contract, registries +
 validator + CI), which is inherited — partly INSTALLED from @galaxy-foundry packages and
 partly re-stood-up as known machinery, a split "The shared substrate" below draws and the
@@ -18,7 +18,7 @@ external check, composition), which only your domain can supply.
 PART 1 — DEFINE THE VOCABULARY FIRST
 
 A Foundry names things that did not exist before it, and the glossary is the KB's highest
-fan-in reference — the casting model grounds on it, and a human learns the domain from it.
+fan-in reference — every cast carries it, and a human learns the domain from it.
 Pin it first, in one glossary: content/meta/glossary.md (the deliberate loose-doc exception
 inside the design-record directory, excluded by name from the `meta` collection and rendered by
 Part 2's render-vault-doc helper) that the rest of the corpus answers to.
@@ -63,7 +63,7 @@ Part 2's render-vault-doc helper) that the rest of the corpus answers to.
   do is redefine an inherited term to mean something local — that is the real failure, and moving
   it to a different section was never what prevented it.
 - Make the glossary the tie-breaker: where two pages disagree, the glossary wins — state it
-  outright. Casting copies glossary entries VERBATIM, never condensed.
+  outright. Casting copies glossary entries VERBATIM.
 
 
 REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal)
@@ -169,12 +169,11 @@ have either a dependency dictating your domain or a copy that drifts:
                       Ships no collection TABLE either — that names your directories.
   reference-contract  Ships used_at / load / modes / evidence. You keep `kinds` — exactly the half
                       that varies by domain. Inherit the four whole: a term you have not used YET
-                      is inheritance, not drift. The one exception is a term that is CAPACITY
-                      rather than description — `modes.condense` commits you to an LLM phase in
-                      your caster, to pending_llm slots, to prompt/model provenance, and to the
-                      loss of byte-stable output that makes a --check gate possible at all —
-                      which you decline with `narrow: { modes: [...] }` until a Mold needs it.
-                      A narrowed group is AUTHORED, so it rejoins the dead-vocabulary check.
+                      is inheritance, not drift. Treat `modes` as deterministic placement rules
+                      such as verbatim, inline, bundled, and sidecar. Narrow the group to the modes
+                      your targets implement; the validator must reject anything the caster cannot
+                      reproduce byte for byte. A narrowed group is AUTHORED, so it rejoins the
+                      dead-vocabulary check.
   site-kit            Ships the MARKUP and the one rule inside it — which nav destination is
                       active, derived from the reader's path rather than declared per entry. You
                       keep the IDENTITY: both names, the description, the repository, the list of
@@ -685,7 +684,7 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   matter what the kind said. Check that yours matches a declared directory before you need it to.
   `disposition` is ONE axis — whether the file reaches a skill artifact. `foundry-only` never
   leaves (eval, scenarios). `cast-input` means the caster READS it and it does not appear in the
-  output (a per-note condensation prompt). `bundled` is copied in (a vendored schema). The middle
+  output (rendering metadata or a placement manifest). `bundled` is copied in (a vendored schema). The middle
   value is the one a boolean cannot express, and the reason to model it at the kind is a measured
   one. A target's forbidden-file list is every companion that is not `bundled` — BOTH other values
   — and one instance kept that list by hand in its target config, where it named TWO of the eight

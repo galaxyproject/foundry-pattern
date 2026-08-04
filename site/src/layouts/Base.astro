@@ -36,7 +36,7 @@ const here = Astro.url.pathname.replace(/\/$/, "");
             The Foundry Pattern
           </span>
         </a>
-        <nav class="flex gap-x-6 gap-y-1 flex-wrap ml-auto text-[0.82rem] uppercase" style="font-family: var(--font-display); letter-spacing: 0.1em; font-weight: 500">
+        <nav class="flex w-full gap-x-5 gap-y-1 flex-wrap text-[0.82rem] uppercase sm:ml-auto sm:w-auto sm:gap-x-6" style="font-family: var(--font-display); letter-spacing: 0.1em; font-weight: 500">
           {nav.map((n) => (
             <a
               href={n.href}

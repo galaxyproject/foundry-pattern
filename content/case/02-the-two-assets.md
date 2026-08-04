@@ -32,8 +32,8 @@ developing each on its own terms.
 ## Asset one — Provenance (the universal one)
 
 Provenance is the record emitted beside every cast artifact: which Mold revision was
-compiled, which model version produced it, which references resolved, which checks ran,
-and — per reference — whether each byte came from deterministic tooling or from an LLM.
+compiled, which target produced it, which references resolved, which checks ran,
+and — per reference — its source, destination, placement, and hashes.
 It is the forensic answer to the **traceability cost**: from a finished skill you
 cannot tell which citations, thresholds, and claims are real-and-verified versus
 plausibly-confabulated. Provenance restores that legibility, and it does so in *every*
@@ -42,7 +42,7 @@ Foundry regardless of domain — it is the part of the package no instance opts 
 It is legible to **both** audiences, which is the point. A human can scrutinize a
 claim, correct it against its source, and contribute back to the source rather than
 patching a frozen copy. An agent can reason about *what knowledge actually exists* — what
-was grounded, what was condensed, what is stale — instead of treating every sentence as
+was grounded, what was included, what is stale — instead of treating every sentence as
 equally load-bearing. The same record serves the human surface above and the agent
 runtime below.
 

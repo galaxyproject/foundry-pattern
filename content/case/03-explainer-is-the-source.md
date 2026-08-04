@@ -71,14 +71,14 @@ on what casting produces:
 > The wiki-links that make the KB navigable are **resolved away or stripped**, so the artifact is
 > self-contained.
 
-A cast artifact is condensed, isolated, and frozen. That is not a defect — **flattening is what
+A cast artifact is scoped, isolated, and frozen. That is not a defect — **flattening is what
 packaging is**, and it is precisely why a cast skill is a good package: an agent should not have to
 traverse a library to act.
 
 But it means the choice of source format is a choice about structure. If the skill *is* the source,
 your authoring surface is the flattened one — the artifact whose structure was stripped by design.
 There is nowhere to put the worked example, the eval that never ships, the schema, the rationale,
-the typed reference back to where a claim came from. They are condensed away or never exist. The KB
+the typed reference back to where a claim came from. They are left at the source layer or never packaged. The KB
 holds them because it is not the package: a [[glossary|Reference]] has a *kind*, and `eval`
 references are Foundry-only, **never packaged** at all. The source is strictly richer than anything
 cast from it, by construction.
@@ -127,9 +127,9 @@ justification is the one this page has been making.
 
 Three differences are real, and they are what a Foundry adds rather than restates:
 
-- **Extraction versus generation.** `tangle` lifts code chunks out verbatim. A cast is a
-  *transformation* — deterministic-first, LLM-second — and it records what each fragment came from.
-  Knuth needed no provenance because nothing was rewritten; a Foundry needs it because things are.
+- **Extraction versus assembly.** `tangle` lifts code chunks out verbatim. A cast deterministically
+  resolves and assembles several kinds of source material for a target, and records where each part
+  came from. Knuth needed no separate source index; a Foundry combines a typed reference graph.
 - **No check.** WEB guarantees the document matches the code. It guarantees nothing about whether
   either is right. [[the-two-assets|The enforced check]] has no LP analogue at all.
 - **Scope.** WEB serves one program's maintainers. A KB is domain knowledge outliving many casts.
@@ -236,11 +236,10 @@ What it buys is the thing Litt's explainer structurally cannot have: **a provena
 Every claim traceable to a Mold revision and a resolved reference — `src_hash == dst_hash` where
 nothing was paraphrased. An explainer generated from code has no source of record to point at.
 
-And two casts of one Mold cannot drift **silently**. Not "cannot drift" — they are two independent
-condensation runs and nothing recasts them atomically, so they can absolutely diverge. But both name
-the same Mold revision, and [[the-model|provenance makes drift mechanically detectable]]: re-hash and
-a stale artifact announces itself. Detectable, not impossible; that is the whole reason the record
-exists.
+Two casts of the same Mold and target are byte-stable. If a committed artifact differs from a fresh
+cast, either its source or target changed, or the compiler has a defect. Both casts name their inputs,
+and [[the-model|provenance makes the cause mechanically discoverable]]: re-hash the Mold, target, and
+resolved references, then follow the first mismatch. Reproducibility and forensics share one record.
 
 For a statistical-genomics Foundry the natural human target is a notebook — Pérez's literate
 computing, in the domain where it already won. That is design, not shipped code.

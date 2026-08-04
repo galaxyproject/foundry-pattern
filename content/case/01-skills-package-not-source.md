@@ -21,8 +21,8 @@ inspectable, human-readable, authored to be *read and learned by a person*, not
 merely retrieved by an agent. Its unit is the **Mold**: an abstract, typed
 manifest of one action that declares the references it depends on. A deterministic
 **cast** compiles a Mold into a target-specific skill artifact and emits
-`_provenance.json` beside it — which Mold revision, which model, which references
-resolved, which checks ran. The skill is condensed, frozen, self-contained, with
+`_provenance.json` beside it — which Mold revision, which target, which references
+resolved, which checks ran. The skill is scoped, frozen, self-contained, with
 no links back. It is a *build output*.
 
 The picture to hold: the skill is the binary, the KB is the code, casting is the

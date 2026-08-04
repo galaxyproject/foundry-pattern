@@ -7,7 +7,7 @@ order: 6
 
 # Setting up a Foundry
 
-[[anatomy-of-an-instance|Anatomy]] describes what a Foundry *is* — the substrate every instance shares, the extension surface each domain adds. This page is its imperative twin: what you actually *do* to stand a new one up. The substrate — KB-as-source, the typed [[the-model|Mold]], deterministic-first [[the-model|casting]], [[the-model|provenance]], grounding, disclosure — is inherited essentially for free. The steps below are the part the substrate cannot do for you.
+[[anatomy-of-an-instance|Anatomy]] describes what a Foundry *is* — the substrate every instance shares, the extension surface each domain adds. This page is its imperative twin: what you actually *do* to stand a new one up. The substrate — KB-as-source, the typed [[the-model|Mold]], deterministic [[the-model|casting]], [[the-model|provenance]], grounding, disclosure — is inherited essentially for free. The steps below are the part the substrate cannot do for you.
 
 It is written to be worked through roughly in order, but a Foundry is grown, not stamped: expect to loop back as real cases force new vocabulary, new Molds, and a sharper notion of the check. Only the [glossary step](#define-the-vocabulary) is fully written out today; the rest are stubs that will grow the same way the pattern says a KB should — paragraph by paragraph, when a real case demands it.
 
@@ -17,7 +17,7 @@ It is written to be worked through roughly in order, but a Foundry is grown, not
 
 ## Define the vocabulary
 
-A Foundry names things that did not exist before it. Some terms are the pattern's (*Mold*, *Cast*); most are your domain's, coined for concepts your KB synthesizes and no one has named yet. A coined term has no prior meaning for a reader meeting it and none in a model's training data — there is nothing to fall back on. It means only what your KB says it means. So before the KB can be read by a human or cast by a model without drift, the vocabulary has to be **pinned**: defined once, in one place, that every other page uses without redefining. That place is the glossary, and setting one up is one of the first things you do.
+A Foundry names things that did not exist before it. Some terms are the pattern's (*Mold*, *Cast*); most are your domain's, coined for concepts your KB synthesizes and no one has named yet. A coined term has no prior meaning for a reader meeting it and none in a model's training data — there is nothing to fall back on. It means only what your KB says it means. So before the KB can be read by a human or carried into an agent runtime without drift, the vocabulary has to be **pinned**: defined once, in one place, that every other page uses without redefining. That place is the glossary, and setting one up is one of the first things you do.
 
 It is a small, deliberate control surface — not a dictionary of every word, but the short list of terms your KB *coins* or leans on heavily. Building it well is a handful of disciplines:
 
@@ -31,9 +31,9 @@ It is a small, deliberate control surface — not a dictionary of every word, bu
 
 - **Make it the tie-breaker.** Where two pages disagree on what a term means, the glossary wins. Stating that outright is what turns the glossary from a nicety into an authority the rest of the KB answers to.
 
-Two properties fall out of doing this. The glossary becomes the KB's **highest fan-in reference** — nearly every Mold depends on it — so a definition fixed once propagates everywhere. And because a definition is the one kind of reference you cannot afford to paraphrase, **casting copies glossary entries verbatim, never condensed**: the pinned term is an invariant the compiled artifact must carry unchanged.
+Two properties fall out of doing this. The glossary becomes the KB's **highest fan-in reference** — nearly every Mold depends on it — so a definition fixed once propagates everywhere. And because a definition is the one kind of reference you cannot afford to paraphrase, **casting copies glossary entries verbatim**: the pinned term is an invariant the compiled artifact must carry unchanged.
 
-The payoff is one surface serving both readers a Foundry has. A human reads the glossary to learn the domain's coined language; the casting model is grounded on it and stops substituting its own synonyms for your terms. For the glossary's role in the machine, see [[the-model]]; the [[glossary]] on this site is the pattern's own instance of exactly this.
+The payoff is one surface serving both readers a Foundry has. A human reads the glossary to learn the domain's coined language; every cast artifact carries the same definitions into its runtime. For the glossary's role in the machine, see [[the-model]]; the [[glossary]] on this site is the pattern's own instance of exactly this.
 
 ## Identify the actions and author the Molds
 
@@ -41,7 +41,7 @@ The payoff is one surface serving both readers a Foundry has. A human reads the 
 
 ## Choose the target(s) and set up casting
 
-*Stub.* Pick the format(s) a cast produces and wire the deterministic-first, LLM-second pipeline. The KB stays the source of truth across every target. See [[the-model]] (Cast, Target, Provenance).
+*Stub.* Pick the format(s) a cast produces and wire the deterministic compiler. The KB stays the source of truth across every target. See [[the-model]] (Cast, Target, Provenance).
 
 ## Build the external check
 

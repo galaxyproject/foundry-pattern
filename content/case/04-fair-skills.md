@@ -103,7 +103,7 @@ roles, both licensed by the notation.)
 
 Rich metadata (**F2**) is not something a Foundry adds; it is what a Mold *is*. Typed
 frontmatter, controlled tags, and a manifest of typed references describe each action before
-a single word of the skill body is condensed. The skill, by contrast, is undifferentiated
+a single word of the skill body is rendered. The skill, by contrast, is undifferentiated
 text — the F2-poor end of the spectrum. And because the KB is an inspectable, wiki-linked,
 rendered-and-indexed site rather than a `SKILL.md` dropped in a folder, the source is a
 **searchable resource** (**F4**) in a way a loose skill file simply is not.
@@ -146,7 +146,7 @@ with it.
 of its core unit: a Mold is a **typed reference manifest** — a declaration of qualified
 references to other KB pages, schemas, CLI manual pages, prompts, and examples. Not bare
 links: every reference carries a **kind** (which resolver applies), a **load policy**
-(`upfront` vs `on-demand`), and a **transform mode** (verbatim vs condensed). That is what
+(`upfront` vs `on-demand`), and a **placement mode** (inlined, bundled, or sidecar). That is what
 "qualified" means in I3 — a reference annotated with enough type information that a machine
 knows what to *do* with it, not just where it points. The Mold is I3 made into a build
 primitive.
@@ -178,11 +178,11 @@ This is the heart of it, and where the page stops being a reading of FAIR and st
 claim about two fields.
 
 **R1.2 — provenance.** A Foundry emits `_provenance.json` beside every cast: which Mold
-revision, which model, which references resolved, and — per reference — whether each byte
-came from deterministic tooling or an LLM, with `src_hash` and `dst_hash`. Verbatim
-references prove themselves (`src_hash == dst_hash`, the cheapest possible guarantee that
-nothing was paraphrased); transformed references name the model and prompt that produced
-them. That is not "detailed provenance" as a gesture but fragment-by-fragment auditability —
+revision, which target, which references resolved, and — per reference — its source,
+destination, placement, `src_hash`, and `dst_hash`. Copied references prove themselves
+(`src_hash == dst_hash`, the cheapest possible guarantee that nothing was paraphrased),
+while the complete index traces every packaged fragment back to its declared source.
+That is not "detailed provenance" as a gesture but fragment-by-fragment auditability —
 the forensic trail R1.2 asks for, and one a bare skill structurally cannot carry, because
 [[the-two-assets|provenance is a property of the production process, not the prose]]. R1.2
 is impossible-by-construction for the un-FAIR artifact and automatic-by-construction for the

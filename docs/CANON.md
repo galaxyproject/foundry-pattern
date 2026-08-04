@@ -42,11 +42,11 @@ compiled into frozen skill artifacts:
   action. It declares the references it depends on (other KB pages, schemas, CLI manual
   pages, prompts, examples). Molds are abstract source artifacts, independent of any
   agent runtime.
-- **Cast** — the compilation step (deterministic tooling + LLM, in that order of trust)
+- **Cast** — the deterministic compilation step
   that turns a Mold into a target-specific **skill artifact**. Casting is the
-  *integration boundary*: artifacts are condensed, isolated, frozen, with no links back.
+  *integration boundary*: artifacts are scoped, isolated, frozen, with no links back.
 - **Provenance** — a record (`_provenance.json`) emitted beside every cast artifact:
-  which Mold revision, which model version, which references resolved, which checks ran.
+  which Mold revision, which target, which references resolved, which checks ran.
   The durable, universal non-commodity asset — present in every instance.
 - **Target** — the format a cast produces (e.g. an Anthropic Agent Skill, a generic
   skill, a baked-in bundle). The KB stays the source of truth; the target is one output.
@@ -135,7 +135,7 @@ argument because it is *strippable*: strip the human surface and provenance stil
 the check still gates (Biomni is a real machine-facing instance with no human surface). The
 defense rests on exactly two legs — do not add a third:
 
-- **Flatness.** A cast artifact is condensed/isolated/frozen by construction ("the wiki-links
+- **Flatness.** A cast artifact is scoped/isolated/frozen by construction ("the wiki-links
   that make the KB navigable are resolved away or stripped"). Flattening *is* what packaging
   is, so any structure understanding needs can only live at a source layer. The inversion is
   what makes a structured surface possible at all.
