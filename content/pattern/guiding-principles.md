@@ -41,7 +41,7 @@ A Foundry turns a body of working knowledge into something people can inspect an
   </figcaption>
 </figure>
 
-The principles fall into three families. The first keeps knowledge grounded, the second makes it trustworthy and actionable, and the third keeps it legible and durable. [[principles-in-action]] shows the concrete decisions the two current instances made in response.
+The principles fall into three families. The first keeps knowledge grounded, the second makes it trustworthy and actionable, and the third keeps it legible and durable. [[principles-in-action]] shows the concrete decisions the current instances made in response.
 
 ## Keep knowledge grounded
 
