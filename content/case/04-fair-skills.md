@@ -146,7 +146,7 @@ with it.
 of its core unit: a Mold is a **typed reference manifest** — a declaration of qualified
 references to other KB pages, schemas, CLI manual pages, prompts, and examples. Not bare
 links: every reference carries a **kind** (which resolver applies), a **load policy**
-(`upfront` vs `on-demand`), and a **placement mode** (inlined, bundled, or sidecar). That is what
+(`upfront` vs `on-demand`), and a **placement mode** (`verbatim` or `sidecar`). That is what
 "qualified" means in I3 — a reference annotated with enough type information that a machine
 knows what to *do* with it, not just where it points. The Mold is I3 made into a build
 primitive.
