@@ -30,11 +30,11 @@ This is the far end of [[anatomy-of-an-instance|the external check]]'s range: wh
 
 ## Targets
 
-Casts to portable skill artifacts, inheriting the Mold → Cast → provenance architecture, the human-navigable KB, and the validator from instance #1 — adapting the domain and *adding* the referee.
+The source is organized to cast into portable skill artifacts, but no caster or cast tree exists yet. The intended boundary keeps the Mold → Cast → provenance architecture and adapts the runtime content around the empirical referee; until that boundary is implemented, portability is a source constraint rather than a shipped artifact.
 
 ## Status
 
-**Early — be honest about it.** Mostly design and positioning so far: problem statement, a four-lens SOTA survey, verified positioning against five neighboring systems, a three-pillar narrative, and an architecture expressed as an explicit diff from the parent. The defining `REFEREE_LOOP.md` is a design sketch with open decisions flagged; nothing is implemented, the repo is freshly stood up, and the flagship Mold (`audit-method-validity`) is yet to be prototyped.
+**Source system implemented; casting deferred.** The repository now has a substantial typed corpus, deterministic corpus and contract validation, a human reading surface, and authored Molds—including `audit-method-validity` and domain-specific referees—with scenarios and evals. Its casting and provenance contracts are documented, but no caster, cast tree, or packaged runtime skill exists yet.
 
 ---
 
