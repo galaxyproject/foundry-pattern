@@ -121,9 +121,10 @@ under the @galaxy-foundry scope, and an instance INSTALLS them:
                                               assembled, path→kind routing, the kind.md loader,
                                               the companion check
   @galaxy-foundry/reference-contract  ^0.1.0  the four vocabularies every instance inherits
-  @galaxy-foundry/site-kit            ^0.1.0  the reading shell: document skeleton, header with
-                                              derived navigation, footer, and the rule that turns
-                                              a deployment base into an href prefix
+  @galaxy-foundry/site-kit            ^0.2.0  the reading shell: document skeleton, header with
+                                              derived navigation, footer, the rule that turns a
+                                              deployment base into an href prefix, and the style
+                                              contract it leaves you to satisfy
   @galaxy-foundry/tag-registry        ^0.1.0  the meta_tags.yml format and its accessors
   @galaxy-foundry/wiki-links          ^0.3.0  the [[Target]] grammar, resolver, remark transform
 
@@ -183,9 +184,14 @@ have either a dependency dictating your domain or a copy that drifts:
                       links and the other six.
                       Ships NO CSS. It writes Tailwind utility classes and NAMES six custom
                       properties and three classes — the surface and text colours, the accent, the
-                      grid background, the skip link, the active-nav treatment — which your
-                      stylesheet defines. The palette is the part of a reading surface that is
-                      genuinely an instance's, and the kit is careful not to take it.
+                      dark chrome behind the header and footer, the grid background, the skip link,
+                      the active-nav treatment — which your stylesheet defines. The palette is the
+                      part of a reading surface that is genuinely an instance's, and the kit is
+                      careful not to take it.
+                      Ships the LIST as a value, not a paragraph: `SHELL_TOKENS`, `SHELL_CLASSES`
+                      and `shellStyleGaps(css)`, so what you owe can be asserted on a built
+                      stylesheet instead of read carefully. Every name in it is a ROLE —
+                      `--color-chrome`, not the name of whichever instance the shell came out of.
                       Ships ONE value it does NOT take a prop for: the width of the reading
                       column. Both instances had converged on it before the shell moved, and
                       handing a settled value back out as a parameter re-opens a decision nobody
@@ -450,9 +456,23 @@ that a note is well-formed.
     If your tests live inside the Vite root, exclude them — `@source not "../../tests"` — or the
   test that names the canary is what puts the class in the CSS, and it cannot fail. One instance
   found that by deleting the class from the layout and watching the assertion pass.
-- The PALETTE stays yours. The kit ships no CSS; it names custom properties and classes your
-  stylesheet defines. Nothing checks that you defined them all, so a token you forget renders as
-  an unstyled element rather than an error.
+- The PALETTE stays yours, AND THE LIST OF WHAT IT OWES IS A VALUE. The kit ships no CSS; it names
+  six custom properties and three classes your stylesheet defines. Miss one and the utility still
+  compiles to `var(--color-chrome)`, the property resolves to nothing, and that region renders with
+  no background — which reads as a design decision rather than a fault.
+    So do not satisfy the list by reading it. `SHELL_TOKENS`, `SHELL_CLASSES` and
+  `shellStyleGaps(css)` are exported; hand the helper every stylesheet your build emitted and
+  expect no gaps. Import all three rather than restating them, or your repo can go on agreeing with
+  a contract the shell has moved past.
+    The helper exists because the obvious loop is wrong in a way that PASSES. A token counts only
+  where its DECLARATION is present, so the search needs the colon: `--color-chrome` on its own also
+  matches the shell's own `var(--color-chrome)`, which every site emits — including one with no
+  `@theme` block at all. What makes the assertion exact is that Tailwind 4 tree-shakes theme
+  variables nothing references, so a declaration reaching the output proves both halves at once:
+  you defined the token, and something asked for it.
+    Unlike the `@source` canary above, none of this depends on where your tests live. That one
+  asserts on a utility, which Tailwind creates by scanning source TEXT; declarations come from CSS,
+  which is never scanned for candidates.
 - The components that render your NOTES are yours. The nearest pair the two instances have — the
   box that surfaces a note's provenance and license — takes a note entry plus the link map in one
   and eleven flat fields in the other, because one instance authors its corpus and the other
@@ -1288,6 +1308,23 @@ describe your own frontmatter. Two cautions from the same afternoon — the firs
 rule matched the English word in page copy ("install like any Foundry cast skill"), because
 stripping comments does not strip the prose a page renders; and `as unknown as` still goes unasked
 about, which the test says out loud rather than leaving the list to look complete.
+
+A SHARED NAME CARRIES WHOEVER IT WAS LIFTED FROM, and every other instance pays for that. The
+reading shell asked for `--color-galaxy-dark` — a role, the dark bar behind the header, the "More"
+menu and the footer, wearing the name of the one repo it happened to be extracted from. The bill
+was legible in the sibling: a statistical-genomics site declaring `--color-galaxy-primary: #25537b`
+and `--color-galaxy-dark: #2c3143`, another project's hexes under another project's names, because
+that is what the header wanted. Nor did it stay in the contract. Eleven more use sites had grown on
+top of the two the shell asked for — a hero heading, a button and its hover, three role pills, an
+eyebrow, a tag hover — none of which the kit had ever wanted, all of them reading as a claim about
+which project this is.
+  The fix is one line and the SHAPE is the point: the shared thing names ROLES, the instance names
+its own brands, and the instance maps one onto the other, `--color-chrome: var(--color-brand-dark)`.
+That keeps the brand token meaning the brand rather than doubling as chrome, and it costs the next
+instance nothing but a mapping. Extraction is where this gets decided, and it is cheapest there: a
+name is copied out of whatever repo you are looking at, and by the second consumer it is a rename
+across two codebases and a published package. When you lift something shared, read every name in
+it and ask whether an instance that is not this one could say it without lying.
 
 The base rule is the worked example. site-kit ships `shellBase` because the shell has to resolve
 its nav against a base, so the 56 instance-side copies of that strip — 38 and 18 — were never
