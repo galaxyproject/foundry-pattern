@@ -1,73 +1,142 @@
 ---
 title: Guiding Principles
-description: The design pressures every Foundry obeys, abstracted from the diff between its two instances — the discipline a domain inherits before it extends the substrate.
+description: Nine commitments that keep a Foundry's knowledge grounded, actionable, legible, and durable as its domain and tooling change.
 section: pattern
 order: 3
 ---
 
 # Guiding Principles
 
-A Foundry is not a glossary, a documentation site, or a pile of skills. It is an attempt to make a body of working knowledge durable, inspectable, executable, and externally checkable while the surrounding tooling keeps changing. These principles are the design pressure behind that attempt. They are domain-free on purpose: each one holds for any Foundry, and where the two instances honor a principle differently, that difference is the pattern earning its abstraction (see [[anatomy-of-an-instance]]).
+A Foundry turns a body of working knowledge into something people can inspect and agents can act on. These nine principles keep that knowledge trustworthy as the domain, the corpus, and the surrounding tools change. They are domain-free on purpose: every Foundry inherits the commitments, then decides how its own domain will honor them.
 
-The pressure is real because a class of generated work fails in specific, detectable ways, and monolithic skills answer those failures with prose caveats that neither compose nor scale. Make the knowledge base actionable instead, and the principles below explain why the [[the-model|architecture]] is shaped the way it is.
+<figure class="not-prose principles-loop" aria-labelledby="principles-loop-caption" data-pagefind-ignore>
+  <div class="principles-loop-flow">
+    <div>
+      <span>01</span>
+      <strong>Ground</strong>
+      <small>Start with authoritative sources and observed practice.</small>
+    </div>
+    <b aria-hidden="true">→</b>
+    <div>
+      <span>02</span>
+      <strong>Explain</strong>
+      <small>Keep the knowledge inspectable and give it its own map.</small>
+    </div>
+    <b aria-hidden="true">→</b>
+    <div>
+      <span>03</span>
+      <strong>Cast</strong>
+      <small>Package one action through a deterministic process.</small>
+    </div>
+    <b aria-hidden="true">→</b>
+    <div>
+      <span>04</span>
+      <strong>Check</strong>
+      <small>Require evidence outside the work that produced the result.</small>
+    </div>
+    <b class="principles-loop-return" aria-hidden="true">↺</b>
+  </div>
+  <figcaption id="principles-loop-caption">
+    The loop closes when evidence from use improves the source rather than becoming another caveat in a hand-written skill.
+  </figcaption>
+</figure>
 
-## Source Authority Beats Local Copies
+The principles fall into three families. The first keeps knowledge grounded, the second makes it trustworthy and actionable, and the third keeps it legible and durable. [[principles-in-action]] shows the concrete decisions the two current instances made in response.
 
-Knowledge stays healthy near the project that owns it. A Foundry should not become a stale mirror of upstream systems; it points to source, quotes only what it must, and syncs through the strongest available mechanism when freshness matters. A Foundry adds value by connecting, explaining, and operationalizing upstream knowledge — not by competing to be its canonical home.
+## Keep knowledge grounded
 
-Grounding is a spectrum, and the choice is the author's: cite by URL — cheapest and always fresh, but weakest on stability; quote a fixed excerpt inline — stable to read, but able to go stale silently; or pin a source by content hash, commit, or DOI — stable *and* drift-detectable, but frozen until someone re-pins. Citing rather than mirroring carries an honest cost: upstream *structural* drift is not caught automatically, because the price of not maintaining a copy is not getting a diff when the source moves. The discipline is to pin what must stay stable and review on sync — not to mirror everything to feel safe.
+Grounding prevents a Foundry from becoming an articulate account of its authors' assumptions. Authority, licensing, and evidence determine what the knowledge base may claim and carry.
 
-(Instance #1 cites the curated workflow corpus by URL rather than importing it, and lets the CLI remain the source of behavior. Instance #2 pins methods literature and reporting standards by DOI/commit and reads tool behavior from invoking the tool, not from prose it maintains.)
+### Source Authority Beats Local Copies
 
-## Redistributed Content Carries Its License
+Keep knowledge near the project that owns it. A Foundry adds value by connecting, explaining, and operationalizing upstream knowledge—not by silently becoming its canonical home.
 
-A Foundry is a redistributor. It vendors upstream artifacts verbatim and derives notes from copyrighted sources, and the moment content crosses in from outside, its license crosses with it. Every imported artifact should declare, as typed metadata, the license it is redistributed under and a pointer to the verbatim license text. That declaration is not decoration: it is validated — the license text must actually be present, and external content with no stated license is a defect the build can refuse — and, where the license constrains reuse, it governs how the content may be cast. A source under a non-derivative or non-redistributable license is carried in the Foundry's own words rather than quoted; a permissively-licensed one may be copied verbatim. The license becomes an input to casting, not a caveat bolted on after the fact.
+**Why it matters.** A local mirror creates another copy that can drift. Citing by URL stays fresh but may be unstable; quoting a fixed excerpt is stable to read but can go stale; pinning by hash, commit, or DOI is stable and drift-detectable but frozen until it is deliberately updated. No choice removes the tradeoff.
 
-The Foundry's own authored content carries the Foundry's own license, and the two are never conflated — a reader must always be able to tell what the project is asserting from what it is merely passing through. A knowledge base that redistributes what it has no right to redistribute is a liability; one that cannot state the terms under which its content may be reused has undercut the reuse it exists to enable.
+**Requires:** cite rather than mirror by default, pin what must remain stable, and review the dependency when an upstream source changes.
 
-## Reproducibility At Every Layer
+### Redistributed Content Carries Its License
 
-Producing knowledge is itself a scientific act. A result is only useful if a maintainer can recover how it was derived, which assumptions it inherited, and which checks were applied. Reproducibility here is broader than rerunning the final artifact: it includes the [[glossary|provenance]] of every derived artifact — which Mold was cast, which target produced it, which references resolved, which checks ran. The goal is not perfect immutability but *accountable change*: when a Mold, package, or cast changes, the reason and the dependency path should be recoverable.
+When outside content crosses into a Foundry, its license crosses with it. A reader must be able to distinguish what the Foundry asserts from what it redistributes, and casting must respect the terms attached to every carried artifact.
 
-(This is why casts emit provenance in both instances, and why each treats validation as part of the authoring loop rather than a final cleanup step.)
+**Why it matters.** Unlicensed or incorrectly redistributed material turns a reusable knowledge base into a liability. Treating license as prose metadata also makes it easy for a cast to carry content in a mode its terms do not permit.
 
-## Deterministic Tools Do Deterministic Work
+**Requires:** typed license metadata, the corresponding license text where needed, a default-deny policy for unknown terms, and casting rules that use the license as an input rather than an afterthought.
 
-LLMs are excellent at interpretation, synthesis, repair, and translation across weakly structured contexts. They are poor replacements for the instruments that establish a result's trustworthiness. A Foundry should spend model context on the work only models can do, and delegate everything else to a tool that does it the same way every time. This keeps agents more reliable and cheaper to run: tool calls are saved for high-value judgment, context is not filled with data a program can query, and hallucinated caveats are replaced by executable checks.
+### Corpus-First, Not Invention-First
 
-The *soul* of the principle is constant — do not let the model be the only judge of its own work — while the *form* of the deterministic instrument varies. The corollary is enforcement over advisory: a caveat a model *may* mention is not a check; the work must hand off to something external before it counts. (Instance #1's instrument is schematic: a parser/validator that asks "does this parse?" Instance #2's is empirical: permutation under the null, simulation under known truth, calibration, negative controls — "is this calibrated, does it recover known truth?" One kind of instrument is a CLI you call; another is an empirical referee that must itself be constructed. The principle is shared; which instrument a domain builds is one of the things it *extends* the substrate with — see [[anatomy-of-an-instance]].)
+Earn abstractions from real examples before naming them. Mold behavior, taxonomies, and reference notes should trace to observed practice rather than plausible-sounding prose written in advance.
 
-## Progressive Disclosure Over Context Flooding
+**Why it matters.** A downstream agent cannot tell hard-won knowledge from confident invention. Comprehensive notes authored before contact with a corpus quietly turn the Foundry into the thing it is meant to guard against.
 
-Agents — and the humans reading over them — should see the right knowledge at the right time. A Foundry should not flatten every reference, schema, example, and rationale into one prompt just because the information exists. Molds disclose the action; typed references disclose the dependency surface; load policy distinguishes up-front material from on-demand; placement mode decides inlined vs. bundled vs. sidecar; and where a domain composes ordered journeys, those disclose the journey.
+**Requires:** survey broadly, inspect candidate structure cheaply, and read deeply only where a real case justifies it. Start reference notes as sourced stubs and grow them when a cast, failure, or corpus example demands more.
 
-The goal is not minimalism but *navigable depth*: a human browses from journey to Mold to reference, and an agent moves from action to supporting evidence without dragging the whole library into every step. This principle is the connective tissue of the whole loop — it is what keeps the source record rich without forcing every runtime artifact to carry every page.
+## Make knowledge trustworthy and actionable
 
-## Portable Artifacts Over Platform Fashion
+Grounded knowledge becomes useful when its structure can drive work and when something independent can check the result.
 
-The agentic landscape will keep changing. A Foundry should not bind its core knowledge to one agent runtime, editor, model vendor, or orchestration framework. A Mold is a typed reference manifest plus a procedural skeleton — abstract enough to cast into several targets and explicit enough that each target can be audited. Molds are durable source; cast skills are generated targets; a new runtime should require a new cast target or harness, not a rewrite of the knowledge base.
+### Reproducibility At Every Layer
 
-## Actionable Knowledge, Not Passive Notes
+A maintainer should be able to recover how a derived artifact was produced, what it depended on, and which checks it cleared. Reproducibility applies to the knowledge pipeline, not only to the final result.
 
-A passive knowledge base explains but cannot make an agent act. A standalone skill acts but leaves little room for the evidence and rationale that make a task maintainable. A Foundry keeps both: the source preserves the rich graph — references, schemas, citations, rationale — while Molds identify which knowledge a concrete task needs and casting packages it into executable artifacts. This is the central wager: a knowledge base becomes more useful when its structure makes it executable, and a skill becomes more trustworthy when its source stays inspectable.
+**Why it matters.** Without lineage, a changed artifact is merely different: nobody can tell which source, assumption, target, or check accounts for the difference. The goal is not perfect immutability but accountable change.
 
-## Corpus-First, Not Invention-First
+**Requires:** provenance for each cast—its Mold, target, resolved references, source identities or hashes, and checks—and deterministic regeneration wherever the domain permits it.
 
-A Foundry learns from a real, curated [[glossary|grounding corpus]] before it invents abstractions. Corpus-first does not mean copying the corpus wholesale; it means abstractions are justified by observed examples — pages cite concrete cases, Mold behavior aligns with recurring tasks, new taxonomy appears only after content demands it.
+### Deterministic Tools Do Deterministic Work
 
-Building that grounding from a large corpus is itself tiered, cheap-to-expensive: a broad inexpensive scan to locate where the relevant cases live, a structural pass that reads the *shape* of the candidates without their full contents, and selective deep reads of only the few that earn the attention. The ladder is what keeps corpus-first affordable — survey widely, read deeply only where a real case justifies it — rather than a counsel of perfection nobody can follow.
+Use models for interpretation, synthesis, repair, and translation. Give parsing, resolution, validation, hashing, copying, and other repeatable work to tools that produce the same answer every time.
 
-The same discipline governs the prose a Mold references. A reference note starts as a stub — frontmatter, title, primary-source link — and grows paragraph-by-paragraph only when a real case (a cast run, a logged failure, a place an agent guessed) demands it. Pre-written comprehensive notes are an anti-pattern: they read as plausible, sound authoritative, and quietly propagate the author's priors into every downstream cast. A downstream agent cannot tell invented prose from earned prose, so the safe default is to write nothing until contact with the corpus forces it. A Foundry must not become the thing it gates against.
+**Why it matters.** Prose caveats are advisory; a model may repeat one and still violate it. A deterministic instrument is cheaper, easier to audit, and capable of stopping the work. Most importantly, doing does not get to certify itself.
 
-## How The Principles Connect
+**Requires:** deterministic casting and an external check before work counts as trusted. The form of that check belongs to the domain: it may be a parser or validator where correctness is mechanical, or an empirical referee using simulation, calibration, or negative controls where it is not.
 
-The principles reinforce each other. Keeping information at its source makes upstream sync possible, but only if derived artifacts record provenance and every artifact carried across the boundary brings its license with it. Provenance is meaningful only if deterministic instruments perform the checks the model should not grade itself on. Those instruments are reusable only when artifacts are portable, which needs an inspectable source of truth, which pushes toward a knowledge base, which becomes actionable through Molds and casts — all kept grounded by a corpus-first posture.
+### Actionable Knowledge, Not Passive Notes
 
-**Actionable Knowledge, Not Passive Notes** is the spine through all of it: it is what turns a knowledge base into something trustworthy rather than merely articulate, and provenance plus the deterministic-tools discipline are what keep "actionable" honest. Progressive disclosure is the connective tissue that holds the loop together. Each layer has a job — upstream owns the facts, the Foundry owns synthesis and casting source, the domain's check owns the verdict, cast artifacts own execution, harnesses own orchestration — and a Foundry works when those jobs stay separate and the connections between them stay explicit. The principles are the invariant discipline; what each domain *builds* on that discipline — its composition, its check — is the pattern being applied.
+Keep the rich source and make its structure executable. A Mold identifies the knowledge one concrete action needs; casting turns that declaration into an artifact an agent can use.
+
+**Why it matters.** A passive knowledge base can explain without causing action. A standalone skill can cause action while hiding the evidence and rationale needed to maintain it. Neither is enough by itself.
+
+**Requires:** typed units and references that a build can resolve and check, plus a deterministic cast that packages the declared dependency surface without making the package the new source of truth.
+
+## Make knowledge legible and durable
+
+A trustworthy system still fails if only its original authors can understand it, if every task must load all of it, or if its knowledge is trapped in one runtime.
+
+### The Knowledge Base Documents Itself
+
+A Foundry must explain not only its domain knowledge, but how that knowledge is named, organized, and transformed. Its vocabulary, architecture, and content contracts belong inside the inspectable knowledge base rather than in maintainer memory or scattered implementation comments.
+
+**Why it matters.** A system can execute correctly today and still be impossible to change responsibly tomorrow. If contributors must reconstruct its design from code and repository history, the hard-won knowledge has merely moved from a skill into another hidden container.
+
+**Requires:** an authoritative glossary; focused design records with explicit ownership boundaries; documentation and an example beside each knowledge kind; and generated catalogs for inventories that would go stale if restated by hand. The knowledge base should carry its own map.
+
+### Progressive Disclosure Over Context Flooding
+
+Show people and agents the right knowledge at the right time. Preserve navigable depth in the source without forcing every runtime artifact to carry the entire library.
+
+**Why it matters.** Flattening every reference, schema, example, and rationale into one prompt makes rich knowledge harder to navigate and consumes attention before it is useful. Minimalism is not the goal; deliberate disclosure is.
+
+**Requires:** a visible path from journey to action to supporting evidence, plus declared load and placement policies that distinguish up-front material from on-demand references and inlined content from bundled or sidecar material.
+
+### Portable Artifacts Over Platform Fashion
+
+Keep core knowledge independent of any agent runtime, editor, model vendor, or orchestration framework. A new platform should require a new target or harness, not a rewrite of the knowledge base.
+
+**Why it matters.** Agent platforms will change faster than the domain knowledge they consume. Binding source knowledge to today's packaging format makes that knowledge inherit the platform's lifetime.
+
+**Requires:** runtime-neutral Molds and references, target-specific casting rules, and generated artifacts that may adopt a platform's vocabulary without pushing it back into the source.
+
+## One Reinforcing System
+
+These are not nine independent virtues. Source authority and corpus-grounding establish what may be claimed; licensing controls what may be carried; provenance explains what a cast used; deterministic tools and domain checks make that lineage meaningful. Self-documentation gives people a map of the system, progressive disclosure makes its depth navigable, and portable artifacts let the knowledge outlive a runtime.
+
+**Actionable Knowledge, Not Passive Notes** is the spine: it turns an inspectable source into something that can drive work. **The Knowledge Base Documents Itself** keeps that spine intelligible as the Foundry grows. The pattern works when each layer keeps its job—upstream owns the facts, the Foundry owns its synthesis and casting source, the domain's check owns the verdict, cast artifacts own execution, and harnesses own orchestration.
 
 ## See Also
 
-- [[anatomy-of-an-instance]] — the shared substrate vs. the extension surface each domain adds.
-- [[the-two-assets]] — provenance, the universal asset, and the enforced checks a domain builds on top.
-- [[the-model]] — KB, Mold, Cast, the structural realization of these principles.
-- [[glossary]] — terms used above.
+- [[principles-in-action]] — how the two current Foundries enact each principle.
+- [[anatomy-of-an-instance]] — the invariant substrate and the domain-specific extension surface.
+- [[the-model]] — Knowledge Base, Mold, Cast, and provenance as the structural realization of these principles.
+- [[design-records]] — the map a Foundry keeps of its own design.
+- [[glossary]] — the pattern's authoritative vocabulary.
