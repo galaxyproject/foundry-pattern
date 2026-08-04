@@ -256,6 +256,87 @@ article.prose::before {
   text-decoration-color: var(--link);
 }
 
+/* Guiding Principles — one reinforcing loop, rather than nine isolated claims. */
+.principles-loop {
+  position: relative;
+  margin: 2rem 0 2.5rem;
+  padding: 1.25rem;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    var(--soot);
+  background-size: 1.25rem 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+}
+
+.principles-loop::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  content: "";
+  background: var(--molten);
+}
+
+.principles-loop-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.principles-loop-flow > div {
+  display: flex;
+  min-height: 8.5rem;
+  flex-direction: column;
+  gap: 0.35rem;
+  justify-content: center;
+  padding: 0.9rem;
+  background: var(--iron);
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+}
+
+.principles-loop-flow span {
+  color: var(--ember);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+}
+
+.principles-loop-flow strong {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  line-height: 1.1;
+}
+
+.principles-loop-flow small {
+  color: var(--ash);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.principles-loop-flow > b {
+  color: var(--ember);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px rgba(226, 85, 43, 0.7);
+}
+
+.principles-loop-return {
+  font-size: 1.55rem !important;
+}
+
+.principles-loop figcaption {
+  padding: 1rem 0.35rem 0;
+  color: var(--ash);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
 /* Model page — the four-part machine and its running example. */
 .model-machine {
   position: relative;
@@ -468,6 +549,24 @@ article.prose::before {
 }
 
 @media (max-width: 42rem) {
+  .principles-loop-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .principles-loop-flow > div {
+    min-height: 0;
+  }
+
+  .principles-loop-flow > b {
+    justify-self: center;
+    line-height: 0.8;
+    transform: rotate(90deg);
+  }
+
+  .principles-loop-return {
+    transform: none !important;
+  }
+
   .model-machine-flow,
   .model-parts {
     grid-template-columns: 1fr;
