@@ -385,8 +385,13 @@ that a note is well-formed.
   pages its own pages never mentioned.
     What genuinely differs per collection is small enough to be DATA — there it was two fields,
   whether a reader can go up from here and whether the page states the note's own title and
-  summary. Kind-specific furniture dispatches in the route on `entry.collection`, which is what the
-  other instance had always done on a note's `type`.
+  summary. Kind-specific furniture dispatches in the route, and DISPATCH ON THE DISCRIMINANT THAT
+  NARROWS WHAT YOU PASS. `entry.collection` narrows the entry, so a component declaring the one
+  collection it renders is checked against the branch it sits in. A note's own `type` field looks
+  like the same question and is not: it narrows `entry.data` and leaves `entry` the whole union, so
+  a branch written on `type` still hands the component every kind there is and the prop says
+  nothing. Both instances key on the collection now. The one that keyed on `type` paid for it with
+  a cast inside every component it dispatched to, and Part 9 is what those cost.
     THE TYPE ARGUMENT FOR SEPARATE ROUTES IS WORTH TESTING BEFORE YOU BELIEVE IT. If you keep each
   kind's frontmatter shape precise — Part 3 says why you should — a single route looks like it must
   widen them. It does not. A `.map` over the collection list produces a homogeneous array and
@@ -1245,6 +1250,32 @@ renders chips" pass — it removed the shape of the failure, because a question 
 site cannot have five answers. Prefer that, and when it happens, rewrite the rule to read the new
 structure rather than deleting it: it is now cheap, and it is what tells the next author the
 collapse is load-bearing.
+
+A CAST IS A DECISION NOT TO BE TOLD, and what it costs is worth measuring before you keep one. An
+instance opened twenty-two files with `const data = entry.data as any` and dispatched eight kinds
+underneath. The union was not the obstacle and never had been: deleting the cast in the route
+produced six errors, and the error text printed all nine arms intact. Six of those files were
+components that took the whole union and cast it again — a component that accepts every kind and
+renders one is the tell, because nothing then checks that the branch above it passed the kind it
+draws.
+
+Under the cast, and all of it building green: a label table declared `Record<string, string>` held
+eight rows for ten kinds behind a fallback, so two kinds printed their own raw type string as their
+label on every page they had. "What do I call this note" was answered six times privately; five
+omitted a branch the sixth had, so an entire kind was titled from its slug everywhere except its
+own header — `Add`, `List`, `Convert`, `Validate`, each unqualified in a list of links. And a
+component re-described a nine-field frontmatter shape the schema already built, because the package
+had widened it to `unknown` on the way out, which is the documented-but-not-shipped rule above
+wearing a different coat.
+
+None of those is a broken page. An absent field reads as undefined and renders as nothing, which is
+indistinguishable from a corpus with nothing to render — the same failure shape as the detail
+routes, arriving through the type system instead of through the file layout. Pin the ERASURE rather
+than the correct expression, the way the base rule pins the single reader: a component that names
+its collection needs no cast and a cross-kind reader narrows with `in`, so any remaining site is
+either a component that has not said what it renders or a field no schema declares. Scope the rule
+to frontmatter and leave unrelated casts alone; a rule that forbids everything gets an exception
+list, and an exception list is where the next one hides.
 
 The base rule is the worked example. site-kit ships `shellBase` because the shell has to resolve
 its nav against a base, so the 56 instance-side copies of that strip — 38 and 18 — were never
