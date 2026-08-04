@@ -1,13 +1,13 @@
 ---
 title: Guiding Principles
-description: Nine commitments that keep a Foundry's knowledge grounded, actionable, legible, and durable as its domain and tooling change.
+description: Commitments that keep a Foundry's knowledge grounded, actionable, legible, and durable as its domain and tooling change.
 section: pattern
 order: 3
 ---
 
 # Guiding Principles
 
-A Foundry turns a body of working knowledge into something people can inspect and agents can act on. These nine principles keep that knowledge trustworthy as the domain, the corpus, and the surrounding tools change. They are domain-free on purpose: every Foundry inherits the commitments, then decides how its own domain will honor them.
+A Foundry turns a body of working knowledge into something people can inspect and agents can act on. These principles keep that knowledge trustworthy as the domain, the corpus, and the surrounding tools change. They are domain-free on purpose: every Foundry inherits the commitments, then decides how its own domain will honor them.
 
 <figure class="not-prose principles-loop" aria-labelledby="principles-loop-caption" data-pagefind-ignore>
   <div class="principles-loop-flow">
