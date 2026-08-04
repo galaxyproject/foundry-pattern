@@ -1272,10 +1272,22 @@ None of those is a broken page. An absent field reads as undefined and renders a
 indistinguishable from a corpus with nothing to render — the same failure shape as the detail
 routes, arriving through the type system instead of through the file layout. Pin the ERASURE rather
 than the correct expression, the way the base rule pins the single reader: a component that names
-its collection needs no cast and a cross-kind reader narrows with `in`, so any remaining site is
-either a component that has not said what it renders or a field no schema declares. Scope the rule
-to frontmatter and leave unrelated casts alone; a rule that forbids everything gets an exception
-list, and an exception list is where the next one hides.
+its collection needs no cast and a cross-kind reader narrows, so any remaining site is either a
+component that has not said what it renders or a field no schema declares.
+
+AND THE ERASURE HAS MORE THAN ONE SPELLING, which that instance learned by shipping a rule for the
+obvious one. `entry.data as any` was the form the test asked about; eleven live sites survived it,
+four of them in files the same change had just edited. A callback typed `(ref: any)` over a value
+read from frontmatter erases the same thing one line further from the word `data`, and a component
+prop typed `any[]` is worse than either — the caller had the type right and the component threw it
+away on arrival, so the fix looked done from both sides. Ask instead where `any` appears in TYPE
+position at all, and name the modules allowed to say it. The named list is the assertion. Keep it
+short and make each entry earn a reason: a module rendering a JSON Schema is describing a shape
+that genuinely is whatever the document says, and that is a different claim from declining to
+describe your own frontmatter. Two cautions from the same afternoon — the first draft of the broad
+rule matched the English word in page copy ("install like any Foundry cast skill"), because
+stripping comments does not strip the prose a page renders; and `as unknown as` still goes unasked
+about, which the test says out loud rather than leaving the list to look complete.
 
 The base rule is the worked example. site-kit ships `shellBase` because the shell has to resolve
 its nav against a base, so the 56 instance-side copies of that strip — 38 and 18 — were never
