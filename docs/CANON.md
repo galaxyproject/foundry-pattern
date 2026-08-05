@@ -123,7 +123,7 @@ mechanically detectable. Runtime fetch augments, never replaces, compiled ground
 
 ## The Case's four planks (page order)
 
-The Case is a four-plank argument, then two map pages (Comparisons, Related Projects). The
+The Case develops its argument, then locates it in the field through Comparisons. The
 planks build: **1 the inversion** (skills-as-source is the wrong choice) → **2 the two
 assets** (what survives instead: provenance + the enforced check) → **3 the human surface**
 → **4 the outside witness**. Planks 1–2 are the thesis above; 3–4 add these claims and

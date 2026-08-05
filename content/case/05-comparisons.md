@@ -234,8 +234,8 @@ A KB is a compile-time asset with provenance: it is what the bundle is cast
 *from*. Same files on disk, opposite roles — and the role determines whether you
 can answer "which claim here is real, and where did it come from?"
 
-How the two current instances realize this same landing — with different domain
-extensions on the same substrate — is laid out in the values table at [[related-projects]].
+How the current instances realize this same landing — with different domain
+extensions on the same substrate — is laid out in [[the-diff]].
 
 ---
 

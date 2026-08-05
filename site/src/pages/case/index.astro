@@ -1,12 +1,549 @@
 ---
+import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
-import SectionIndex from "../../components/SectionIndex.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const entries = await getCollection("docs", (entry) => entry.data.section === "case");
+
+function casePage(slug: string) {
+  const entry = entries.find((candidate) => candidate.id === `case/${slug}`);
+  if (!entry) throw new Error(`Missing Case page: ${slug}`);
+
+  return {
+    href: `${base}/${entry.id}/`,
+    title: entry.data.title,
+  };
+}
+
+const thesis = {
+  ...casePage("skills-package-not-source"),
+  summary: "Why the knowledge base is the source of record and the skill is something it produces.",
+};
+
+const branches = [
+  {
+    ...casePage("the-two-assets"),
+    label: "Traceability + trust",
+    summary: "What remains valuable when models can regenerate the instructions.",
+  },
+  {
+    ...casePage("explainer-is-the-source"),
+    label: "Structure + participation",
+    summary: "Why the source must remain intelligible to the people responsible for it.",
+  },
+];
+
+const fair = {
+  ...casePage("fair-skills"),
+  summary: "The same source-and-package distinction, reached through provenance, interoperability, licensing, and reuse.",
+};
+
+const comparison = {
+  ...casePage("comparisons"),
+  label: "Approaches + systems",
+  summary: "Locate the pattern among wikis, directly authored skills, generated documentation, runtime retrieval, and neighboring systems.",
+};
 ---
-<Base title="The Case" description="Why skills should be a packaging format, not a source format.">
-  <SectionIndex
-    section="case"
-    kicker="The Case"
-    title="The Case"
-    intro="The argument: skills should be a packaging format, not a source format. The flagship essay states it; The Two Assets and The Explainer Is the Source develop it; FAIR Skills corroborates it from outside; Comparisons and Related Projects locate it."
-  />
+<Base
+  title="The Case"
+  description="Why skills should be a packaging format, not a source format."
+>
+  <div class="case-landing">
+    <section class="case-hero" aria-labelledby="case-title">
+      <div>
+        <p class="kicker">The Case</p>
+        <h1 id="case-title">A skill should be the package, not the source.</h1>
+      </div>
+      <div class="case-intro">
+        <p>
+          The Foundry Pattern begins with one inversion: keep domain knowledge in a
+          source people can examine and improve, then cast the parts an agent needs into
+          portable artifacts.
+        </p>
+        <p>
+          Start with the claim. From there, follow either of its consequences, approach
+          it through FAIR, or locate it in the surrounding field.
+        </p>
+      </div>
+    </section>
+
+    <section class="argument-path" aria-labelledby="argument-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-label">The main path</p>
+          <h2 id="argument-title">Follow the argument</h2>
+        </div>
+        <p>One starting point, followed by two branches. The branches deepen different consequences; neither is a prerequisite for the other.</p>
+      </div>
+
+      <a class="trailhead" href={thesis.href}>
+        <span class="path-index">01</span>
+        <span class="trailhead-copy">
+          <span class="path-role">Start here · The inversion</span>
+          <strong>{thesis.title}</strong>
+          <span>{thesis.summary}</span>
+        </span>
+        <span class="path-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+
+      <div class="path-fork" aria-hidden="true">
+        <span></span>
+      </div>
+
+      <div class="branch-grid">
+        {branches.map((entry, index) => (
+          <a class="branch" href={entry.href}>
+            <span class="path-index">0{index + 2}</span>
+            <span class="path-role">{entry.label}</span>
+            <strong>{entry.title}</strong>
+            <span class="branch-summary">{entry.summary}</span>
+            <span class="branch-link">Follow this branch <span aria-hidden="true">&rarr;</span></span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="outside-lens" aria-labelledby="lens-title">
+      <div class="lens-context">
+        <p class="section-label">An outside lens</p>
+        <h2 id="lens-title">Arrive through FAIR</h2>
+        <p>
+          This is not required reading for the main argument. It is the path for readers
+          who already think in terms of research infrastructure and data stewardship.
+        </p>
+      </div>
+      <a class="lens-link" href={fair.href}>
+        <span class="audience-label">For research infrastructure + data stewardship</span>
+        <strong>{fair.title}</strong>
+        <span>{fair.summary}</span>
+        <span class="lens-cta">Read through this lens <span aria-hidden="true">&rarr;</span></span>
+      </a>
+    </section>
+
+    <section class="field-map" aria-labelledby="field-title">
+      <div class="section-heading field-heading">
+        <div>
+          <p class="section-label">The field map</p>
+          <h2 id="field-title">Locate the pattern</h2>
+        </div>
+        <p>Test the claimed niche against both stable kinds of approach and a dated landscape of specific systems.</p>
+      </div>
+
+      <div class="field-route">
+        <a class="field-stop" href={comparison.href}>
+          <span class="path-index">05</span>
+          <span class="path-role">{comparison.label}</span>
+          <strong>{comparison.title}</strong>
+          <span>{comparison.summary}</span>
+        </a>
+      </div>
+    </section>
+  </div>
 </Base>
+
+<style>
+  .case-landing {
+    padding-top: clamp(1.5rem, 4vw, 3.5rem);
+  }
+
+  .case-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+    gap: clamp(2.5rem, 8vw, 7rem);
+    align-items: end;
+    padding-bottom: clamp(4rem, 9vw, 7rem);
+  }
+
+  .case-hero h1 {
+    max-width: 13ch;
+    margin-top: 0.7rem;
+    font-size: clamp(3.2rem, 7vw, 5.25rem);
+    line-height: 0.94;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .case-intro {
+    padding: 0 0 0.35rem clamp(1.25rem, 3vw, 2.25rem);
+    border-left: 2px solid var(--ember);
+  }
+
+  .case-intro p {
+    max-width: 34rem;
+    color: var(--steel);
+    font-size: clamp(1rem, 1.35vw, 1.15rem);
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  .case-intro p + p {
+    margin-top: 1rem;
+    color: var(--ash);
+  }
+
+  .argument-path,
+  .field-map {
+    padding: clamp(3rem, 7vw, 5rem) 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .section-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(18rem, 1fr);
+    gap: 2rem;
+    align-items: end;
+    margin-bottom: 2rem;
+  }
+
+  .section-label,
+  .path-role,
+  .audience-label {
+    color: var(--ember);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .section-label {
+    margin-bottom: 0.45rem;
+  }
+
+  .section-heading h2,
+  .lens-context h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+  }
+
+  .section-heading > p,
+  .lens-context > p:last-child {
+    max-width: 36rem;
+    color: var(--ash);
+    font-size: 1rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .trailhead,
+  .branch,
+  .lens-link,
+  .field-stop {
+    color: inherit;
+    text-decoration: none;
+    transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  .trailhead:focus-visible,
+  .branch:focus-visible,
+  .lens-link:focus-visible,
+  .field-stop:focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 4px;
+  }
+
+  .trailhead {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr) auto;
+    gap: 1.25rem;
+    align-items: center;
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: clamp(1.3rem, 3vw, 1.8rem);
+    background: var(--iron);
+    border: 1px solid var(--ember);
+    border-radius: 0.7rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.045),
+      0 28px 55px -38px rgba(226, 85, 43, 0.8);
+  }
+
+  .trailhead:hover,
+  .branch:hover,
+  .lens-link:hover,
+  .field-stop:hover {
+    background: var(--graphite);
+    border-color: var(--ember);
+    transform: translateY(-2px);
+  }
+
+  .path-index {
+    color: var(--ember);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+
+  .trailhead-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .trailhead-copy strong,
+  .branch strong,
+  .lens-link strong,
+  .field-stop strong {
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .trailhead-copy strong {
+    font-size: clamp(1.3rem, 2vw, 1.65rem);
+  }
+
+  .trailhead-copy > span:last-child,
+  .branch-summary,
+  .lens-link > span:nth-of-type(2),
+  .field-stop > span:last-child {
+    color: var(--ash);
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .path-arrow {
+    color: var(--ember);
+    font-size: 1.5rem;
+    transition: transform 180ms ease;
+  }
+
+  .trailhead:hover .path-arrow {
+    transform: translateX(4px);
+  }
+
+  .path-fork {
+    position: relative;
+    width: calc(50% + 1px);
+    height: 4.25rem;
+    margin: 0 auto;
+    border-left: 1px solid var(--ember);
+    border-bottom: 1px solid var(--ember);
+  }
+
+  .path-fork::after {
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    width: 50%;
+    content: "";
+    border-bottom: 1px solid var(--ember);
+  }
+
+  .path-fork span::before,
+  .path-fork span::after {
+    position: absolute;
+    bottom: -0.3rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    content: "";
+    background: var(--paper);
+    border: 1px solid var(--ember);
+    border-radius: 50%;
+  }
+
+  .path-fork span::before {
+    left: -0.32rem;
+  }
+
+  .path-fork span::after {
+    right: -0.32rem;
+  }
+
+  .branch-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 3vw, 2rem);
+  }
+
+  .branch {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.5rem 1rem;
+    align-content: start;
+    min-height: 15rem;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    background: var(--iron);
+    border: 1px solid var(--rule);
+    border-radius: 0.7rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .branch .path-role {
+    align-self: center;
+  }
+
+  .branch strong,
+  .branch-summary,
+  .branch-link {
+    grid-column: 2;
+  }
+
+  .branch strong {
+    margin-top: 0.65rem;
+    font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  }
+
+  .branch-link,
+  .lens-cta {
+    align-self: end;
+    margin-top: auto;
+    padding-top: 1.4rem;
+    color: var(--link);
+    font-family: var(--font-display);
+    font-size: 0.86rem;
+    font-weight: 600;
+  }
+
+  .outside-lens {
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(20rem, 1.22fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+    margin: clamp(2.5rem, 6vw, 5rem) 0;
+    padding: clamp(1.6rem, 4vw, 2.75rem);
+    background:
+      linear-gradient(90deg, rgba(226, 85, 43, 0.07), transparent 52%),
+      var(--soot);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--ember);
+    border-radius: 0.7rem;
+  }
+
+  .lens-context > p:last-child {
+    margin-top: 0.9rem;
+  }
+
+  .lens-link {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: clamp(1.35rem, 3vw, 2rem);
+    background: var(--iron);
+    border: 1px solid var(--rule);
+    border-radius: 0.55rem;
+  }
+
+  .audience-label {
+    display: inline-block;
+    padding: 0.24rem 0.48rem;
+    color: var(--glow);
+    background: rgba(226, 85, 43, 0.11);
+    border: 1px solid rgba(226, 85, 43, 0.36);
+    border-radius: 0.25rem;
+  }
+
+  .lens-link strong {
+    margin-top: 0.45rem;
+    font-size: clamp(1.45rem, 2.7vw, 2rem);
+  }
+
+  .field-map {
+    margin-top: clamp(3rem, 7vw, 5rem);
+  }
+
+  .field-heading {
+    margin-bottom: 1.5rem;
+  }
+
+  .field-route {
+    max-width: 46rem;
+  }
+
+  .field-stop {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.45rem 0.9rem;
+    padding: clamp(1.35rem, 3vw, 1.8rem);
+    background: var(--iron);
+    border: 1px solid var(--rule);
+    border-radius: 0.65rem;
+  }
+
+  .field-stop strong,
+  .field-stop > span:last-child {
+    grid-column: 2;
+  }
+
+  .field-stop strong {
+    margin-top: 0.5rem;
+    font-size: 1.45rem;
+  }
+
+  @media (max-width: 52rem) {
+    .case-hero,
+    .section-heading,
+    .outside-lens {
+      grid-template-columns: 1fr;
+    }
+
+    .case-hero {
+      gap: 2rem;
+    }
+
+    .case-intro {
+      max-width: 40rem;
+    }
+
+    .section-heading {
+      gap: 0.75rem;
+    }
+
+    .outside-lens {
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .case-landing {
+      padding-top: 1rem;
+    }
+
+    .case-hero h1 {
+      font-size: clamp(2.75rem, 14vw, 4rem);
+    }
+
+    .case-intro {
+      padding-left: 1rem;
+    }
+
+    .trailhead {
+      grid-template-columns: 2rem minmax(0, 1fr) auto;
+      gap: 0.75rem;
+      padding: 1.2rem 1rem;
+    }
+
+    .path-fork {
+      width: 1px;
+      height: 2.5rem;
+      border-bottom: 0;
+    }
+
+    .path-fork::after,
+    .path-fork span::before,
+    .path-fork span::after {
+      display: none;
+    }
+
+    .branch-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .branch {
+      min-height: 0;
+    }
+
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .trailhead,
+    .branch,
+    .lens-link,
+    .field-stop,
+    .path-arrow {
+      transition: none;
+    }
+  }
+</style>

@@ -33,8 +33,7 @@ Home  ............................. the bet in one breath + three doors
 │   ├── The Two Assets ........... provenance (universal) + the enforced check    [NET-NEW]
 │   ├── The Explainer Is the Source  the third plank — why the KB is human-legible [NET-NEW]
 │   ├── FAIR Skills ............... the outside witness — FAIR converged on R1.2/R1.3 [was blog; de-dated]
-│   ├── Comparisons .............. Part A positioning (stable) + Part B landscape (dated, refreshed) [pull: comparisons Part A + B]
-│   └── Related Projects ......... the values table                               [NET-NEW — issue #2 rows]
+│   └── Comparisons .............. Part A positioning (stable) + Part B landscape (dated, refreshed) [pull: comparisons Part A + B]
 │
 ├── 3. INSTANCES  ............... the pattern, twice, as proof
 │   ├── Galaxy Workflow Foundry .. thin profile + link-out; check = gxwf (rails)
