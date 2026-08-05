@@ -14,7 +14,7 @@ least one tag, every tag belongs to a declared **facet**, and every facet is a c
 whose members each carry a one-line gloss.
 
 The **format** is substrate, shared verbatim across instances and specified in Part 4 of the
-[[standing-up-a-foundry|Astro-stack worked example]]. The **vocabulary** is not, and should not
+[[standing-up-a-foundry|Build with the Astro Stack]]. The **vocabulary** is not, and should not
 be: a domain's browse axes are the domain's.
 
 This page renders both registries as they actually stand, vendored from each instance's

@@ -1,15 +1,25 @@
 ---
-title: Anatomy of an Instance
-description: What every Foundry shares (the substrate) versus what each domain adds (the extension surface) — the pattern is a base to extend, not a template to stamp.
+title: What a Foundry Needs
+description: The substrate a Foundry inherits and the decisions each domain must make — the pattern is a base to extend, not a template to stamp.
 section: pattern
 order: 5
 ---
 
-# Anatomy of an Instance
+# What a Foundry Needs
 
 A Foundry is an inspectable, human-readable knowledge base of deep domain knowledge whose *structure* makes it executable: the knowledge is decomposed into typed units that compile into frozen artifacts carrying provenance. That sentence names the part that is the *same* in every instance. This page separates that shared substrate — the invariants — from the decisions each instance must make for its domain — the extension surface. The thing to take away is not a checklist of identical slots but a posture: **the pattern is a substrate you extend, not a template you stamp.**
 
 Where [[the-diff]] earns the abstraction comparatively (hold the two instances side by side; what survives the diff is real), this page earns it descriptively: walk the anatomy once, and mark each part shared or domain-added. For the underlying model and term definitions, see [[the-model]] and the [[glossary]].
+
+## At a glance
+
+| What stays consistent | Your domain decides | Evidence it is working |
+|---|---|---|
+| Human-inspectable source | Knowledge organization and vocabulary | A navigable site, authoritative glossary, focused design records, kind documentation, and generated catalogs |
+| Grounded knowledge | Corpus and derivative policy | Citations, licenses, source identities, hashes, and sync checks appropriate to what is carried locally |
+| Typed actions | Mold boundaries and reference kinds | Schemas validate and every typed reference resolves |
+| Deterministic casting | Target formats and placement rules | The same source, Mold, and target reproduce the same artifact bytes |
+| Re-checkable lineage | Provenance representation | Drift can be detected and a packaged claim can be traced to its source |
 
 ## The invariants — the substrate
 
@@ -46,18 +56,6 @@ Here is where instances differ, and the difference is the point: applying the pa
 - In the [[statistical-genomics-foundry]], "is this method valid?" has no mechanical oracle, so the check is itself *authored knowledge cast into a skill* — an empirical **referee** running an `analyze → referee → revise` loop, which both reasons about known invalidity patterns and *constructs and runs* the empirical test the field trusts. There the check is a deliverable you produce, not a tool you call.
 
 These are not two settings of one universal knob. They are two domains solving "what does *correct* even mean here, and what can decide it?" their own way. A third Foundry might check with a human review queue, a proof assistant, or something none of these resemble — and that freedom is the pattern working as designed, not a gap in it.
-
-## Substrate vs. extension, at a glance
-
-| What stays consistent | What each domain decides |
-|---|---|
-| Reader-facing, self-documenting KB with progressive disclosure | The domain knowledge and how readers navigate it |
-| Mold = typed reference manifest | Action boundaries and reference kinds |
-| Cast = deterministic integration boundary | Target formats and casting rules |
-| Re-checkable provenance beside every artifact | The source identities and representation that carry it |
-| Corpus-grounding | The grounding corpus and its derivative, license, and refresh policies |
-| Independent evaluation before work counts as trusted | What can provide that verdict *(e.g. Galaxy's CLI validator; stat-gen's empirical referee)* |
-| Actions may stand alone or form a journey | Whether and how to compose or orchestrate them |
 
 ## How to read this
 

@@ -1,6 +1,6 @@
 ---
 title: "Astro-Stack Glossary"
-description: The vocabulary an instance inherits by adopting the worked example's stack — note, kind, shape, companion, collection — pinned separately from the pattern's own terms because it describes an implementation, not the pattern.
+description: The vocabulary an instance inherits from the Astro reference stack — note, kind, shape, companion, collection — pinned separately from the pattern's own terms because it describes an implementation, not the pattern.
 section: pattern
 order: 8
 ---
@@ -9,16 +9,16 @@ order: 8
 
 The [[glossary]] pins the vocabulary of the abstract pattern: terms that hold for a Foundry built
 on any stack. This page pins the layer beneath it — the words an instance acquires by adopting the
-[[standing-up-a-foundry|Astro-stack worked example]], describing how a corpus gets typed and laid
-out on disk.
+Astro stack described in [[standing-up-a-foundry|Build with the Astro Stack]], including how a
+corpus gets typed and laid out on disk.
 
 The split is not tidiness. A term in the pattern glossary is a claim about every Foundry that will
 ever exist; a term here is a claim about the ones sharing this stack, and a third instance on a
 different stack may reasonably have none of them. Mixing the two makes the pattern look like it
-requires decisions it does not, which is the failure mode the [[anatomy-of-an-instance|Anatomy]]
+requires decisions it does not, which is the failure mode the [[anatomy-of-an-instance|What a Foundry Needs]]
 page exists to prevent.
 
-Vocabulary reaches a Foundry from three places, and Part 1 of the worked example says to pin them
+Vocabulary reaches a Foundry from three places, and Part 1 of the Astro build guide says to pin them
 in this order:
 
 1. **The pattern's terms** — [[glossary]]. Every instance carries them, copied verbatim.

@@ -23,7 +23,7 @@ tables are derived from the same zod definitions its validator runs; this site v
 manifests and renders them. Nothing below is transcribed, so nothing below can quietly stop
 being true. The layout that makes this possible — one directory per kind, holding the schema,
 its documentation, and a worked example — is specified in Part 3 of the
-[[standing-up-a-foundry|Astro-stack worked example]].
+[[standing-up-a-foundry|Build with the Astro Stack]].
 
 ## How to read it
 
@@ -65,7 +65,7 @@ or directories — and its **companions**, the non-note files belonging beside a
 note, each with a requirement level and a disposition saying whether casting may carry it into an
 artifact. Both terms are pinned in the [[astro-stack-glossary]] — they belong to this stack rather
 than to the pattern — and specified in Part 3 of the
-[[standing-up-a-foundry|Astro-stack worked example]].
+[[standing-up-a-foundry|Build with the Astro Stack]].
 
 Three things that declaration makes visible for the first time:
 
@@ -93,5 +93,5 @@ the strongest claim on this page. A file one instance declares and the other doe
 dash — an extension inside a shared kind, which is a real difference and not a gap in the data.
 
 For where these kinds live inside a repository, and what a new instance should copy first, see
-[[anatomy-of-an-instance]] and the [[standing-up-a-foundry|Astro-stack worked example]]. For the
+[[anatomy-of-an-instance]] and [[standing-up-a-foundry|Build with the Astro Stack]]. For the
 vocabulary the `tags` field draws on, see [[tag-catalog]].
