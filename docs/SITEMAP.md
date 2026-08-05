@@ -12,12 +12,21 @@ check"; **provenance** is the one universal non-commodity asset.
 Home  ............................. the bet in one breath + three doors
 │
 ├── 1. THE PATTERN  ............... the timeless, domain-free spec
-│   ├── Story ..................... why skills rot — generalized motivation       [pull: foundry story, de-domained]
-│   ├── The Model ................. KB → Mold → Cast → Provenance, abstractly     [adapt: ARCHITECTURE/COMPILATION]
-│   ├── Guiding Principles ........ the principles, corpus/target made generic    [pull: guiding-principles]
-│   ├── Principles in Action ...... the principles incarnated in the two instances [NET-NEW — concrete companion]
-│   ├── Anatomy of an Instance .... the substrate vs the extension surface       [NET-NEW — spine]
-│   └── Glossary ................. Mold, Cast, Provenance; extension surface      [pull: glossary, instance terms dropped]
+│   ├── Start here
+│   │   ├── Story ................. why handwritten skills rot
+│   │   ├── The Model ............. KB → Mold → Cast → Provenance, abstractly
+│   │   ├── Guiding Principles .... the disciplines that keep a Foundry trustworthy
+│   │   └── Principles in Action .. how current instances realize those principles
+│   ├── Build one
+│   │   ├── What a Foundry Needs .. the substrate and the extension boundary
+│   │   ├── Plan Your Foundry ..... a stack-neutral route through domain decisions
+│   │   └── Build with the Astro Stack  one concrete implementation
+│   └── Reference
+│       ├── Astro-Stack Glossary .. vocabulary introduced by the implementation
+│       ├── Kind Catalog .......... generated content-kind contracts
+│       ├── Tag Catalog ........... generated controlled vocabularies
+│       ├── Design Records ........ ownership and change boundaries
+│       └── Glossary .............. the pattern's canonical terms
 │
 ├── 2. THE CASE  ................. the argument
 │   ├── Skills: Package, Not Source ★ flagship — "the problems with skills"      [NET-NEW]
@@ -38,7 +47,7 @@ Home  ............................. the bet in one breath + three doors
 
 ## Load-bearing docs
 
-The abstraction's whole weight rests on two net-new pages: **Anatomy of an Instance**
+The abstraction's whole weight rests on two net-new pages: **What a Foundry Needs**
 (Pattern) and **The Diff** (Instances). The substrate is invariant across both foundries;
 what each domain extends it with varies — and those two pages are where that contrast is made explicit. The
 flagship **Skills: Package, Not Source** is the front door to The Case; **Blind

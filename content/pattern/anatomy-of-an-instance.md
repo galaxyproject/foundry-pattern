@@ -1,6 +1,6 @@
 ---
 title: What a Foundry Needs
-description: The substrate a Foundry inherits and the decisions each domain must make — the pattern is a base to extend, not a template to stamp.
+description: The substrate a Foundry inherits and the extension surface each domain must fill — the pattern is a base to extend, not a template to stamp.
 section: pattern
 order: 5
 ---

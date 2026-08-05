@@ -7,9 +7,7 @@ order: 6
 
 # Plan Your Foundry
 
-[[anatomy-of-an-instance|What a Foundry Needs]] describes the shared substrate and the decisions each domain owns. This page turns that distinction into a route from an idea to one working vertical slice. Follow the phases roughly in order, but expect to loop back: real cases will sharpen the vocabulary, move Mold boundaries, and expose checks the first design missed.
-
-The phases are not equal-sized tasks. Establishing vocabulary, for example, benefits from more explicit guidance than choosing whether several actions need orchestration. The repeated **Goal / Produce / Done when** structure keeps the route visible even where one phase needs a deeper treatment.
+[[anatomy-of-an-instance|What a Foundry Needs]] describes the shared substrate and the extension surface each domain owns. This page turns that distinction into a route from an idea to one working vertical slice. Follow the phases roughly in order, but expect to loop back: real cases will sharpen the vocabulary, move Mold boundaries, and expose checks the first design missed.
 
 ## The route at a glance
 
@@ -64,7 +62,7 @@ The payoff is one surface serving both readers a Foundry has. A human reads the 
 
 **Goal.** Make the knowledge source inspectable by people and structured enough for tooling to validate.
 
-**Produce.** Establish a content tree that renders as a navigable site. Keep the glossary authoritative; add focused design records for architectural decisions; place documentation and an example beside each knowledge kind; and generate catalogs for inventories that would stale if repeated by hand. Use one link grammar and resolution map for both rendering and validation so the site and its checks cannot disagree about what a reference means.
+**Produce.** Establish a content tree that renders as a navigable site. Keep the glossary authoritative; add focused design records for architectural decisions; place documentation and an example beside each knowledge kind; and generate catalogs for inventories that would go stale if repeated by hand. Use one link grammar and resolution map for both rendering and validation so the site and its checks cannot disagree about what a reference means.
 
 **Done when.** A new contributor can find the vocabulary, content contracts, examples, and ownership boundaries from inside the knowledge base. Broken references, invalid frontmatter, and stale generated surfaces fail a repeatable check rather than remaining editorial suggestions. The result should already be useful to a human reader before it can produce a runtime artifact.
 
