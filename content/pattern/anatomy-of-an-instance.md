@@ -13,13 +13,13 @@ Where [[the-diff]] earns the abstraction comparatively (hold the two instances s
 
 ## At a glance
 
-| What stays consistent | Your domain decides | Evidence it is working |
+| Pattern term or principle | Your domain decides | Evidence it is working |
 |---|---|---|
-| Human-inspectable source | Knowledge organization and vocabulary | A navigable site, authoritative glossary, focused design records, kind documentation, and generated catalogs |
-| Grounded knowledge | Corpus and derivative policy | Citations, licenses, source identities, hashes, and sync checks appropriate to what is carried locally |
-| Typed actions | Mold boundaries and reference kinds | Schemas validate and every typed reference resolves |
-| Deterministic casting | Target formats and placement rules | The same source, Mold, and target reproduce the same artifact bytes |
-| Re-checkable lineage | Provenance representation | Drift can be detected and a packaged claim can be traced to its source |
+| Knowledge Base (KB) | Knowledge organization and vocabulary | A navigable site, authoritative glossary, focused design records, kind documentation, and generated catalogs |
+| Corpus-First, Not Invention-First | Corpus and derivative policy | Citations, licenses, source identities, hashes, and sync checks appropriate to what is carried locally |
+| Mold (typed actions) | Action boundaries and reference kinds | Schemas validate and every typed reference resolves |
+| Casting | Target formats and placement rules | The same source, Mold, and target reproduce the same artifact bytes |
+| Provenance | Provenance representation | Drift can be detected and a packaged claim can be traced to its source |
 
 ## The invariants — the substrate
 
