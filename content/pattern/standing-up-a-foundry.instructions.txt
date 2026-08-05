@@ -2,8 +2,8 @@ STANDING UP A FOUNDRY — WORKING CHECKLIST
 
 This is prescriptive: it maps the abstract pattern onto ONE concrete implementation — the
 Astro-SSG-on-GitHub-Pages stack both current instances share, in the fuller form the
-Statistical Genomics Foundry uses (schema + validator + registries). The abstract "Setting
-up a Foundry" page stays stack-agnostic; this one names packages, versions, paths, commands.
+Statistical Genomics Foundry uses (schema + validator + registries). The abstract "Plan Your
+Foundry" page stays stack-agnostic; this one names packages, versions, paths, commands.
 Nothing here is the only way to satisfy the pattern — it is the one worked example.
 
 Order of work: the glossary comes FIRST (Part 1) — it is the KB's highest fan-in reference

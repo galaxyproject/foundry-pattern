@@ -1,21 +1,44 @@
 ---
-title: Setting up a Foundry
-description: The imperative companion to Anatomy — how to stand up a new Foundry, step by step. The substrate is given; the work is bringing domain knowledge and extending the base with what the domain needs.
+title: Plan Your Foundry
+description: A stack-neutral route from the shared Foundry substrate to the decisions and domain knowledge a working instance needs.
 section: pattern
 order: 6
 ---
 
-# Setting up a Foundry
+# Plan Your Foundry
 
-[[anatomy-of-an-instance|Anatomy]] describes what a Foundry *is* — the substrate every instance shares, the extension surface each domain adds. This page is its imperative twin: what you actually *do* to stand a new one up. The substrate — KB-as-source, the typed [[the-model|Mold]], deterministic [[the-model|casting]], [[the-model|provenance]], grounding, disclosure — is inherited essentially for free. The steps below are the part the substrate cannot do for you.
+[[anatomy-of-an-instance|What a Foundry Needs]] describes the shared substrate and the extension surface each domain owns. This page turns that distinction into a route from an idea to one working vertical slice. Follow the phases roughly in order, but expect to loop back: real cases will sharpen the vocabulary, move Mold boundaries, and expose checks the first design missed.
 
-It is written to be worked through roughly in order, but a Foundry is grown, not stamped: expect to loop back as real cases force new vocabulary, new Molds, and a sharper notion of the check. Only the [glossary step](#define-the-vocabulary) is fully written out today; the rest are stubs that will grow the same way the pattern says a KB should — paragraph by paragraph, when a real case demands it.
+## The route at a glance
 
-## Bring the domain knowledge and its grounding corpus
+| Phase | Outcome |
+|---|---|
+| 1. Frame and ground the domain | A bounded promise, representative cases, and an authoritative corpus |
+| 2. Establish the vocabulary | One glossary that governs inherited and domain terms |
+| 3. Stand up the reader's surface | A navigable, self-documenting source of truth |
+| 4. Author one action | A typed Mold with resolvable references |
+| 5. Cast one target | A reproducible artifact with provenance |
+| 6. Build the external check | An independent way to decide whether the resulting work is trustworthy |
+| 7. Compose only if needed | An explicit orchestration decision, not a default framework layer |
+| 8. Grow from evidence | New knowledge and structure justified by real use |
 
-*Stub.* The real asset is *what the Foundry knows* — the patterns, methods, and hard-won procedure of one field — and the external corpus every abstraction traces back to. Bring both before you build machinery around them. See [[anatomy-of-an-instance]] and [[guiding-principles]] (Corpus-First).
+## 1. Frame and ground the domain
 
-## Define the vocabulary
+**Goal.** State what work the Foundry will help perform and ground its knowledge in real practice before building machinery around it.
+
+**Produce.** Write a short promise naming the domain, intended users, and kinds of action the Foundry should support. Select a small set of representative cases — including an awkward or negative case — and identify the authoritative corpus behind them. For every source, decide whether the Foundry will cite it, synthesize it, carry a pinned snapshot, or treat it as a working cache; record the license and refresh posture that choice requires.
+
+**Done when.** A reviewer can point from the proposed work to concrete cases and upstream evidence, and can tell which claims belong to the source versus the Foundry's synthesis. Do not wait for a comprehensive survey: the first corpus needs enough variation to challenge the design, not enough volume to justify decisions already made. See [[guiding-principles]] (Corpus-First and Upstream Authority, Local Synthesis).
+
+## 2. Establish the vocabulary
+
+**Goal.** Give people, source documents, and cast artifacts one authoritative language.
+
+**Produce.** Create one glossary containing the pattern terms the instance inherits, any vocabulary introduced by its implementation stack, and the domain terms its first real actions require. Record the provenance of each entry without partitioning the reader's vocabulary by supply chain.
+
+**Done when.** Every coined or heavily relied-on term has one authoritative definition; conflicting usage defers to the glossary; inherited terms retain their inherited meanings; and casting can carry the definitions an action needs verbatim.
+
+### Glossary discipline
 
 A Foundry names things that did not exist before it. Some terms are the pattern's (*Mold*, *Cast*); most are your domain's, coined for concepts your KB synthesizes and no one has named yet. A coined term has no prior meaning for a reader meeting it and none in a model's training data — there is nothing to fall back on. It means only what your KB says it means. So before the KB can be read by a human or carried into an agent runtime without drift, the vocabulary has to be **pinned**: defined once, in one place, that every other page uses without redefining. That place is the glossary, and setting one up is one of the first things you do.
 
@@ -35,18 +58,50 @@ Two properties fall out of doing this. The glossary becomes the KB's **highest f
 
 The payoff is one surface serving both readers a Foundry has. A human reads the glossary to learn the domain's coined language; every cast artifact carries the same definitions into its runtime. For the glossary's role in the machine, see [[the-model]]; the [[glossary]] on this site is the pattern's own instance of exactly this.
 
-## Identify the actions and author the Molds
+## 3. Stand up the reader's surface
 
-*Stub.* Decompose the domain into repeatable decision-and-handoff units — one [[the-model|Mold]] per action worth casting — and declare each Mold's typed references. Getting the boundary right (not one monolith, not a dust of fragments) is the craft here. See [[the-model]] and [[anatomy-of-an-instance]].
+**Goal.** Make the knowledge source inspectable by people and structured enough for tooling to validate.
 
-## Choose the target(s) and set up casting
+**Produce.** Establish a content tree that renders as a navigable site. Keep the glossary authoritative; add focused design records for architectural decisions; place documentation and an example beside each knowledge kind; and generate catalogs for inventories that would go stale if repeated by hand. Use one link grammar and resolution map for both rendering and validation so the site and its checks cannot disagree about what a reference means.
 
-*Stub.* Pick the format(s) a cast produces and wire the deterministic compiler. The KB stays the source of truth across every target. See [[the-model]] (Cast, Target, Provenance).
+**Done when.** A new contributor can find the vocabulary, content contracts, examples, and ownership boundaries from inside the knowledge base. Broken references, invalid frontmatter, and stale generated surfaces fail a repeatable check rather than remaining editorial suggestions. The result should already be useful to a human reader before it can produce a runtime artifact.
 
-## Build the external check
+## 4. Identify the actions and author one Mold
 
-*Stub.* Decide what *correct* means in your domain and what can decide it — a deterministic validator where output is parseable, a constructed empirical referee where it is not. This is the sharpest, most domain-specific part of the work and the one the substrate deliberately leaves open. See [[anatomy-of-an-instance]] and [[the-two-assets]].
+**Goal.** Turn one repeatable unit of domain work into a typed action without trying to model the entire field.
 
-## Compose, if the work is sequential
+**Produce.** Choose one representative decision-and-handoff unit and author a [[the-model|Mold]] for it. Declare every dependency by kind, along with its load policy and placement mode. Keep facts, schemas, examples, prompts, and rationale as references rather than duplicating them into the procedure.
 
-*Stub.* Where a domain's task is an inherently multi-step journey, compose Molds into ordered end-to-end tasks and orchestrate them. A domain whose actions stand alone needs no such layer. See [[anatomy-of-an-instance]].
+**Done when.** The Mold describes one coherent action — neither an entire journey nor a dust of fragments — and every declared reference resolves and validates. Someone should be able to explain why each dependency is present and why it loads when it does. Let the boundary be corrected by the first real use before multiplying it into a taxonomy.
+
+## 5. Choose one target and set up casting
+
+**Goal.** Prove that the structured source can become a frozen, usable artifact without becoming a second source of truth.
+
+**Produce.** Select one target format and implement its deterministic casting rules: how each reference kind resolves, what is inlined or bundled, and how target-specific files are laid out. Emit provenance beside the artifact, including the Mold and target identities, resolved references, hashes, placement, and cast-time checks.
+
+**Done when.** The same source, Mold, and target reproduce the same bytes; links back into the KB have been resolved away; the artifact is self-contained for its intended runtime; and a reviewer can trace packaged material back to its source. When the artifact is wrong, the repair happens in the Mold, its references, or the target rules — never by hand-editing the cast.
+
+## 6. Build the external check
+
+**Goal.** Decide what *correct* means for work performed with the artifact and what can judge it independently of the process that produced it.
+
+**Produce.** Name the strongest check the domain admits. Where correctness is parseable, use a deterministic validator. Where it is empirical, construct a referee that runs the simulation, calibration, negative control, or other test the field trusts. A domain may instead require human review, a proof tool, or another mechanism; the pattern fixes the independence requirement, not the implementation.
+
+**Done when.** Work cannot count as trusted merely because the producing process says it succeeded. The check has a defined input, verdict, and failure path, and the Foundry makes clear what the check covers and what remains outside its reach. See [[anatomy-of-an-instance]] and [[the-two-assets]].
+
+## 7. Compose only if the work is sequential
+
+**Goal.** Add orchestration only where the domain's work genuinely consists of ordered actions and handoffs.
+
+**Produce.** Either compose Molds into an explicit end-to-end journey or record that the domain's actions stand alone. If composition is needed, keep the pipeline or harness separate from the Molds it invokes so orchestration does not become a second place to author domain knowledge.
+
+**Done when.** Every transition has a reason and a defined handoff, individual Molds remain independently understandable, and a domain with standalone actions carries no ceremonial pipeline layer. Composition is an extension, not evidence that a Foundry is more complete.
+
+## 8. Grow from evidence
+
+**Goal.** Expand the Foundry through observed needs rather than anticipated completeness.
+
+**Produce.** Exercise the first vertical slice against the representative cases. Feed failures and repeated decisions back into the source: sharpen a glossary entry, add a reference, move a Mold boundary, introduce a kind, or compose a journey only when the evidence calls for it. Recast after source changes and use provenance to identify stale artifacts.
+
+**Done when.** New knowledge points to a corpus example, cast requirement, failure, or repeated workflow; generated surfaces remain current; and the source improves when the artifact is used. A Foundry is grown, not stamped — the first complete slice is the beginning of the knowledge base, not a miniature version of every feature it might someday contain.

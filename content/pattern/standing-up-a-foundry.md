@@ -1,14 +1,14 @@
 ---
-title: "One Worked Example: the Astro Stack"
-description: How one concrete stack — Astro, zod, seven installed packages — resolves each of the pattern's invariants into a named decision, and what building a second instance on it corrected.
+title: "Build with the Astro Stack"
+description: How Astro, zod, and the shared Foundry packages resolve each of the pattern's invariants into a concrete implementation decision.
 section: pattern
 order: 7
 instructions: pattern/standing-up-a-foundry.instructions.txt
 ---
 
-# One Worked Example: the Astro Stack
+# Build with the Astro Stack
 
-[[setting-up-a-foundry|Setting up a Foundry]] is the summary in front of this page, and it is
+[[setting-up-a-foundry|Plan Your Foundry]] is the summary in front of this page, and it is
 deliberately stack-agnostic: it says *pin the vocabulary*, *type the frontmatter*, *build an
 external check* — and names no tool that could do any of them. That silence is right for a
 pattern and useless for a repository. An instance cannot decline to pick a site generator.
@@ -29,7 +29,7 @@ row.
 
 ## What the choices had to do
 
-Each row takes one invariant from [[anatomy-of-an-instance|Anatomy]], states the demand it makes
+Each row takes one invariant from [[anatomy-of-an-instance|What a Foundry Needs]], states the demand it makes
 on *any* implementation, and gives the decision this checklist makes to satisfy it.
 
 | Invariant | What it demands of an implementation | What this checklist decides |
