@@ -548,6 +548,208 @@ article.prose::before {
   font-size: 0.88em;
 }
 
+/* Astro build guide — repository ownership and composition, not package internals. */
+.astro-build-architecture {
+  position: relative;
+  contain: inline-size;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 2rem 0 3rem;
+  padding: 1.25rem;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    var(--soot);
+  background-size: 1.25rem 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 30px 60px -45px rgba(226, 85, 43, 0.62);
+}
+
+.astro-build-architecture::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  content: "";
+  background: var(--molten);
+}
+
+.astro-build-node {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 0.42fr) minmax(0, 1fr);
+  gap: 0.2rem 1rem;
+  align-items: baseline;
+  padding: 1rem 1.1rem;
+  background: var(--iron);
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.astro-build-node > span {
+  grid-row: 1 / span 2;
+  color: var(--ember);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.astro-build-node > strong {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  line-height: 1.15;
+}
+
+.astro-build-node > small {
+  color: var(--ash);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.astro-build-node a {
+  color: var(--ink);
+  text-decoration-color: rgba(241, 122, 70, 0.7);
+}
+
+.astro-build-seam {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) 4.5rem minmax(0, 0.82fr);
+  gap: 0.65rem;
+  align-items: stretch;
+}
+
+.astro-build-instance {
+  border-left: 3px solid var(--ember);
+}
+
+.astro-build-library {
+  background: var(--graphite);
+  border-style: dashed;
+}
+
+.astro-build-output {
+  border-color: var(--ember);
+}
+
+.astro-build-connector,
+.astro-build-bridge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ember);
+  font-family: var(--font-display);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.astro-build-connector {
+  min-height: 3.4rem;
+  flex-direction: column;
+}
+
+.astro-build-bridge {
+  flex-direction: column;
+}
+
+.astro-build-connector span,
+.astro-build-bridge span {
+  color: var(--ash);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.astro-build-connector b,
+.astro-build-bridge b {
+  color: var(--ember);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.astro-build-architecture figcaption {
+  padding: 1rem 0.35rem 0;
+  color: var(--ash);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.astro-build-architecture figcaption a {
+  color: var(--link);
+}
+
+.astro-build-matrix {
+  contain: inline-size;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 0.65rem;
+}
+
+.astro-build-matrix table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--steel);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.astro-build-matrix th,
+.astro-build-matrix td {
+  padding: 0.75rem 0.8rem;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.astro-build-matrix tr > :last-child {
+  border-right: 0;
+}
+
+.astro-build-matrix tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.astro-build-matrix thead th {
+  color: var(--ink);
+  background: var(--iron);
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.astro-build-matrix tbody th {
+  width: 24%;
+  color: var(--ink);
+  background: rgba(38, 43, 50, 0.72);
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 500;
+}
+
+.astro-build-matrix tbody td:nth-child(2) {
+  width: 50%;
+}
+
+.astro-build-matrix a {
+  color: var(--link);
+}
+
 /* Principles in Action — comparison first, detail second. */
 .principles-action-matrix {
   position: relative;
@@ -655,6 +857,63 @@ article.prose::before {
 }
 
 @media (max-width: 42rem) {
+  .astro-build-matrix thead {
+    display: none;
+  }
+
+  .astro-build-matrix tbody,
+  .astro-build-matrix tr,
+  .astro-build-matrix th,
+  .astro-build-matrix td {
+    display: block;
+    width: 100%;
+  }
+
+  .astro-build-matrix tbody tr {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .astro-build-matrix tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .astro-build-matrix tbody th,
+  .astro-build-matrix tbody td,
+  .astro-build-matrix tbody td:nth-child(2) {
+    box-sizing: border-box;
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .astro-build-matrix tbody th {
+    color: var(--ink);
+    background: var(--graphite);
+    font-size: 0.82rem;
+  }
+
+  .astro-build-matrix tbody td::before {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--ash);
+    font-family: var(--font-display);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .astro-build-matrix tbody td:nth-of-type(1)::before {
+    content: "This Astro composition";
+  }
+
+  .astro-build-matrix tbody td:nth-of-type(2)::before {
+    content: "Canonical detail";
+  }
+
+  .astro-build-matrix tbody td:last-child {
+    border-bottom: 0;
+  }
+
   .principles-action-matrix table {
     min-width: 0;
   }
@@ -752,6 +1011,27 @@ article.prose::before {
 
   .model-machine-cast small {
     text-align: left;
+  }
+
+  .astro-build-architecture {
+    padding: 1rem;
+  }
+
+  .astro-build-node,
+  .astro-build-seam {
+    grid-template-columns: 1fr;
+  }
+
+  .astro-build-node > span {
+    grid-row: auto;
+  }
+
+  .astro-build-bridge {
+    min-height: 2.8rem;
+  }
+
+  .astro-build-bridge b {
+    transform: rotate(90deg);
   }
 }
 
