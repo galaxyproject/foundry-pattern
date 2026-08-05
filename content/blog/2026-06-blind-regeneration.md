@@ -79,4 +79,4 @@ The recipe is deliberately cheap to reproduce:
 5. **Score:** % recovered; net quality (blind worse / wash / better); list the irreproducible specifics; then **separately, verify each citation and threshold against primary sources** — the step that exposes the provenance gap directly.
 6. **Strengthen it:** use a *different* model for the blind author than for the judge. That single change closes the biggest hole above.
 
-The raw blind `SKILL.md` artifacts from this run are preserved; we'll commit them under an appendix once we settle where they land. This note connects to the [[related-projects]] values table — it supplies the evidence behind the Traceability, Human Scrutiny, and Knowledge-Base-Backed rows.
+The raw blind `SKILL.md` artifacts from this run are preserved; we'll commit them under an appendix once we settle where they land. This note supplies evidence for the Case's claims about traceability, human scrutiny, and knowledge-base-backed skills.

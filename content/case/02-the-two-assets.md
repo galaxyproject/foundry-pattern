@@ -103,8 +103,8 @@ tool ships that can decide validity, the Foundry has to build the check as autho
 knowledge cast into a skill — work a frontier model does not hand you for free.
 
 (The empirical, non-self-certifying *posture* of such a referee is shared prior art, not
-ours to claim — POPPER does this with provable Type-I error control; see
-[[related-projects]]. What is non-commodity here is narrower: a *constructed* check
+ours to claim — [POPPER](https://arxiv.org/abs/2502.09858) does this with provable Type-I
+error control. What is non-commodity here is narrower: a *constructed* check
 standing in for a static restatement a frontier model already outperforms.)
 
 Contrast the other end of the range. In the [[galaxy-workflow-foundry]] the check is a
@@ -146,7 +146,7 @@ distribution choice matters: ship knowledge as a **package** carrying its proven
 backed by a check the doing can't skip, not as a **source** that is only a restatement a
 frontier model already outperforms.
 
-Neighboring projects are genuinely good at the artifact layer (see [[related-projects]]);
+Neighboring projects are genuinely good at the artifact layer (see [[comparisons]]);
 the claim here is narrow and about a layer — the source beneath the package, and the
 enforcement around the doing — not a verdict on anyone's skills.
 

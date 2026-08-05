@@ -41,7 +41,6 @@ content/
     01-skills-package-not-source.md   ★ flagship
     02-the-two-assets.md              provenance (universal) + the enforced check
     03-comparisons.md                 compile-time-with-provenance vs runtime
-    04-related-projects.md            the values table
   instances/       ← thin profiles + link-out, and the diff that justifies the pattern
     galaxy-workflow-foundry.md
     statistical-genomics-foundry.md

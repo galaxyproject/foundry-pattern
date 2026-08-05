@@ -140,4 +140,4 @@ data principles, which named provenance and standards-conformance as prerequisit
 decade earlier — see [[fair-skills]]. For where this sits against the rest of the field —
 runtime retrieval versus compile-time grounding, and the neighbors worth crediting —
 see [[comparisons]]. For a project-by-project read of who foregrounds a source and
-who enforces a check, see [[related-projects]].
+who enforces a check, see the dated landscape in [[comparisons]].

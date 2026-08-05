@@ -15,7 +15,7 @@ A third plank carries as much weight and has only ever been asserted: the
 [[the-model|Knowledge Base]] is *"authored to be read and learned by a human, not merely stored
 for an agent to retrieve."* Nothing in the machinery requires that. Strip the human surface out
 and provenance still records; the check still gates. That is not hypothetical — it is a real and
-reasonable design: [[related-projects|Biomni]] keeps a machine-facing substrate with no human
+reasonable design: [Biomni](https://github.com/snap-stanford/Biomni) keeps a machine-facing substrate with no human
 surface and keeps traceable outputs without one.
 
 So the human surface needs an argument. This page is that argument, and it is not the obvious one.
