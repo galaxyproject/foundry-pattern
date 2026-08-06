@@ -131,7 +131,7 @@ The comparison is intentionally uneven. The [[galaxy-workflow-foundry]] has a wo
 
 ### The Knowledge Base Documents Itself
 
-**Both — implemented.** Each repository keeps an authoritative glossary under `content/meta/`, typed design records with explicit ownership boundaries, documentation and examples beside its knowledge kinds, and generated catalogs for inventories. These records pass through the same validation and reading machinery as domain content.
+**Both — implemented.** Each repository keeps an authoritative glossary under `content/meta/`, typed design records with explicit ownership boundaries, documentation and examples beside its knowledge kinds, and generated catalogs for inventories. These records pass through the same validation and reading machinery as domain content. [[design-records]] describes the shared directory contract and expected records.
 
 The second instance makes the benefit especially visible: its build record says exactly what runs today, while its casting record opens by saying no caster exists. Self-documentation is not self-promotion; it gives a maintainer enough of a map to tell architecture from aspiration.
 

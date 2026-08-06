@@ -138,5 +138,5 @@ These are not independent virtues. Upstream authority and corpus-grounding estab
 - [[principles-in-action]] — how current Foundries enact each principle.
 - [[anatomy-of-an-instance]] — the invariant substrate and the domain-specific extension surface.
 - [[the-model]] — Knowledge Base, Mold, Cast, and provenance as the structural realization of these principles.
-- [[design-records]] — the map a Foundry keeps of its own design.
+- [[design-records]] — how a Foundry keeps its own design inside the knowledge base and routes changes to the record that owns them.
 - [[glossary]] — the pattern's authoritative vocabulary.
