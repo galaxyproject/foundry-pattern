@@ -124,6 +124,7 @@ verdict without pretending Astro or a shared package can answer that domain ques
 The checklist is rendered **verbatim** because it is a repository composition recipe: named paths,
 commands, and checkpoints precise enough to follow by hand or hand to an agent. Work it top to
 bottom and expect to loop back. When it names package behavior, the linked `foundry-lib`
-architecture and package documentation are canonical. Versions live in one `REFERENCE STACK`
-table and move as a set; the closing `INSTALLED` / `MECHANICAL` / `YOURS` grading keeps shared
-machinery distinct from instance policy and domain knowledge.
+architecture and package documentation are canonical. Toolchain versions live in one
+`REFERENCE STACK`; current `@galaxy-foundry/*` ranges stay canonical in `foundry-lib` and are
+adopted by capability rather than mirrored here. The closing `INSTALLED` / `MECHANICAL` / `YOURS`
+grading keeps shared machinery distinct from instance policy and domain knowledge.

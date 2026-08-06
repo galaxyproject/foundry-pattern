@@ -66,7 +66,7 @@ Part 2's render-vault-doc helper) that the rest of the corpus answers to.
   outright. Casting copies glossary entries VERBATIM.
 
 
-REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal)
+REFERENCE STACK  (toolchain versions checked 2026-08-06 — bump coupled peers together)
 
   Toolchain     Node 24 (engines: >=22.12), pnpm via corepack (lockfile committed, the version
                 pinned by `packageManager` in package.json), TypeScript ^5.7.0
@@ -81,23 +81,32 @@ REFERENCE STACK  (versions pinned as of 2026-07 — bump as a set, not piecemeal
   YAML          js-yaml ^4.1.0 + @types/js-yaml ^4.0.9
   Validator     vitest ^4.1.10
 
+  Foundry       Install @galaxy-foundry packages BY CAPABILITY using foundry-lib's current
+                Getting Started guide and package metadata. Releases, APIs and peer compatibility
+                are canonical there, not mirrored here. Commit the chosen ranges in
+                site/package.json and the resolution in the lockfile. The substrate section below
+                owns which capability each package supplies and when an instance needs it.
+
   Layout        repo root holds site/ and content/ as siblings; paths under content/ resolve
                 from the site/ cwd as '../content/…'. content/meta/ holds flat `meta` design
                 records; glossary.md is excluded by name and an ops log may remain a second
                 explicit loose-doc exception.
 
-  This table and the substrate table below are the single source of truth for packages +
-  versions. The parts below name MODULES and WIRING, not packages — they do not re-list
-  what is pinned here.
+  This table is the source of truth for this worked example's TOOLCHAIN versions. The substrate
+  table below is the source of truth for package CAPABILITIES and adoption timing. foundry-lib is
+  the source of truth for @galaxy-foundry package versions and APIs. The parts below name MODULES
+  and WIRING; they do not mirror dependency ranges.
 
-  "As a set" is not a style preference in one place: `zod` and the two substrate packages that
-  read its internals move TOGETHER, in one commit, because the peer range admits exactly one
-  major. See the zod bullet below for what a split bump does.
+  "Coupled peers together" is not a style preference: `zod`, kind-manifest and kind-schema move
+  TOGETHER, in one commit, because the schema packages peer on one zod major and inspect the same
+  shapes the instance builds. See the zod bullet below for what a split bump does. Unrelated
+  @galaxy-foundry capabilities do not need ceremonial lockstep bumps.
 
 
 THE SHARED SUBSTRATE — INSTALL IT, DO NOT COPY IT
 
-Seven pieces of a Foundry are not yours to author. Both existing instances wrote each of them
+The baseline reader-and-contract substrate has seven pieces that are not yours to author. Both
+existing instances wrote each of them
 independently, and comparing the results found the same thing twice in three different ways. Some
 were one file living in two places — the kind-manifest reader and deriver were character-for-
 character identical apart from quote style, test suites included; the license table differed only
@@ -111,21 +120,36 @@ PURPOSE, one value at a time, over several passes — the container measure, the
 the active-link treatment, a copyright year. Every one of those turned out to be an artifact of the
 copy rather than a decision either instance had taken. That is a third kind of evidence, and the
 most actionable: the disagreements were not defensible, and finding that out is what made the piece
-movable. All three findings argue for the same fix. All seven now ship from jmchilton/foundry-lib
-under the @galaxy-foundry scope, and an instance INSTALLS them:
+movable. All three findings argue for the same fix. The seven baseline capabilities now ship from
+jmchilton/foundry-lib under the @galaxy-foundry scope. Use its Getting Started guide and package
+metadata when your instance reaches each capability:
 
-  @galaxy-foundry/license-policy      ^0.2.0  the license → redistribution table + loader
-  @galaxy-foundry/kind-manifest       ^0.4.0  the manifest format: reader + zod-shape deriver,
-                                              and the LAYOUT vocabulary a manifest carries
-  @galaxy-foundry/kind-schema         ^0.5.0  the kind contract: what a kind IS, how one is
-                                              assembled, path→kind routing, the kind.md loader,
-                                              the companion check
-  @galaxy-foundry/reference-contract  ^0.1.0  the four vocabularies every instance inherits
-  @galaxy-foundry/site-kit            ^0.1.0  the reading shell: document skeleton, header with
-                                              derived navigation, footer, and the rule that turns
-                                              a deployment base into an href prefix
-  @galaxy-foundry/tag-registry        ^0.1.0  the meta_tags.yml format and its accessors
-  @galaxy-foundry/wiki-links          ^0.3.0  the [[Target]] grammar, resolver, remark transform
+  @galaxy-foundry/license-policy      the license → redistribution table + loader
+  @galaxy-foundry/kind-manifest       the manifest format: reader + zod-shape deriver,
+                                      and the LAYOUT vocabulary a manifest carries
+  @galaxy-foundry/kind-schema         the kind contract: what a kind IS, how one is assembled,
+                                      path→kind routing, the kind.md loader, the companion check
+  @galaxy-foundry/reference-contract  the four behavior vocabularies every instance inherits
+  @galaxy-foundry/site-kit            the reading shell, reference view and the behavior contracts
+                                      for navigation, theme state, search and deployment base
+  @galaxy-foundry/tag-registry        the meta_tags.yml format and its accessors
+  @galaxy-foundry/wiki-links          the [[Target]] grammar, path/term slugging, exact resolver,
+                                      parsed- and raw-Markdown transforms
+
+Two more packages are capability-specific, not part of the baseline install:
+
+  @galaxy-foundry/cast                deterministic casting assembly, reference placement,
+                                      reconciliation, licensing and provenance. Adopt when the
+                                      first real Mold is ready to cast. Early N=1 extraction: a
+                                      structurally different second adopter tests the boundary.
+  @galaxy-foundry/audit-citations     scholarly-citation extraction, evidence capture and replay.
+                                      Adopt only when citation auditing is part of the instance's
+                                      acceptance policy. Experimental N=1, deliberately not a
+                                      generic external-check framework.
+
+The package count is not a completeness score. A Foundry without citation auditing does not install
+audit-citations; a reader-only vertical slice need not install cast. Capability-based adoption is
+the package model, and the lockfile is the record of what this instance actually selected.
 
 Every one of these was, in an earlier version of this checklist, an instruction to COPY a file
 and mirror any change by hand across repositories. Each of those instructions is now a
@@ -138,10 +162,14 @@ WHAT EACH PACKAGE DOES NOT DO is the half that matters. The package ships the FO
 MACHINERY; your instance supplies the CONTENT. Get the line wrong in either direction and you
 have either a dependency dictating your domain or a copy that drifts:
 
-  license-policy      Ships the table — which SPDX id permits verbatim carry. You keep license
-                      COHERENCE: own-words-only must not ship a `license_file`; a note vendoring
-                      an external upstream must declare one. Both instances enforce coherence,
-                      and they enforce genuinely DIFFERENT rules. The package answers "what does
+  license-policy      Ships the table — which SPDX id permits verbatim carry. It names policy,
+                      license-file obligation, copyleft and obligations; it names NO casting mode.
+                      A license constrains what expression a note carries, not how a bundle places
+                      it. `declaresVerbatimCarry(derived)` separates pass-through/quoted content
+                      from Foundry-authored own-words prose before the row is applied. You keep
+                      license COHERENCE: how a note's declared posture, license file and any
+                      vendored source must agree. Both instances enforce coherence, and they
+                      enforce genuinely DIFFERENT rules. The package answers "what does
                       this license permit", never "is this note coherent with its license".
                       Load with bundledPolicy() — the table travels with the dependency, so a
                       content tree no longer has to CARRY it to be validated or cast against it.
@@ -175,18 +203,21 @@ have either a dependency dictating your domain or a copy that drifts:
                       your targets implement; the validator must reject anything the caster cannot
                       reproduce byte for byte. A narrowed group is AUTHORED, so it rejoins the
                       dead-vocabulary check.
-  site-kit            Ships the MARKUP and the one rule inside it — which nav destination is
-                      active, derived from the reader's path rather than declared per entry. You
-                      keep the IDENTITY: both names, the description, the repository, the list of
+  site-kit            Ships the shared MARKUP, behavior-critical component styles and the rules
+                      inside them — active navigation, pre-paint theme state, Pagefind body
+                      coverage, overflow behavior, the reference-contract view, and deployment
+                      base handling. You keep the IDENTITY: both names, the description, the
+                      repository, the list of
                       destinations, and how many of them fit on the bar before the rest go under
                       "More". That last one is a number set by measurement, not taste — one
                       instance's wordmark is 75px and the other's 279px, so one bar holds five
                       links and the other six.
-                      Ships NO CSS. It writes Tailwind utility classes and NAMES six custom
-                      properties and three classes — the surface and text colours, the accent, the
-                      grid background, the skip link, the active-nav treatment — which your
-                      stylesheet defines. The palette is the part of a reading surface that is
-                      genuinely an instance's, and the kit is careful not to take it.
+                      Ships no complete GLOBAL THEME. It writes Tailwind utility classes, carries
+                      structural styles beside the components that need them, and NAMES custom
+                      properties and global classes your stylesheet defines. The palette is the
+                      part of a reading surface that is genuinely an instance's. Point Tailwind at
+                      the package source and use its emitted-CSS checks; both missing halves build
+                      cleanly and render wrong.
                       Ships ONE value it does NOT take a prop for: the width of the reading
                       column. Both instances had converged on it before the shell moved, and
                       handing a settled value back out as a parameter re-opens a decision nobody
@@ -202,11 +233,24 @@ have either a dependency dictating your domain or a copy that drifts:
                       facets are the browse axes of one domain — one Foundry groups by
                       target/tool/cli, another by family/role/domain — and there is no useful
                       subset to inherit.
-  wiki-links          Ships the grammar, the resolver and the tree walk. Ships NO LINK MAP: which
+  wiki-links          Ships the grammar, path and term slugging, the resolver, and parsed- and
+                      raw-Markdown walks. Use `fileSlug` for the path side of a note address and
+                      `slugify` for the authored-target side so the two halves cannot drift.
+                      Ships NO LINK MAP: which
                       notes exist and what each is addressable by is your data. One instance keys
                       by basename plus a Mold's `name` plus a `tool command` pair, another by a
                       dashed collection id, the pattern site by a filename with its ordering
                       prefix stripped.
+  cast                Ships `castMold`, cast-contract parsing, the generic skill-document shape,
+                      deterministic placement/reconciliation and provenance. You keep the kind
+                      declarations, target policy, slug map and hooks: domain skill sections,
+                      non-verbatim renderers, extra bundle files, aliases and external checks.
+                      Errors and drift return as values; your caller decides how they affect the
+                      process. Early N=1: do not disguise first-adopter vocabulary as substrate.
+  audit-citations     Ships one replayable scholarly-citation audit and its strict wire formats.
+                      You keep source selection, trusted hosts, artifact kinds and the acceptance
+                      gate. Experimental N=1: its citation-specific candidates and verdicts are
+                      not a base schema for every domain's external check.
 
 COMPOSE, DO NOT RE-EXPORT. Where your instance supplies a half, write ONE composition point that
 keeps the signature your callers already use, and let every other call site import from the
@@ -335,8 +379,8 @@ that a note is well-formed.
   pipeline, and `markdown.remarkPlugins` — the astro ≤6 spelling, and the one every tutorial still
   shows — is not the wiring any more, which is why the block above names `markdown.processor`
   instead: opting the unified pipeline back in explicitly. For this stack that is not a nicety —
-  `[[wiki-links]]` is one of the seven installed packages, and Part 4's link check asserts against a
-  grammar the renderer would no longer be applying.
+  `[[wiki-links]]` is supplied by the installed wiki-links package, and Part 4's link check asserts
+  against a grammar the renderer would no longer be applying.
   This entry USED to say the legacy spelling was silently ignored, leaving a site that built clean
   with every `[[Target]]` rendered as literal text. Measured against 7.1.6 while bringing the
   pattern repo itself onto the stack, that is wrong, and wrong in the reassuring direction: there
@@ -964,12 +1008,15 @@ Registries — TWO YAML files at the REPO ROOT, each holding only the half that 
 formats, the loaders and the inherited vocabularies are installed (see "The shared substrate"):
 
 - license-policy.yml — THERE IS NO SUCH FILE. The table ships in @galaxy-foundry/license-policy;
-  read it with bundledPolicy(). SPDX id → { policy: verbatim-ok | own-words-only, allowed_modes,
-  license_file }; unknown/missing → deny-by-default row. Adopting this deleted 268 lines of table
+  read it with bundledPolicy(). SPDX id → { name, policy: verbatim-ok | own-words-only,
+  license_file, copyleft, obligations }; unknown/missing → deny-by-default row with
+  `defect: true`. Apply the row to third-party pass-through or quoted expression;
+  `declaresVerbatimCarry(note.derived)` makes Foundry-authored own-words prose explicitly out of
+  scope. No row names a casting mode. Adopting this deleted 268 lines of table
   and two loaders from one instance, and let two test scaffolds stop planting a copy of the real
   table in their temp repos. What stays yours is license COHERENCE, which lives in your validator:
-  own-words-only must not ship a `license_file`; a note vendoring an external upstream must declare
-  one. The two instances' coherence rules genuinely differ, which is why they did not move.
+  how the note's derived posture, declared license, optional license file and any vendored source
+  must agree. The two instances' concrete rules genuinely differ, which is why they did not move.
 - reference_contract.yml — holds `kinds` ONLY, and nothing else: the reference kinds YOUR Molds
   author. used_at/load/modes/evidence come from @galaxy-foundry/reference-contract, and the loader
   refuses a file that re-declares an inherited block (and refuses a shared table that declares
@@ -1182,12 +1229,14 @@ INHERITED vs. SUPPLIED
 
 Parts 2–4 are the substrate, and they now arrive in three grades rather than one:
 
-  INSTALLED   The seven @galaxy-foundry packages. Not re-implemented, not copied, not mirrored —
-              a dependency. This is the license-policy table, the kind-manifest format and its
-              deriver, the kind CONTRACT and its assembly and routing, the four inherited
-              reference vocabularies, the meta_tags.yml format, the [[Target]] grammar, and the
-              reading shell. Standing them up is one install plus a composition point per package,
-              each keeping the signature your callers already use.
+  INSTALLED   The @galaxy-foundry capabilities this instance actually reaches. Not re-implemented,
+              copied or mirrored — dependencies selected by capability. The reader-and-contract
+              baseline is license policy, kind manifest/schema, the four inherited reference
+              vocabularies, tag-registry format, wiki-link grammar and the reading shell. Add cast
+              when a real Mold is ready to compile; add audit-citations only when scholarly-citation
+              replay belongs to the acceptance policy. Each keeps instance facts at one explicit
+              composition point. The consuming package.json and lockfile record the selected
+              versions; foundry-lib, not this checklist, owns compatible ranges.
   MECHANICAL  Re-stood-up rather than installed, because it is wiring rather than a format: the
               site/ Astro app, the one-schema-two-consumers arrangement, the types/ directory
               layout, the vitest validator, the ci.yml/deploy.yml workflows, the repo-root anchor
