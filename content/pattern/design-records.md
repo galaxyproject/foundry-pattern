@@ -1,24 +1,96 @@
 ---
 title: Design Records
-description: The documents a Foundry keeps about itself — which records every instance is expected to have, what each one owns, what it must not, and which change obliges an edit.
+description: How a Foundry keeps its own design inside the knowledge base — the content/meta contract, expected records, ownership boundaries, and change-routing index.
 section: pattern
 order: 11
 ---
 
 # Design Records
 
-A Foundry accumulates documents about *itself* — why it is shaped this way, what the code is,
-where files go, what runs and what proves the result current. These are **design records**, and
-they are notes of kind `meta`, routed and validated like every other note in the corpus.
+To ease maintenance and development, a Foundry keeps its vocabulary, architecture, content
+contracts, file ownership, and build inside the knowledge base itself. In the current Astro
+composition, that explanation lives under `content/meta/`: not as secondary project
+documentation, but as validated, navigable source inside the Foundry itself.
+
+<figure class="not-prose self-doc-map" aria-labelledby="self-doc-map-caption" data-pagefind-ignore>
+  <div class="self-doc-root">
+    <span>Self-documenting surface</span>
+    <strong><code>content/meta/</code></strong>
+    <small>Knowledge about how the knowledge base works</small>
+  </div>
+  <div class="self-doc-directory">
+    <div class="self-doc-glossary">
+      <div>
+        <span>Vocabulary authority</span>
+        <strong><code>glossary.md</code></strong>
+      </div>
+      <small>One language for readers, authors, and casts. Deliberately outside the <code>meta</code> collection.</small>
+    </div>
+    <div class="self-doc-shelves">
+      <section aria-label="Foundation records">
+        <header>
+          <span>Why</span>
+          <strong>Foundation</strong>
+        </header>
+        <p><code>architecture</code> · <code>guiding-principles</code> · <code>molds</code> · <code>mold-spec</code> · <code>casting</code> · <code>corpus</code></p>
+        <small>Rationale, commitments, and semantic boundaries</small>
+      </section>
+      <section aria-label="Infrastructure records">
+        <header>
+          <span>What · where · when</span>
+          <strong>Infrastructure</strong>
+        </header>
+        <p><code>code-architecture</code> · <code>content-model</code> · <code>build-and-validation</code> · <code>repository-layout</code></p>
+        <small>Present-tense contracts for the machinery that exists</small>
+      </section>
+    </div>
+  </div>
+  <figcaption id="self-doc-map-caption">
+    One directory, two voices, and one explicit exception. The shared names are a default map—not a limit on what an instance may document.
+  </figcaption>
+</figure>
+
+These self-documenting files are **design records**. Most are notes of kind `meta`, routed and
+validated like every other note in the corpus. The glossary is the deliberate exception: it
+shares the directory because it documents the Foundry's language, but its alphabetical structure
+and vocabulary-aware renderer give it a different contract.
 
 This page maps them. Three questions per record — **what it owns**, **what it must not**, and
 **what change obliges an edit** — answered here rather than in each record, so a change can be
 routed without opening all of them. A record may also state its own scope, or close with its own
 change trigger; where it does, the two must agree.
 
+## The directory contract
+
+A design record is about the Foundry rather than the domain the Foundry knows. It is not a Mold
+reference and is not cast into a runtime artifact merely because it lives under `content/`.
+
+The shared record shape adds three fields to the normal lifecycle envelope:
+
+```yaml
+type: meta
+title: Architecture
+record_kind: foundation  # or infrastructure
+order: 1                 # reading order within this shelf
+```
+
+The current Astro instances also require the lifecycle fields they can support honestly: status,
+creation and revision dates, revision number, summary, and tags. The collection contract is as
+important as the frontmatter:
+
+- records are flat files at `content/meta/*.md`;
+- `glossary.md` is excluded by name and rendered through its own route;
+- the design-record index sorts by shelf and then `order`; and
+- validation rejects duplicate order values within a shelf.
+
+Putting design knowledge inside the corpus does not make it infallible. It makes that knowledge
+visible, addressable, and eligible for the Foundry's schema, link, and rendering checks. A record
+cannot sit unseen in a secondary directory while a hand-maintained navigation array forgets it
+exists.
+
 ## The two shelves
 
-Every design record declares a `record_kind`, and both instances use the same two values. The
+Every design record declares a `record_kind`, and the current instances use the same two values. The
 field sorts a reading order, but it is doing something more useful than that: it is a **voice
 contract**.
 
@@ -32,13 +104,13 @@ reliable tell is an `infrastructure` record that argues, or a `foundation` recor
 a dispatch table and a directory listing.
 
 Reading order within a shelf is instance-owned. `order` is pedagogical, it does not transfer
-between Foundries, and only its uniqueness within a shelf is contractual — both instances test
-for that.
+between Foundries, and only its uniqueness within a shelf is contractual — each current instance
+tests for that.
 
 ## The core records
 
-Both instances carry these under the same name. Each has one purpose and can say what it does
-not own.
+The current instances carry these under the same name. Each has one purpose and can say what it
+does not own.
 
 **`architecture.md`** · foundation · *the map*. Owns the system map, top-level boundaries,
 architectural invariants, and the route to every focused record. Owns no detail a focused record
@@ -61,10 +133,10 @@ source layout, which companion files may sit beside the note, and who enforces e
 which Molds exist, nor how casting consumes the contract. Update it when a frontmatter field,
 companion rule, or reference field changes.
 
-**`casting.md`** · foundation. Owns source-to-artifact semantics: per-kind dispatch, the
-provenance contract, and the boundary between what is deterministic and what a model produces.
-Does not own the authoring contract, where bundles land, or the gate commands. Update it when a
-reference kind, dispatch behavior, provenance field, or the determinism boundary changes.
+**`casting.md`** · foundation. Owns deterministic source-to-artifact semantics: per-kind dispatch
+and the provenance contract. Does not own the authoring contract, where bundles land, or the gate
+commands. Update it when a reference kind, dispatch behavior, provenance field, or deterministic
+assembly rule changes.
 
 **`corpus.md`** · foundation. Owns how external evidence grounds the Foundry without being
 mirrored into it, and which integration is deliberately absent. Does not own what any individual
@@ -123,7 +195,7 @@ The reverse direction, which is the one asked most often. Find the change, edit 
 | added a generator or a check mode | build and validation |
 | added a CI gate | build and validation |
 | added a reference kind | casting **and** the Mold spec |
-| changed the deterministic/model boundary | casting |
+| changed deterministic casting behavior | casting |
 | authored a new Mold | nothing — the corpus lists it. Only a new bucketing axis or a change of direction touches the Mold record |
 | added a Mold companion file kind | the Mold spec |
 | added a top-level directory | repository layout *(+ the map, if it is a new boundary)* |
@@ -136,19 +208,47 @@ A change that fits two records usually belongs in the more specific one, with a 
 other. A change that fits none is evidence for a new record — add it, and say so in the map
 rather than growing the map to absorb it.
 
+## Keep the map current
+
+A self-documenting Foundry makes documentation maintenance part of the change path:
+
+1. Route the change through the index above.
+2. Edit the one record that owns the claim; link from neighboring records instead of duplicating
+   it.
+3. Run the corpus, schema, link, generated-surface, and site checks the instance defines.
+4. Review changed records for scope, voice, stale paths, and claims the implementation no longer
+   supports.
+
+This repository ships that last pass as the **`review-design-docs`** skill in the
+[`foundry-review` plugin](https://github.com/galaxyproject/foundry-pattern/tree/main/plugin). Give it
+a record path to review one record, no target to review changed records, or `all` for a sweep. If a
+code change touches no record, the skill inverts this map and reports which record should probably
+have changed. In Claude Code it is exposed as `/foundry-review:review-design-docs`; in Codex it is
+selectable as `$review-design-docs` after installing the plugin.
+
+The review is not a correctness oracle for the system. It checks whether design knowledge landed
+in the right place, uses the right register, and still tells the truth about cheaply verifiable
+commands, paths, packages, and checks.
+
 ## An open contract
 
 The core records are not the whole set and are not meant to be. Any number of further `meta`
 records may appear — for a domain concern, for a piece of machinery, for a decision that kept
-getting re-argued — and they need no permission from this page. A third Foundry will want records
-neither current instance has; [[anatomy-of-an-instance]] is where what varies by domain is set
-out.
+getting re-argued — and they need no permission from this page. Future Foundries will want records
+the current instances do not have; [[anatomy-of-an-instance]] is where what varies by domain is
+set out.
 
-Two constraints apply to all of them. A record may describe a **commitment** before the machinery
-exists, provided it says which parts are deferred: `casting.md` is a core record in an instance
-that has no caster, no cast tree, and no bundle. What no record may do is describe absent
-machinery as though it runs — and a record that can only be written by inspecting something built
-waits until that thing is built.
+### Honest gaps are architecture
+
+A record may describe a **commitment** before the machinery exists, provided it says which parts
+are deferred. The Statistical Genomics Foundry's build record describes the checks and generators
+that run today; its casting record opens by saying that no caster, cast tree, or bundle exists.
+Those statements do not conflict. Together they keep a designed boundary from masquerading as
+shipped machinery.
+
+Use present tense only for behavior a contributor can inspect or run. A record that can only be
+written by inspecting something built waits until that thing is built. When deferred machinery
+becomes real, update its focused record and every architecture-level claim that named the gap.
 
 Some records from the current instances, and what makes each one earn its place:
 
@@ -176,15 +276,32 @@ Some records from the current instances, and what makes each one earn its place:
   record, because its check is a deterministic CLI validator already described by its principles
   and its build-and-validation record. Ask whether the check is described somewhere findable, not
   whether it has its own file.
-- **A positioning or prior-art record** — both instances keep one, under different names and on
+- **A positioning or prior-art record** — the current instances keep one, under different names and on
   different shelves. It is where *what this is not* gets written down once, so the boundary is
   not re-argued in every other record.
 
+## Start here
+
+For a new Astro-based instance:
+
+1. Create the authoritative `content/meta/glossary.md` and exclude it explicitly from the `meta`
+   collection.
+2. Define the flat-file `meta` kind and render its two shelves.
+3. Seed the short architecture map and the four infrastructure records once enough machinery
+   exists to describe them honestly.
+4. Add foundation records as the corpus, Mold contract, casting boundary, and principles take
+   shape.
+5. Put each new recurring design concern in one focused record, then link it from the architecture
+   map rather than stretching the map to contain its details.
+
+The concrete schemas, routes, and validation hooks belong to
+[[standing-up-a-foundry|Build with the Astro Stack]].
+
 ## How to read this
 
-At N=2 the honest claim is narrow. What both instances converged on independently is the
-**split** — one purpose per record, every record able to name what it does not own — and the
+The honest claim from the current evidence is narrow. What the current instances converged on is
+the **split** — one purpose per record, every record able to name what it does not own — and the
 routing of design records into the corpus as a validated kind. The architecture names above are a
 shared *default* rather than a proven taxonomy: adopt them so a contributor can move between
-Foundries without relearning where to look, and where your domain has a concern they do not
-cover, add a record and say so in the map.
+Foundries without relearning where to look, and where your domain has a concern they do not cover,
+add a record and say so in the map.

@@ -62,7 +62,7 @@ The payoff is one surface serving both readers a Foundry has. A human reads the 
 
 **Goal.** Make the knowledge source inspectable by people and structured enough for tooling to validate.
 
-**Produce.** Establish a content tree that renders as a navigable site. Keep the glossary authoritative; add focused design records for architectural decisions; place documentation and an example beside each knowledge kind; and generate catalogs for inventories that would go stale if repeated by hand. Use one link grammar and resolution map for both rendering and validation so the site and its checks cannot disagree about what a reference means.
+**Produce.** Establish a content tree that renders as a navigable site. Keep the glossary authoritative; add focused design records for architectural decisions; place documentation and an example beside each knowledge kind; and generate catalogs for inventories that would go stale if repeated by hand. Use one link grammar and resolution map for both rendering and validation so the site and its checks cannot disagree about what a reference means. See [[design-records]] for the shared self-documentation pattern.
 
 **Done when.** A new contributor can find the vocabulary, content contracts, examples, and ownership boundaries from inside the knowledge base. Broken references, invalid frontmatter, and stale generated surfaces fail a repeatable check rather than remaining editorial suggestions. The result should already be useful to a human reader before it can produce a runtime artifact.
 

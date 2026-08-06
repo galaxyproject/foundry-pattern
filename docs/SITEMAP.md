@@ -25,7 +25,7 @@ Home  ............................. the bet in one breath + three doors
 │       ├── Astro-Stack Glossary .. vocabulary introduced by the implementation
 │       ├── Kind Catalog .......... generated content-kind contracts
 │       ├── Tag Catalog ........... generated controlled vocabularies
-│       ├── Design Records ........ ownership and change boundaries
+│       ├── Design Records ........ self-documenting content/meta contract and routing index
 │       └── Glossary .............. the pattern's canonical terms
 │
 ├── 2. THE CASE  ................. the argument
