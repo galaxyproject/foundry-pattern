@@ -14,6 +14,13 @@ partly re-stood-up as known machinery, a split "The shared substrate" below draw
 closing section grades. Then the rest of the domain knowledge (Parts 5–8: corpus, Molds, the
 external check, composition), which only your domain can supply.
 
+Do not read Parts 2–4 as one all-at-once site launch. The first reviewable loop is deliberately
+small: the glossary, one explicit collection row, one kind with one real note, one content-reader
+binding, the shared shell/frame, a built-output contract, and CI running a frozen install plus that
+contract. Expand the taxonomy only after this slice proves its routes, links, emitted styles and
+search coverage. A third instance used exactly this loop to find stale reader instructions without
+committing itself to every proposed kind.
+
 
 PART 1 — DEFINE THE VOCABULARY FIRST
 
@@ -105,8 +112,8 @@ REFERENCE STACK  (toolchain versions checked 2026-08-06 — bump coupled peers t
 
 THE SHARED SUBSTRATE — INSTALL IT, DO NOT COPY IT
 
-The baseline reader-and-contract substrate has seven pieces that are not yours to author. Both
-existing instances wrote each of them
+The baseline reader-and-contract substrate has eight pieces that are not yours to author. The first
+two instances wrote each of them
 independently, and comparing the results found the same thing twice in three different ways. Some
 were one file living in two places — the kind-manifest reader and deriver were character-for-
 character identical apart from quote style, test suites included; the license table differed only
@@ -120,7 +127,7 @@ PURPOSE, one value at a time, over several passes — the container measure, the
 the active-link treatment, a copyright year. Every one of those turned out to be an artifact of the
 copy rather than a decision either instance had taken. That is a third kind of evidence, and the
 most actionable: the disagreements were not defensible, and finding that out is what made the piece
-movable. All three findings argue for the same fix. The seven baseline capabilities now ship from
+movable. All three findings argue for the same fix. The eight baseline capabilities now ship from
 jmchilton/foundry-lib under the @galaxy-foundry scope. Use its Getting Started guide and package
 metadata when your instance reaches each capability:
 
@@ -129,9 +136,12 @@ metadata when your instance reaches each capability:
                                       and the LAYOUT vocabulary a manifest carries
   @galaxy-foundry/kind-schema         the kind contract: what a kind IS, how one is assembled,
                                       path→kind routing, the kind.md loader, the companion check
+  @galaxy-foundry/content-reader      collection-backed file selection, note ids, wiki-link map
+                                      registration, and parsed/raw Markdown link binding
   @galaxy-foundry/reference-contract  the four behavior vocabularies every instance inherits
   @galaxy-foundry/site-kit            the reading shell, reference view and the behavior contracts
-                                      for navigation, theme state, search and deployment base
+                                      for navigation, note framing, tags, theme state, search and
+                                      deployment base
   @galaxy-foundry/tag-registry        the meta_tags.yml format and its accessors
   @galaxy-foundry/wiki-links          the [[Target]] grammar, path/term slugging, exact resolver,
                                       parsed- and raw-Markdown transforms
@@ -195,6 +205,15 @@ have either a dependency dictating your domain or a copy that drifts:
                       registry, the other spreads one field and hands kinds a license table), so
                       `KindDefinition` is generic over it and you alias the parameter away once.
                       Ships no collection TABLE either — that names your directories.
+  content-reader      Ships the collection-backed filesystem walk, note ids, wiki-link map
+                      registration, and parsed/raw Markdown transforms as ONE composition. You
+                      keep the collection table, content path, route targets, extra loose targets,
+                      and the vocabulary that makes a note addressable by aliases. Frontmatter is
+                      read only when aliases or metadata-bearing targets opt in. The package owns
+                      applying those aliases and its deterministic collision rules; the instance
+                      does not rebuild the walk in order to learn its own vocabulary.
+                      Ships no Astro collection exports or schemas. Keep those explicit so
+                      `entry.collection` continues to discriminate precise frontmatter types.
   reference-contract  Ships used_at / load / modes / evidence. You keep `kinds` — exactly the half
                       that varies by domain. Inherit the four whole: a term you have not used YET
                       is inheritance, not drift. `modes` ships exactly two deterministic placement
@@ -205,9 +224,9 @@ have either a dependency dictating your domain or a copy that drifts:
                       dead-vocabulary check.
   site-kit            Ships the shared MARKUP, behavior-critical component styles and the rules
                       inside them — active navigation, pre-paint theme state, Pagefind body
-                      coverage, overflow behavior, the reference-contract view, and deployment
-                      base handling. You keep the IDENTITY: both names, the description, the
-                      repository, the list of
+                      coverage, overflow behavior, the invariant ContentNote frame, TagChips, the
+                      reference-contract view, and deployment base handling. You keep the
+                      IDENTITY: both names, the description, the repository, the list of
                       destinations, and how many of them fit on the bar before the rest go under
                       "More". That last one is a number set by measurement, not taste — one
                       instance's wordmark is 75px and the other's 279px, so one bar holds five
@@ -234,13 +253,10 @@ have either a dependency dictating your domain or a copy that drifts:
                       target/tool/cli, another by family/role/domain — and there is no useful
                       subset to inherit.
   wiki-links          Ships the grammar, path and term slugging, the resolver, and parsed- and
-                      raw-Markdown walks. Use `fileSlug` for the path side of a note address and
-                      `slugify` for the authored-target side so the two halves cannot drift.
-                      Ships NO LINK MAP: which
-                      notes exist and what each is addressable by is your data. One instance keys
-                      by basename plus a Mold's `name` plus a `tool command` pair, another by a
-                      dashed collection id, the pattern site by a filename with its ordering
-                      prefix stripped.
+                      raw-Markdown walks. It ships NO LINK MAP by itself: which notes exist and
+                      what each is addressable by is instance data. content-reader owns registering
+                      that data for collection-backed sites; a lower-level direct consumer uses
+                      `fileSlug` and `slugify` so the path and authored-target halves cannot drift.
   cast                Ships `castMold`, cast-contract parsing, the generic skill-document shape,
                       deterministic placement/reconciliation and provenance. You keep the kind
                       declarations, target policy, slug map and hooks: domain skill sections,
@@ -266,7 +282,7 @@ files untouched. Re-export only a TYPE a caller must name to build an options ob
 re-exporting the package's whole API is a name list that drifts from the package's, and one more
 place to look.
 
-SIX THINGS THAT WILL BITE:
+SEVEN THINGS THAT WILL BITE:
 
 - A package can install correctly and still not work, if something other than the module resolver
   has to find its files. site-kit is the case in this set: Tailwind does not scan node_modules, so
@@ -311,6 +327,12 @@ SIX THINGS THAT WILL BITE:
 - A caret on a 0.x version does not cross a minor. `^0.3.0` will not take 0.4.0, so every substrate
   range moves BY HAND on a minor release; there is no `pnpm update` that will do it for you, and
   nothing fails while it is not done — you keep the old package.
+- A local package link can survive the release it was waiting for. Before a consumer PR leaves a
+  worktree, remove its `overrides` and every `link:` resolution, regenerate the affected lockfile
+  from the published range rather than editing a resolution by hand, then run
+  `pnpm install --frozen-lockfile` and inspect `pnpm list --depth 0`. The manifest naming a release
+  while node_modules or the lockfile still names a sibling worktree is not published-package
+  adoption; it is a build whose success depends on a directory outside the repository.
 - If your repo is a WORKSPACE, state ONE version of each package across every member. A range that
   admits the current release does not mean the lockfile resolved it: one instance had two copies of
   kind-schema installed at once — 0.3.0 where a `^0.3.0` range asked for it, 0.2.0 where an older
@@ -327,22 +349,20 @@ the other one — Part 3 says why that gap is honest), the kind schemas (only `m
 are common to both instances at all, and even those differ threefold in size), and the license
 coherence rules above.
 
-Three more, now that the shell has gone the other way and the contrast is legible:
+Three boundaries are now clearer because the shared reader has been exercised by three instances:
 
-  the link map        Declined on purpose, and named as such in the package that could have taken
-                      it. What a note is addressable BY is domain — one instance keys by basename
-                      plus a Mold's name plus a tool/command pair, the other by a dashed id.
-  the note components The things that render a Mold's phases or a paper's provenance are domain,
-                      and the two corpora are different shapes. This row used to read "22 files and
-                      3,290 lines against 2 and 85, no name in common", which OVERSTATED it: one
-                      instance put per-type rendering in components behind one route and the other
-                      put it in the routes, so a count of components was partly measuring where the
-                      code sat. The components are still yours. The route that CHOOSES among them
-                      is not, and has since converged.
+  link vocabulary     What a note is addressable BY is domain — one instance adds a Mold's name
+                      and a tool/command pair, another needs only its primary id. The instance
+                      supplies that alias vocabulary; content-reader owns walking the admitted
+                      notes, registering the addresses once, and applying collision precedence.
+  domain furniture    ContentNote owns the invariant frame and TagChips owns the shared tag markup.
+                      The things that render a Mold's phases, a paper's provenance, or a package's
+                      software facts remain domain. They enter the frame through slots rather than
+                      by copying the frame into one component per kind.
   the palette         Six custom properties and three class names, which the shell now NAMES
                       without shipping. Genuinely an instance's, and the one piece of the reading
-                      surface where nothing yet checks that both halves agree — a token an
-                      instance forgets to define renders unstyled rather than failing.
+                      surface where a token an instance forgets renders unstyled rather than
+                      failing. Assert the package's style-gap helpers against emitted CSS.
 
 If you are the third instance, the parts where you diverge are evidence about the substrate;
 report them rather than papering over them.
@@ -490,40 +510,32 @@ that a note is well-formed.
     If your tests live inside the Vite root, exclude them — `@source not "../../tests"` — or the
   test that names the canary is what puts the class in the CSS, and it cannot fail. One instance
   found that by deleting the class from the layout and watching the assertion pass.
-- The PALETTE stays yours. The kit ships no CSS; it names custom properties and classes your
-  stylesheet defines. Nothing checks that you defined them all, so a token you forget renders as
-  an unstyled element rather than an error.
-- The components that render your NOTES are yours. The nearest pair the two instances have — the
-  box that surfaces a note's provenance and license — takes a note entry plus the link map in one
-  and eleven flat fields in the other, because one instance authors its corpus and the other
-  derives it from books and papers it must attribute. That is domain, and it should stay split.
-    DO NOT READ IT AS "NOTHING HERE IS SHARED", and be careful how you measure. The count that used
-  to stand here — 22 components against 2, no name in common — was comparing a repo that renders
-  per note TYPE from components against one that rendered per COLLECTION from routes. Same job,
-  different place, and a diff of component names reports that as no overlap at all.
-    Both instances render a tag chip linking to `<base>/tags/<tag>/`, which was plainly the same
-  problem twice, and neither had converged with ITSELF: `.tag` named the chip in one repo and a
-  provenance pill — source, version, license — in the other, whose chips were inline utilities
-  touching `.tag` never. One rendered the same chip two ways, the class on a nested span in one
-  place and on the anchor in the other, which is a different hover for one thing.
-    Both are one rule now, in each stylesheet, and the interesting part is where it did NOT go. Not
-  into the shell's package, which ships no chip concept: converging two instances is not the same
-  act as extracting from them, and doing the first buys you the right to ask the second. Ask it
-  separately every time.
-  Convergence is a PRECONDITION, not a consequence: settle what a name means inside each repo, make
-  each repo agree with itself, and only then compare across them. A shared component chosen from
-  among live disagreements is one instance's accident, promoted.
-    Size is the other half of the judgement. A tag chip is one line of markup and an href; the shell
-  was some 250 lines across three files with a derivation rule worth fourteen tests. Duplication is
-  necessary evidence for extracting something, never sufficient.
-- Resolve wiki-links ([[Target]]) with @galaxy-foundry/wiki-links, in BOTH the renderer and the
-  validator. The package owns the grammar, the exact resolver and the tree walk; you supply the
-  MAP — a thin src/lib/wiki-links.ts adapter returning whatever shape your callers already pass
-  around, and a `resolve` callback for the remark transform. "Never encode the link rules twice"
-  was the instruction here before, and it did not hold: one instance carried THREE byte-identical
-  copies of `slugify` and four more hand-rolled [[...]] regexes, with everything around them
-  drifted — strict vs. naive bracket stripping, deterministic vs. insertion-order resolution.
-  Two rules the package settles, both worth knowing before you are tempted to re-litigate them:
+- The PALETTE stays yours. The kit ships structural component styles but no complete global theme;
+  it names custom properties and global classes your stylesheet defines. A token you forget
+  renders as an unstyled element rather than an error, so use the package's style-gap helpers on
+  emitted CSS.
+- Use site-kit's `ContentNote` for the invariant note frame and `TagChips` for tag markup. The frame
+  owns back navigation, metadata/badge/reference slots, tag placement, optional heading and
+  summary, and the article boundary. Pass a based `tagBase` only after the instance has a tag route;
+  without one, the same component renders controlled non-link chips rather than claiming a dead
+  destination. Domain furniture stays yours: a Mold's phases, a paper's provenance, or a package's
+  software facts enter through slots and never require the shared component to inspect frontmatter.
+- Bind the collection-backed reader ONCE in site/src/lib/content-reader.ts with
+  `createContentReader({ collections: COLLECTIONS, contentPath, targetOf, aliases? })`. The package
+  composes kind-schema's collection matching with wiki-links' transforms, so note-file selection,
+  ids, link-map registration, remark links and raw-Markdown resolution all read the same table.
+  Do not walk the corpus or parse frontmatter in a caller to build aliases: return the instance's
+  alternate addresses from `aliases(meta, id, collection)`, and use the same optional `meta` in
+  `targetOf` when route targets need summary tooltips. Readers with neither requirement retain the
+  directory-only path.
+    Collection declaration order is contractual when two primary basenames collide; aliases fill
+  empty addresses and never overwrite primaries; explicit extra targets apply last. Only files
+  admitted by the collection table become note targets, so companions cannot acquire links to
+  routes that do not exist. Keep these rules in the package and its tests; the instance supplies
+  the vocabulary and the acceptance policy for unresolved links.
+- Resolve wiki-links ([[Target]]) through that reader in BOTH the renderer and the validator. The
+  underlying wiki-links package owns the grammar, exact resolver and tree walk. Two rules it
+  settles are worth knowing before you are tempted to re-litigate them:
     * RESOLUTION IS EXACT — no prefix fallback. Measured over ~4,200 links in two corpora, exactly
       two resolved by prefix alone and both were bugs: `[[...]]` slugifies to the empty string,
       which prefixes every key, and landed on an arbitrary note out of 264; a deliberate glob
@@ -536,9 +548,10 @@ that a note is well-formed.
       scanning, so a backticked link naming a note that never existed renders as dead monospace
       and is reported by nothing — both surfaces blind at once. One instance accumulated 63 of
       them across 12 files. Put the rule in your authoring guide, not just in the transform.
-- Render explicit loose docs that live OUTSIDE any collection (the glossary, an ops log) through the
-  shared helper src/lib/render-vault-doc.ts (resolves [[links]], renders via src/lib/marked.ts,
-  injects #term anchors) from a dedicated page — e.g. site/src/pages/glossary.astro reading
+- Render explicit loose docs that live OUTSIDE any collection (the glossary, an ops log) through a
+  small local src/lib/render-vault-doc.ts composition: `contentReader.resolveMarkdown` supplies the
+  same link map as typed notes, then the instance's Markdown renderer and term-anchor transform
+  finish the document. Call it from a dedicated page — e.g. site/src/pages/glossary.astro reading
   content/meta/glossary.md. Exclude each one BY NAME from the collection that otherwise claims its
   directory; sharing `content/meta/` is a filing decision, not a reason for every file there to
   bypass validation. `content/meta/*.md` is a validated `meta` collection, with only the named
@@ -893,12 +906,17 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   directory holding two kinds (`cli/<tool>/index.md` is a cli-tool, `cli/<tool>/<cmd>.md` is a
   cli-command — note the `!`-exclusion that keeps them disjoint), and two collections resolving to
   one kind (a browse route that wants its own URL without inventing a kind for it).
-  Astro's site/src/content.config.ts then stays a thin consumer: it walks the table into
-  defineCollection() calls with a glob loader per row, and nothing else. Every OTHER consumer —
-  the validator's corpus walk, the registry-drift check, the wiki-link map — matches against the
-  same rows with the package's `matchesCollection` / `collectionOf` / `kindOf`, rather than
-  hand-rolling `**/index.md` a fourth time. One instance had exactly four hand-rolled copies of
-  that selector, two of them character-identical `walkIndexFiles` helpers in adjacent test files.
+  Astro's site/src/content.config.ts then stays a thin, EXPLICIT consumer. Bind each table row to a
+  named `defineCollection({ loader: glob(...), schema: row.schema })` export and spell those names
+  out in `collections`. Do not map the table through `Object.fromEntries`: Astro preserves the
+  precise frontmatter type of each collection only when the schema-bearing entries remain explicit;
+  a generic loop widens them to their common shape and can turn the detail route's discriminated
+  union into `any` without a typecheck failure.
+    Every OTHER consumer — the validator's corpus walk, registry drift and wiki-link binding —
+  reads the same rows through content-reader or kind-schema's `matchesCollection` /
+  `collectionOf` / `kindOf`, rather than hand-rolling `**/index.md` a fourth time. One instance had
+  exactly four hand-rolled copies of that selector, two of them character-identical
+  `walkIndexFiles` helpers in adjacent test files.
   Two things to get right. `base` is matched as a PLAIN PREFIX of the paths you pass in, so the
   frame is yours to pick — repo-relative, project-relative, absolute — but it must be the SAME
   frame as the paths and the same frame for EVERY row, or a collection silently claims nothing.
@@ -1231,20 +1249,22 @@ Parts 2–4 are the substrate, and they now arrive in three grades rather than o
 
   INSTALLED   The @galaxy-foundry capabilities this instance actually reaches. Not re-implemented,
               copied or mirrored — dependencies selected by capability. The reader-and-contract
-              baseline is license policy, kind manifest/schema, the four inherited reference
-              vocabularies, tag-registry format, wiki-link grammar and the reading shell. Add cast
-              when a real Mold is ready to compile; add audit-citations only when scholarly-citation
-              replay belongs to the acceptance policy. Each keeps instance facts at one explicit
-              composition point. The consuming package.json and lockfile record the selected
-              versions; foundry-lib, not this checklist, owns compatible ranges.
+              baseline is license policy, kind manifest/schema, the collection-backed content
+              reader, the four inherited reference vocabularies, tag-registry format, wiki-link
+              grammar and the reading shell/frame. Add cast when a real Mold is ready to compile;
+              add audit-citations only when scholarly-citation replay belongs to the acceptance
+              policy. Each keeps instance facts at one explicit composition point. The consuming
+              package.json and lockfile record the selected versions; foundry-lib, not this
+              checklist, owns compatible ranges.
   MECHANICAL  Re-stood-up rather than installed, because it is wiring rather than a format: the
               site/ Astro app, the one-schema-two-consumers arrangement, the types/ directory
               layout, the vitest validator, the ci.yml/deploy.yml workflows, the repo-root anchor
               and the test that enforces it.
   YOURS       The halves the packages deliberately decline. Which kinds exist and what each
-              requires; your facet vocabulary; your reference `kinds`; your link map; your
-              license COHERENCE rules; your base envelope, ported honestly; your site's identity
-              and its palette; and the components that render your notes.
+              requires; your facet vocabulary; your reference `kinds`; your link aliases, routes
+              and unresolved-link policy; your license COHERENCE rules; your base envelope, ported
+              honestly; your site's identity
+              and its palette; and the domain furniture rendered inside the shared note frame.
 
 The middle grade is where the next packages come from. If you find yourself writing something in
 the MECHANICAL column for the second time in a second instance, that is the signal — and only the

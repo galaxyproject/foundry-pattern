@@ -79,7 +79,7 @@ page is canonical for what those packages can truthfully own.
       <tr>
         <th scope="row">Knowledge Base (KB)</th>
         <td>Astro renders the content tree; the instance supplies identity, routes, corpus, and visual contract.</td>
-        <td><a href="https://jmchilton.github.io/foundry-lib/#/architecture/site-kit-runtime"><code>site-kit</code> runtime</a></td>
+        <td><a href="https://jmchilton.github.io/foundry-lib/#/architecture/content-reader-boundary"><code>content-reader</code> boundary</a></td>
       </tr>
       <tr>
         <th scope="row">Mold (typed actions)</th>
