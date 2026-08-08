@@ -35,6 +35,12 @@ const startHere = [
   },
 ];
 
+const bioinformatics = {
+  ...patternPage("foundries-for-bioinformatics"),
+  summary:
+    "Connect scientific sources to typed knowledge, executable environments, portable packaging, citation evidence, and a domain-specific correctness check.",
+};
+
 const buildOne = [
   {
     ...patternPage("anatomy-of-an-instance"),
@@ -153,6 +159,23 @@ const reference = [
           </li>
         ))}
       </ol>
+    </section>
+
+    <section class="domain-lens" aria-labelledby="domain-lens-title">
+      <div class="domain-context">
+        <p class="section-label">A domain profile</p>
+        <h2 id="domain-lens-title">Build for scientific work</h2>
+        <p>
+          This is the concrete route for readers working with papers, software,
+          reproducible environments, packaging, and scientific evidence.
+        </p>
+      </div>
+      <a class="domain-link" href={bioinformatics.href}>
+        <span class="audience-label">For bioinformatics + research software</span>
+        <strong>{bioinformatics.title}</strong>
+        <span>{bioinformatics.summary}</span>
+        <span class="domain-cta">Read the domain profile <span aria-hidden="true">&rarr;</span></span>
+      </a>
     </section>
 
     <div class="secondary-sections">
@@ -287,6 +310,7 @@ const reference = [
   .primary-action:focus-visible,
   .text-action:focus-visible,
   .route-list a:focus-visible,
+  .domain-link:focus-visible,
   .link-list a:focus-visible,
   .reference-list a:focus-visible {
     outline: 2px solid var(--glow);
@@ -523,6 +547,93 @@ const reference = [
     transform: translateX(3px);
   }
 
+  .domain-lens {
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(20rem, 1.22fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+    margin: clamp(2.5rem, 6vw, 5rem) 0;
+    padding: clamp(1.6rem, 4vw, 2.75rem);
+    background:
+      linear-gradient(90deg, rgba(226, 85, 43, 0.07), transparent 52%),
+      var(--soot);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--ember);
+    border-radius: 0.7rem;
+  }
+
+  .domain-context h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+  }
+
+  .domain-context > p:last-child {
+    max-width: 34rem;
+    margin-top: 0.9rem;
+    color: var(--ash);
+    font-size: 1rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .domain-link {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: clamp(1.35rem, 3vw, 2rem);
+    color: inherit;
+    text-decoration: none;
+    background: var(--iron);
+    border: 1px solid var(--rule);
+    border-radius: 0.55rem;
+    transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+  }
+
+  .domain-link:hover {
+    background: var(--graphite);
+    border-color: var(--ember);
+    transform: translateY(-2px);
+  }
+
+  .audience-label {
+    display: inline-block;
+    padding: 0.24rem 0.48rem;
+    color: var(--glow);
+    background: rgba(226, 85, 43, 0.11);
+    border: 1px solid rgba(226, 85, 43, 0.36);
+    border-radius: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .domain-link strong {
+    margin-top: 0.45rem;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 2.7vw, 2rem);
+    font-weight: 600;
+  }
+
+  .domain-link > span:nth-of-type(2) {
+    color: var(--ash);
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .domain-cta {
+    align-self: end;
+    margin-top: auto;
+    padding-top: 1.4rem;
+    color: var(--link);
+    font-family: var(--font-display);
+    font-size: 0.86rem;
+    font-weight: 600;
+  }
+
   .secondary-sections {
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
@@ -610,6 +721,7 @@ const reference = [
     }
 
     .section-heading,
+    .domain-lens,
     .secondary-sections {
       grid-template-columns: 1fr;
     }
@@ -657,6 +769,7 @@ const reference = [
     .text-action,
     .route-list a,
     .route-arrow,
+    .domain-link,
     .link-list a,
     .reference-list a {
       transition: none;

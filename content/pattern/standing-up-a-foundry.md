@@ -2,7 +2,7 @@
 title: "Build with the Astro Stack"
 description: Compose domain-owned knowledge, instance policy, Astro, and the shared Foundry packages into one concrete implementation, pressure-tested across three Foundries.
 section: pattern
-order: 7
+order: 8
 instructions: pattern/standing-up-a-foundry.instructions.txt
 ---
 

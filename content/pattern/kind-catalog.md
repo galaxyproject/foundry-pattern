@@ -2,7 +2,7 @@
 title: Kind Catalog
 description: Every content kind the three Foundries define, with required metadata generated from each instance's own schemas — universal kinds together, non-universal kinds made explicit.
 section: pattern
-order: 9
+order: 10
 catalog: kinds
 ---
 
