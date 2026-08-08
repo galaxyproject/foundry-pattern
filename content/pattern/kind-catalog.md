@@ -81,10 +81,10 @@ Three things that declaration makes visible for the first time:
   acquisition files sit at the *book* level, one directory above the chapter that is the note, so
   declaring the chapter open would have claimed unboundedness where the truth is those files
   belong to a container that is not a note at all.
-- **The declaration is load-bearing, not documentation.** One instance's casting pipeline kept a
-  hand-written list of files a skill artifact may never carry; it named two of the eight its kinds
-  declare. Deriving that list from the dispositions instead is what turned the metadata this page
-  reports into something a check answers to — and the size of the gap is the argument for it.
+- **The declaration is load-bearing, not documentation.** Validation reads it to check the note
+  directory, catalogs read it to report the layout, and casting reads the same declaration to copy
+  fixed `bundled` companions while keeping `foundry-only` and `cast-input` files out. No target or
+  note restates that fixed membership.
 
 Each substrate kind below carries a companion table with one row per file and one column per
 instance, reading *requirement · disposition*. A file both instances declare at the same

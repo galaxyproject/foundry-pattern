@@ -225,11 +225,13 @@ have either a dependency dictating your domain or a copy that drifts:
                       that data for collection-backed sites; a lower-level direct consumer uses
                       `fileSlug` and `slugify` so the path and authored-target halves cannot drift.
   cast                Ships `castMold`, cast-contract parsing, the generic skill-document shape,
-                      deterministic placement/reconciliation and provenance. You keep the kind
-                      declarations, target policy, slug map and hooks: domain skill sections,
-                      non-verbatim renderers, extra bundle files, aliases and external checks.
-                      Errors and drift return as values; your caller decides how they affect the
-                      process. Do not disguise instance vocabulary as substrate.
+                      Kind-layout companion expansion, deterministic placement/reconciliation and
+                      provenance. You keep the kind declarations, target policy, corpus index and
+                      hooks: domain skill sections, non-verbatim renderers, extra bundle files and
+                      external checks. Pass the Kind table as `kindLayouts`; do not translate it
+                      into another companion policy. Errors and drift return as values; your
+                      caller decides how they affect the process. Do not disguise instance
+                      vocabulary as substrate.
   audit-citations     Ships one replayable scholarly-citation audit and its strict wire formats.
                       You keep source selection, trusted hosts, artifact kinds and the acceptance
                       gate. It is experimental; its citation-specific candidates and verdicts are
@@ -621,24 +623,25 @@ wants to know what a Mold is opens types/mold/ rather than scrolling a 400-line 
   `disposition` is ONE axis — whether the file reaches a skill artifact. `foundry-only` never
   leaves (eval, scenarios). `cast-input` means the caster READS it and it does not appear in the
   output (rendering metadata or a placement manifest). `bundled` is copied in (a vendored schema).
-  Derive target exclusions from these declarations rather than restating names in target config.
-  Across kinds, a name declared `bundled` anywhere remains bundle-eligible, and a file legally
-  claimed by a reference is exempt from companion-only exclusion.
+  The caster reads the referenced note's Kind layout and carries fixed `bundled` companions
+  automatically. Derive target exclusions from the same declarations rather than restating names
+  in target config. A file's presence in the directory does not make it eligible; the declaration
+  does.
 - COMPANIONS DESCRIBE LAYOUT, NOT DEPENDENCIES. If a companion declaration starts growing
   `used_at` / `load` / `mode`, it has turned into a second reference contract, and the answer is a
   `references:` entry instead. Worth watching precisely because both sides can be described as
   "a file this note needs" — the difference is that a companion says where a file SITS and a
   reference says what a note DRAWS ON.
-- WHAT MAY SIT BESIDE A NOTE AND WHAT A NOTE CARRIES INTO A CAST ARE TWO QUESTIONS, and only the
-  first is the kind's. It is tempting to collapse them once the kind knows the layout — the
-  directory listing is right there, so why should a note declare anything? Because the answer to
-  the second question decides what reaches a SKILL BUNDLE, and deriving it from the listing means a
-  file ships because of where somebody saved it. What a note carries is DECLARED, never inferred.
-  The two lists coexist without duplicating because they
-  answer different questions: the kind's list is names in one directory and is about layout; the
-  note's is paths (its own subdirectories included) and is about membership. Reject `..` in the
-  second one — a character class permissive enough for filenames admits it as a whole segment, and
-  a note that can name `../` can bundle a file it does not own.
+- FIXED COMPANION MEMBERSHIP BELONGS TO THE KIND. A referenced directory note carries exactly the
+  fixed companions whose disposition is `bundled`; `foundry-only` and `cast-input` cannot be
+  reclassified by note metadata. This is not inference from the directory listing: the Kind names
+  each eligible file, and validation separately checks whether the directory satisfies that
+  declaration. Missing required companions remain refs so the cast reports the missing source;
+  absent recommended or optional companions are skipped.
+  An open Kind (`additionalCompanions: 'allow'`) may let a note enumerate additional bundle members
+  in a per-note `companions:` field. Those are additions only. Reject absolute paths and `..`, and
+  recurse declared directories into one provenance entry per file. A closed Kind accepts no
+  per-note additions. Do not add a second `companions` permission to `reference_contract.yml`.
 - A LAYOUT DECLARATION SAYS A FILE IS THERE, NEVER THAT IT SAYS ANYTHING. Whether `eval.md` exists
   beside a Mold is the declaration's business, and `recommended` is what produces the warning.
   Whether it contains a single property check is a rule about CONTENTS, which no layout vocabulary
@@ -879,7 +882,10 @@ formats, the loaders and the inherited vocabularies are installed (see "The shar
   `kinds`) — the boundary is enforced in both directions, because it is the kind of split that
   otherwise decays quietly. Compose the two halves in src/lib/reference-contract.ts. Your kinds
   keep their own `href` into your spec docs; the inherited four link to the Foundry Pattern, which
-  is where they are specified.
+  is where they are specified. Once the instance adopts @galaxy-foundry/cast, a kind may also carry
+  the delegated `cast:` block Part 7 defines. Load it through `loadCastReferenceContract`; a
+  reader-only composition deliberately refuses that field because no installed capability acts on
+  it.
 - meta_tags.yml — the controlled tag vocabulary, grouped into FACETS: `version: 1` plus
   `facets: <facet>: { label, description, values: { <tag>: <gloss> } }` (`values` may be omitted
   while a facet is still empty). Parse it with @galaxy-foundry/tag-registry — loadTagRegistry()
@@ -1047,7 +1053,82 @@ Decompose the domain into repeatable decision-and-handoff units — one Mold per
 - Get the boundary right: not one monolith, not a dust of fragments.
 
 
-PART 7 — BUILD THE EXTERNAL CHECK
+PART 7 — CAST ONE MOLD TO ONE TARGET
+
+Adopt @galaxy-foundry/cast only after one real Mold and all of its references validate. The reader,
+Kind catalog and reference view are a complete earlier vertical; do not install a caster merely to
+make its configuration look anticipated.
+
+- LOAD BOTH HALVES OF THE REFERENCE CONTRACT at the one composition point that already supplies
+  the site schema. `loadCastReferenceContract` delegates the `cast:` block to the cast parser while
+  returning the same reader-facing contract the site renders. A reference kind's block declares
+  strategy, never companion membership or target placement:
+
+      kinds:
+        environment:
+          label: Environment
+          description: A runnable fixture and its declared bundled companions.
+          ref_shape: wiki-link
+          cast:
+            resolve: note
+            default_mode: verbatim
+
+  `resolve` answers where the primary payload comes from (`note`, `package-export`, or
+  `payload-companion`). `note_types` widens a reference kind that intentionally addresses several
+  note types; do not rename the corpus to make the two vocabularies coincide. Omit `cast:` to make a
+  reference kind reader-visible but uncastable. Before cast is installed, load the contract with
+  `buildReferenceContract` instead; its refusal of an unknown `cast:` field prevents dead
+  configuration from looking implemented.
+
+- BUILD ONE CORPUS INDEX and project every cast input from it: the slug map, parsed frontmatter by
+  path, and note targets. The map must apply the same aliases and collision precedence as prose and
+  frontmatter links, and it must be driven by the collection table so companions never become note
+  targets. Do not add a cast-only walk or slug policy. If the shared reader cannot expose a needed
+  projection, improve that seam upstream rather than make two indexes agree by convention.
+
+- PASS THE KIND TABLE AS `kindLayouts`. Casting consumes only `shape`, `companions`, and
+  `additionalCompanions`, but it must consume the same declarations the validator and generated
+  manifest use. A missing layout is a cast error. Do not translate the table into target excludes,
+  note defaults, or a second list of companion filenames.
+
+- DECLARE ONE TARGET in its own directory. The target owns bundle placement, document vocabulary,
+  per-reference-kind destinations, extensions and supported modes; the reference kind owns source
+  resolution. A minimal target is explicit about the runtime-facing document:
+
+      bundle_path: 'skills/{mold}'
+      document:
+        path: SKILL.md
+        noun: skill
+      kinds:
+        environment:
+          dst_dir: references/environments/
+          dst_extension: .md
+          modes: [verbatim]
+
+  Quote `{mold}` in YAML. Keep `_provenance.json` out of target vocabulary: it is the caster's
+  runtime-neutral account, not a format-specific document. A target may constrain a kind's modes
+  but cannot make an unsupported mode or uncastable kind valid.
+
+- KEEP HOOKS DOMAIN-SHAPED. Supply the cast document's lede and sections, any implemented
+  non-verbatim renderers, extra bundle files and bundle checks. Register `payloadCompanion` or
+  `packageLoader` only when a reference kind selects those strategies. An absent implementation is
+  an error; never fall back to packaging a plausible but different source.
+
+- CALL `castMold` with the loaded Mold, composed reference/cast contracts, reference kinds, corpus
+  index, Kind layouts, target and hooks. Treat `errors`, `drift` and `wrote` as values: aggregate
+  findings in the caller, set the process exit there, and publish only when the complete staged
+  bundle clears every check. A refused cast must leave the working tree untouched.
+
+- HOLD THE FIRST BUNDLE AS AN EXECUTABLE CONTRACT. A write run produces the document, eligible
+  references, eligible companions and provenance. A subsequent `--check` reports no drift and
+  writes nothing. Exercise at least: an unresolved ref; a wrong note type; a missing Kind layout;
+  a missing required companion; an absent recommended companion; a `foundry-only` companion; a
+  bundled file and directory; a duplicate destination; stale owned output; and a license refusal.
+  Assert provenance hashes the actual source and destination bytes. Run the inert check in CI and
+  commit the bundle only when committed casts are part of the instance's distribution contract.
+
+
+PART 8 — BUILD THE EXTERNAL CHECK
 
 Decide what "correct" means in your domain and what can decide it. This is the sharpest, most
 domain-specific part; the substrate deliberately leaves it open, so paths below are structural,
@@ -1065,7 +1146,7 @@ not a fixed tool.
   is low is the work-list.
 
 
-PART 8 — COMPOSE, IF THE WORK IS SEQUENTIAL
+PART 9 — COMPOSE, IF THE WORK IS SEQUENTIAL
 
 Where a domain's task is an inherently multi-step journey, compose Molds into an ordered
 end-to-end protocol and orchestrate them; a domain whose actions stand alone needs no such layer.
@@ -1092,8 +1173,9 @@ Parts 2–4 are the substrate, and they now arrive in three grades rather than o
   YOURS       The halves the packages deliberately decline. Which kinds exist and what each
               requires; your facet vocabulary; your reference `kinds`; your link aliases, routes
               and unresolved-link policy; your license COHERENCE rules; your base envelope, ported
-              honestly; your site's identity
-              and its palette; and the domain furniture rendered inside the shared note frame.
+              honestly; your site's identity and its palette; the domain furniture rendered
+              inside the shared note frame; and, once casting exists, reference strategies,
+              targets, hooks, corpus projections and the release threshold for cast findings.
 
 Mechanical wiring is a package candidate when it exposes a stable, reusable contract. Duplication
 is a prompt to investigate that contract, not sufficient evidence by itself. Reconcile genuine
