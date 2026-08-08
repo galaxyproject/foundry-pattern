@@ -13,7 +13,7 @@ Astro stack described in [[standing-up-a-foundry|Build with the Astro Stack]], i
 corpus gets typed and laid out on disk.
 
 The split is not tidiness. A term in the pattern glossary is a claim about every Foundry that will
-ever exist; a term here is a claim about the ones sharing this stack, and a third instance on a
+ever exist; a term here is a claim about the ones sharing this stack, and another instance on a
 different stack may reasonably have none of them. Mixing the two makes the pattern look like it
 requires decisions it does not, which is the failure mode the [[anatomy-of-an-instance|What a Foundry Needs]]
 page exists to prevent.
@@ -53,7 +53,7 @@ it. The kind decides what metadata is required, what casting may assume, and wha
 render, so it is what makes a corpus machine-readable rather than a pile of Markdown. Beyond its
 frontmatter schema a kind declares its **shape**, its **companions**, and its `layer` — `substrate`
 if the pattern supplied the kind, `instance` if the domain added it. The [[kind-catalog]] tests
-that last claim against both instances rather than accepting it.
+that last claim against every current instance rather than accepting it.
 
 > Not to be confused with a **reference** kind (`pattern`, `schema`, `cli-command`, …), which
 > classifies a dependency a Mold declares rather than a note in the corpus. One word, two closed
@@ -61,8 +61,8 @@ that last claim against both instances rather than accepting it.
 
 **Shape** — whether a kind's notes are flat files (`file`) or directories holding an `index.md`
 (`directory`). Declared by the kind and required of every kind, because a kind that does not answer
-leaves a hole in the cross-instance catalog exactly where a real difference lives: `pattern` is a
-directory in one instance and a flat file in the other.
+leaves a hole in the cross-instance catalog exactly where a real difference lives: `pattern` and
+`paper` now each appear in both flat-file and directory forms across the instances.
 
 **Companion** — a non-note file in a directory-shaped note's directory, declared once by the
 **kind** rather than repeatedly by each note (e.g. `eval.md` beside a Mold; `guidance.md` beside a
@@ -96,14 +96,14 @@ directory can hold two kinds, and two collections can resolve to the same kind �
 
 **Kind context** — what a kind's schema is allowed to draw on when it is built: the base
 frontmatter envelope plus whatever registries the instance hands it. This is the **seam** between
-instances. Two Foundries agree exactly on what a kind *is* and disagree entirely on what a kind may
+instances. Foundries agree exactly on what a kind *is* and disagree entirely on what a kind may
 draw *from*, which is why the shared contract is generic over the context and each instance binds
 it once.
 
 **Kind manifest** — the generated, machine-readable record of every kind an instance defines: its
 title, layer, summary, shape, companions, locations, documentation, and required fields, the last
 derived from the same schema that validates notes. It is the one artifact in a Foundry whose
-consumer is *another repository* — the [[kind-catalog]] on this site renders two of them — which is
+consumer is *another repository* — the [[kind-catalog]] on this site renders three of them — which is
 why its format is a shared, versioned package rather than each instance's own JSON.
 
 **Tag and facet** — the controlled browse vocabulary: every note carries at least one tag, every

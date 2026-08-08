@@ -35,10 +35,11 @@ Home  ............................. the bet in one breath + three doors
 │   ├── FAIR Skills ............... the outside witness — FAIR converged on R1.2/R1.3 [was blog; de-dated]
 │   └── Comparisons .............. Part A positioning (stable) + Part B landscape (dated, refreshed) [pull: comparisons Part A + B]
 │
-├── 3. INSTANCES  ............... the pattern, twice, as proof
+├── 3. INSTANCES  ............... three domains testing and hardening the pattern
 │   ├── Galaxy Workflow Foundry .. thin profile + link-out; check = gxwf (rails)
+│   ├── TDA Bioinformatics ....... active reference build + link-out; check evolving
 │   ├── Statistical Genomics ..... thin profile + link-out; check = referee loop
-│   └── The Diff ................. what generalized vs what stayed local          [NET-NEW — spine]
+│   └── The Diff ................. original N=2 diff + the third-instance test     [NET-NEW — spine]
 │
 └── 4. BLOG / LAB  ............. evidence, experiments, anything dated
     └── Blind Regeneration ........ ★ flagship experiment (issue #2)              [NET-NEW]
@@ -47,7 +48,7 @@ Home  ............................. the bet in one breath + three doors
 ## Load-bearing docs
 
 The abstraction's whole weight rests on two net-new pages: **What a Foundry Needs**
-(Pattern) and **The Diff** (Instances). The substrate is invariant across both foundries;
+(Pattern) and **The Diff** (Instances). The substrate is what survives across all three foundries;
 what each domain extends it with varies — and those two pages are where that contrast is made explicit. The
 flagship **Skills: Package, Not Source** is the front door to The Case; **Blind
 Regeneration** is its evidence. The Case's three argument planks run 1–3 (inversion → the

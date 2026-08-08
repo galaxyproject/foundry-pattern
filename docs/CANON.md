@@ -6,12 +6,13 @@ or editing any content page. It is an internal authoring doc, not a reader-facin
 
 ## What this site is
 
-An **abstract** site that explains *the Foundry Pattern* — the design pattern behind two
-concrete projects (the Galaxy Workflow Foundry and the Statistical Genomics Foundry). It
-is deliberately domain-free. The concrete projects are "instances"; this site is the
-pattern they share. The pattern earns its abstraction at the **diff** between the two
-instances (N=2): what stayed the same is the **substrate**, what each domain adds on top is
-its **extension**. The pattern is a substrate to extend, not a cookie cutter — meant to be
+An **abstract** site that explains *the Foundry Pattern* — the design pattern behind three
+concrete projects: the Galaxy Workflow Foundry, the Statistical Genomics Foundry, and the
+TDA Bioinformatics Foundry. It is deliberately domain-free. The concrete projects are
+"instances"; this site is the pattern they share. The pattern first earned its abstraction
+at the original N=2 **diff**. The third instance is the active falsification and hardening
+exercise: what survives all three is the **substrate**, while each domain's additions are its
+**extension**. The pattern is a substrate to extend, not a cookie cutter — meant to be
 *applied and extended* per domain, never stamped out.
 
 Three products under one roof:
@@ -26,9 +27,11 @@ Three products under one roof:
 ## Naming (use exactly these)
 
 - **The Foundry Pattern** — the pattern this site documents. Capitalized.
-- **A Foundry** / **an instance** — a concrete project applying the pattern. The two
-  current instances: **the Galaxy Workflow Foundry** (instance #1) and **the Statistical
-  Genomics Foundry** (instance #2).
+- **A Foundry** / **an instance** — a concrete project applying the pattern. The current
+  instances are **the Galaxy Workflow Foundry** (instance #1), **the Statistical Genomics
+  Foundry** (instance #2), and **the TDA Bioinformatics Foundry** (instance #3). In reader-facing
+  lists, put TDA before Statistical Genomics: TDA is the active rigorous reference build, and
+  shared improvements now flow back from it into SGF.
 - Avoid "Foundry" bare when you mean the pattern; say "the Foundry Pattern."
 
 ## The substrate (invariant — identical across instances)
@@ -59,7 +62,7 @@ surface. The KB is the source; the skill is the package.
 Applying the pattern means bringing deep domain knowledge and **extending** the substrate
 with what the domain needs: its grounding corpus, target format(s), any composition layer,
 and the external check its notion of "correct" admits. These are extensions, not required
-slots — a third Foundry will need its own. **Do not hoist instance terms into general
+slots — another Foundry will need its own. **Do not hoist instance terms into general
 pattern vocabulary.** In particular:
 
 - **Pipelines belong to the Galaxy Workflow Foundry.** An ordered sequence of Molds for an
@@ -67,8 +70,11 @@ pattern vocabulary.** In particular:
   (Mold-primary) needs none. Not part of the substrate.
 - **"The gate" belongs to the Statistical Genomics Foundry.** It is that instance's name
   for its external check.
+- **The frontier → hardening → delivery arc belongs to the TDA Bioinformatics Foundry.** It
+  connects research to reproducible software and eventual Galaxy delivery; it is not a universal
+  Foundry lifecycle.
 
-**The external check** is the role both instances fill (honoring "deterministic tools do
+**The external check** is the role every mature instance must fill (honoring "deterministic tools do
 deterministic work" / don't let the model grade itself), but *what it is* differs completely
 by domain and there is no universal "gate":
 
@@ -82,6 +88,9 @@ by domain and there is no universal "gate":
   verdict gates certification. The referee both *critiques* (reasons about known invalidity
   patterns) and *calibrates* (constructs and runs an empirical check — permutation under
   the null, simulation-under-truth, calibration). A deliverable you construct.
+- **TDA Bioinformatics Foundry — evolving.** Reproducible environments and evidence-bearing
+  replication are its current teeth while its domain correctness check is still being derived.
+  Say that plainly; do not relabel its extensive build validation as a scientific verdict.
 
 Write neutrally about "the domain's external check" at the pattern level; use "the rails"
 and "the gate"/"referee" only on or about the instance that coined them.

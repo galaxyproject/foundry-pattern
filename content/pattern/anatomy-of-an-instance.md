@@ -9,7 +9,7 @@ order: 5
 
 A Foundry is an inspectable, human-readable knowledge base of deep domain knowledge whose *structure* makes it executable: the knowledge is decomposed into typed units that compile into frozen artifacts carrying provenance. That sentence names the part that is the *same* in every instance. This page separates that shared substrate — the invariants — from the decisions each instance must make for its domain — the extension surface. The thing to take away is not a checklist of identical slots but a posture: **the pattern is a substrate you extend, not a template you stamp.**
 
-Where [[the-diff]] earns the abstraction comparatively (hold the two instances side by side; what survives the diff is real), this page earns it descriptively: walk the anatomy once, and mark each part shared or domain-added. For the underlying model and term definitions, see [[the-model]] and the [[glossary]].
+Where [[the-diff]] first earned the abstraction comparatively (hold the original two instances side by side, then pressure the result with the third), this page earns it descriptively: walk the anatomy once, and mark each part shared or domain-added. For the underlying model and term definitions, see [[the-model]] and the [[glossary]].
 
 ## At a glance
 
@@ -41,21 +41,21 @@ These are the same in every instance. Remove any one and the thing stops being a
 
 Here is where instances differ, and the difference is the point: applying the pattern means bringing real domain knowledge and extending the substrate with what the domain needs. Some decisions here — the knowledge, grounding corpus, target formats, and how trusted work is evaluated — exist in every instance but take domain-specific forms. Others, such as composition, are optional. The substrate defines the boundaries; it cannot supply the domain's answers.
 
-**The domain knowledge itself.** *What* the Foundry actually knows — the patterns, methods, references, and hard-won procedure of one field. This is the real work and the real asset; the substrate exists to carry it, not the other way around. One instance curates workflow-construction knowledge; another, statistical-method validity.
+**The domain knowledge itself.** *What* the Foundry actually knows — the patterns, methods, references, and hard-won procedure of one field. This is the real work and the real asset; the substrate exists to carry it, not the other way around. One instance curates workflow-construction knowledge; another, statistical-method validity; the third connects topological data analysis research to reproducible bioinformatics delivery.
 
-**The grounding corpus.** *Which* external corpus anchors the knowledge — a curated workflow set in one instance, established-methods literature plus cautionary negative examples in another. The grounding *discipline* is invariant; the corpus is the extension.
+**The grounding corpus.** *Which* external corpus anchors the knowledge — a curated workflow set in one instance, established-methods literature plus cautionary negative examples in another, and TDA papers, packages, environments, recipes, and replication evidence in the third. The grounding *discipline* is invariant; the corpus is the extension.
 
 **The target format(s).** *What* a cast produces — one runtime's skill format, a generic bundle, a web payload. The KB stays the source of truth; the target is one output, and an instance may have several. The integration boundary is invariant; which side(s) it compiles toward is the extension.
 
 **Composition / orchestration.** Where a domain's work is an inherently multi-step journey, an instance composes Molds into ordered end-to-end tasks and may orchestrate them with a harness. The [[galaxy-workflow-foundry]] builds **pipelines** for exactly this — workflow construction is sequential by nature. A domain whose actions stand alone may need no such layer at all. Composition is an extension, not a universal requirement.
 
-**The domain's external check.** The requirement is shared: work should not count as trusted solely because the same process that produced it says it is correct. The realization is domain-specific: each Foundry decides what an independent verdict can mean and what can produce one (see [[guiding-principles]]). The current instances sit at opposite ends:
+**The domain's external check.** The requirement is shared: work should not count as trusted solely because the same process that produced it says it is correct. The realization is domain-specific: each Foundry decides what an independent verdict can mean and what can produce one (see [[guiding-principles]]). The first two instances sit at opposite ends:
 
 - In the [[galaxy-workflow-foundry]], correctness is *parseable*, so the check is a **deterministic CLI validator** ("the rails"): `gxwf` parses and validates the workflow format and tool steps; hallucinated identifiers, dropped revisions, and bad state are caught mechanically, the same way every time. Fast and total over what it covers — but it only covers what a parser can decide.
 
 - In the [[statistical-genomics-foundry]], "is this method valid?" has no mechanical oracle, so the check is itself *authored knowledge cast into a skill* — an empirical **referee** running an `analyze → referee → revise` loop, which both reasons about known invalidity patterns and *constructs and runs* the empirical test the field trusts. There the check is a deliverable you produce, not a tool you call.
 
-These are not two settings of one universal knob. They are two domains solving "what does *correct* even mean here, and what can decide it?" their own way. A third Foundry might check with a human review queue, a proof assistant, or something none of these resemble — and that freedom is the pattern working as designed, not a gap in it.
+These are not two settings of one universal knob. They are two domains solving "what does *correct* even mean here, and what can decide it?" their own way. The [[topological-data-analysis-bioinformatics-foundry|TDA Foundry]] is still deriving that scientific verdict; reproducible environments and evidence-bearing replication are its current teeth. That incompleteness is stated rather than disguising extensive build validation as domain correctness.
 
 ## How to read this
 

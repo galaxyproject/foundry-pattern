@@ -1,10 +1,10 @@
-// Load the two instances' vendored kind manifests and tag registries, and work out what is
-// SHARED between them versus what each one adds.
+// Load the instances' vendored kind manifests and tag registries, and work out what is
+// SHARED among them versus what each one adds.
 //
 // The catalogs' whole job is to make that split legible: the pattern's claim is that a
 // substrate transfers and the differences localize, and a claim like that is only worth
 // anything if you can see the diff. So "shared" is COMPUTED here — a kind is substrate
-// because both instances declare it, a facet is shared because both registries carry it —
+// because every instance declares it, a facet is shared because every registry carries it —
 // never asserted by hand in prose that would quietly stop being true.
 
 import fs from 'node:fs';
@@ -71,16 +71,17 @@ function loadManifest(slug: string): VendoredManifest {
   return { ...manifest, source: { ...source, revision: source.revision } };
 }
 
-/** Declaration order is instance order everywhere: #1 first. */
+/** Declaration order is presentation order everywhere, with the active reference build before SGF. */
 const INSTANCE_TITLES: Record<string, string> = {
   'galaxy-workflow-foundry': 'Galaxy Workflow Foundry',
+  'topological-data-analysis-bioinformatics-foundry': 'TDA Bioinformatics Foundry',
   'statistical-genomics-foundry': 'Statistical Genomics Foundry',
 };
 
 /**
  * Read one vendored tag registry, validating it against the shared format.
  *
- * Same reasoning as `loadManifest`: this is another repository's file, and both instances
+ * Same reasoning as `loadManifest`: this is another repository's file, and every instance
  * used to do `yaml.load(...) as TagRegistryFile` and meet a malformed registry as an
  * `undefined` somewhere downstream. Parsing refuses a missing `facets` block, a facet with
  * no label or description, a tag with no gloss, and — the one no single instance could
@@ -193,7 +194,7 @@ export interface CompanionRow {
 /**
  * One row per distinct companion across the instances declaring the kind, shared first.
  *
- * Same discipline as `kindRows`: shared is COMPUTED. A companion arriving in both foundries is
+ * Same discipline as `kindRows`: shared is COMPUTED. A companion arriving in multiple foundries is
  * the strongest transfer evidence this site has — a layout is not something you copy without
  * also copying the practice that produced it — so it is worth exactly as much as the derivation
  * behind it, and no more.

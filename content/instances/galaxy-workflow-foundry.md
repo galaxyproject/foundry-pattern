@@ -1,6 +1,6 @@
 ---
 title: Galaxy Workflow Foundry
-description: Instance #1 — converts papers, Nextflow, and CWL into validated Galaxy workflows, checked by a deterministic CLI ("the rails").
+description: 'Instance #1 — converts papers, Nextflow, and CWL into validated Galaxy workflows, checked by a deterministic CLI ("the rails").'
 section: instances
 order: 1
 instance_number: 1
@@ -38,4 +38,4 @@ The more mature instance. The spine is in place — content types, validator wit
 
 ---
 
-Compare against instance #2 in [[the-diff]] — where this domain's *deterministic CLI* check gives way to a *constructed empirical referee*, a different domain solving the same role its own way. For the shared substrate beneath both, see [[anatomy-of-an-instance]].
+See the [[topological-data-analysis-bioinformatics-foundry|TDA Bioinformatics Foundry]] for the active rigorous reference build, then [[the-diff]] for the original comparison with instance #2's *constructed empirical referee*. For the substrate now tested across all three, see [[anatomy-of-an-instance]].

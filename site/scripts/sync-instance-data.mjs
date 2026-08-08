@@ -1,14 +1,14 @@
-// Vendor the two instances' generated kind manifests and tag registries into src/data/.
+// Vendor the instances' generated kind manifests and tag registries into src/data/.
 //
 // Usage:
-//   node scripts/sync-instance-data.mjs [--check] [--<instance-slug> <path-to-checkout>]
+//   node scripts/sync-instance-data.mjs [--check] [--only <instance-slug>] [--<instance-slug> <path-to-checkout>]
 //
 //   --check   exit non-zero if any vendored file is stale; do not write.
 //
 // This site renders a cross-instance kind catalog and tag catalog. The source of truth for
 // each is the instance's own repository — `types/kinds.generated.json` (itself derived from
 // that instance's zod schemas) and `meta_tags.yml`. We COPY rather than fetch at build time,
-// because a pattern site whose build depends on two other repositories being reachable is a
+// because a pattern site whose build depends on other repositories being reachable is a
 // pattern site that stops building.
 //
 // The copies are therefore a snapshot with a date, and the page says so. Re-run this script
@@ -35,6 +35,12 @@ const INSTANCES = [
     tags: 'meta_tags.yml',
   },
   {
+    slug: 'topological-data-analysis-bioinformatics-foundry',
+    repo: 'jmchilton/bio-topo-foundry',
+    kinds: 'site/src/types/kinds.generated.json',
+    tags: 'meta_tags.yml',
+  },
+  {
     slug: 'statistical-genomics-foundry',
     repo: 'jmchilton/statistical-genomics-foundry',
     kinds: 'site/src/types/kinds.generated.json',
@@ -51,6 +57,13 @@ const searchRoots = [
 
 const args = process.argv.slice(2);
 const check = args.includes('--check');
+const onlyAt = args.indexOf('--only');
+const only = onlyAt !== -1 ? args[onlyAt + 1] : undefined;
+
+if (only && !INSTANCES.some((instance) => instance.slug === only)) {
+  console.error(`Unknown instance for --only: ${only}`);
+  process.exit(1);
+}
 
 function checkoutFor(instance) {
   const flag = args.indexOf(`--${instance.slug}`);
@@ -79,6 +92,7 @@ let synced = 0;
 let missing = 0;
 
 for (const instance of INSTANCES) {
+  if (only && instance.slug !== only) continue;
   const checkout = checkoutFor(instance);
   if (!checkout) {
     console.error(
@@ -130,6 +144,6 @@ if (check && stale) {
   console.error(`\n${stale} vendored file(s) stale — run \`npm run sync:instances\` and commit.`);
   process.exit(1);
 }
-if (missing === INSTANCES.length) process.exit(1);
+if (missing === (only ? 1 : INSTANCES.length)) process.exit(1);
 if (check) console.log('\nVendored instance data matches the local checkouts.');
 else console.log(`\n${synced} file(s) updated.`);
