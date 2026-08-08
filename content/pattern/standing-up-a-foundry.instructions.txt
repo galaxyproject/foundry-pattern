@@ -872,7 +872,7 @@ moved.
 hand-written. A hand-written required-metadata list is a second encoding and it drifts the first
 week. That derivation has just moved one repo over; the rule has not changed.
 
-The manifest is what a cross-instance kind catalog renders, and what lets two Foundries be diffed
+The manifest is what a cross-instance kind catalog renders, and what lets any number of Foundries be diffed
 by machine instead of by eye. Because its consumer is ANOTHER REPOSITORY, `source` is split by who
 actually knows each fact: YOU declare `repo` and `path`, so a consumer vendoring a copy does not
 hard-code your identity on your behalf; WHOEVER TAKES A SNAPSHOT records the `revision`, via the

@@ -53,11 +53,11 @@ const openSet = (kind: ManifestKind) => kind.additionalCompanions === "allow";
   {differingShapes.length > 0 && (
     <p class="mt-4 rounded-lg border p-4 text-sm" style="border-color: var(--rule); color: var(--muted)">
       <strong style="color: var(--ink)">Same kind, different shape:</strong>{" "}
-      {differingShapes.join(", ")} — a flat file in one instance, a directory in the other. Not
-      drift, and not smoothed over: the two are the same kind carrying the same required
-      metadata, laid out differently because one domain needed files beside the note and the
-      other did not. Before kinds declared a shape this difference lived inside each instance's
-      collection glob and reached no manifest, so this page could not have reported it.
+      {differingShapes.join(", ")} — declared as both flat files and directories across the
+      instances. Not drift, and not smoothed over: the same kind can carry compatible metadata
+      while domains make different, explicit layout choices. Before kinds declared a shape this
+      difference lived inside each instance's collection glob and reached no manifest, so this
+      page could not have reported it.
     </p>
   )}
 
@@ -66,7 +66,7 @@ const openSet = (kind: ManifestKind) => kind.additionalCompanions === "allow";
   </h2>
   <p class="mt-2 text-sm" style="color: var(--muted)">
     Declared by <em>every</em> instance. This is the empirical definition — a kind is substrate
-    because two independently-motivated domains both reached for it, not because someone
+    because independently motivated domains all reached for it, not because someone
     labelled it so. These are what a new Foundry starts from.
   </p>
 
@@ -107,7 +107,7 @@ const openSet = (kind: ManifestKind) => kind.additionalCompanions === "allow";
       </dl>
       {sharedRequiredFields(row).length > 0 && (
         <p class="mt-3 border-t pt-3 text-sm" style="border-color: var(--rule); color: var(--muted)">
-          <strong>Required by both:</strong>{" "}
+          <strong>Required by every instance:</strong>{" "}
           {sharedRequiredFields(row).map((f) => <code class="mr-1">{f}</code>)}
         </p>
       )}
@@ -153,8 +153,9 @@ const openSet = (kind: ManifestKind) => kind.additionalCompanions === "allow";
           </div>
           {companionRows(row).some((c) => c.identical) && (
             <p class="mt-2 text-sm" style="color: var(--muted)">
-              Highlighted files are declared by both instances at the same requirement and the
-              same disposition — the layout itself transferring, not just the kind's name.
+              Highlighted files are declared by every instance that carries this kind at the
+              same requirement and disposition — the layout itself transferring, not just the
+              kind's name.
             </p>
           )}
         </div>
@@ -163,14 +164,15 @@ const openSet = (kind: ManifestKind) => kind.additionalCompanions === "allow";
   ))}
 
   <h2 class="mt-12 text-2xl font-bold" style="font-family: var(--font-display)">
-    Instance-specific kinds
+    Non-universal kinds
   </h2>
   <p class="mt-2 text-sm" style="color: var(--muted)">
-    Declared by one instance only. These are the extensions — what each domain had to add on
-    top of the substrate, and the honest measure of how much a second instance actually shared.
+    Not declared by every instance. Some belong to one domain; others transferred between two
+    before the third instance showed they were not universal. Both are useful evidence about
+    where the substrate ends and domain or lineage-specific choices begin.
   </p>
 
-  <div class="mt-6 grid gap-4 sm:grid-cols-2">
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     {instances.map((instance) => (
       <div>
         <h3 class="text-lg font-semibold" style="font-family: var(--font-display)">

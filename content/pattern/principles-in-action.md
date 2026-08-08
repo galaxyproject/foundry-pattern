@@ -1,6 +1,6 @@
 ---
 title: Principles in Action
-description: How current Foundries turn the shared principles into concrete rules, records, checks, and deliberately deferred machinery.
+description: The original two-instance implementation case study, now read alongside the third Foundry hardening and backporting the shared substrate.
 section: pattern
 order: 4
 ---
@@ -8,6 +8,9 @@ order: 4
 # Principles in Action
 
 [[guiding-principles|Guiding Principles]] states the commitments without tying them to a domain. This page shows what those commitments make two Foundries do: which rules they enforce, which artifacts they keep, and which machinery they have deliberately not built.
+
+The comparison is intentionally uneven. The [[galaxy-workflow-foundry]] has a working cast layer and runtime validation path. The [[statistical-genomics-foundry]] has a substantial typed corpus and authored Molds, but no caster or cast artifacts yet. **Implemented** means the behavior is observable in the repository today; **partial** means a real source-side mechanism exists but a later layer is deferred; **designed** means the contract exists without an implementation. Inheritance alone never counts as implementation.
+This page preserves the original N=2 case study rather than retrofitting a third column into old evidence. The [[topological-data-analysis-bioinformatics-foundry|TDA Bioinformatics Foundry]] is now the active rigorous reference build; use its profile and the generated [[kind-catalog]] and [[tag-catalog]] for the current three-instance picture and for the direction of backports into Statistical Genomics.
 
 The comparison is intentionally uneven. The [[galaxy-workflow-foundry]] has a working cast layer and runtime validation path. The [[statistical-genomics-foundry]] has a substantial typed corpus and authored Molds, but no caster or cast artifacts yet. **Implemented** means the behavior is observable in the repository today; **partial** means a real source-side mechanism exists but a later layer is deferred; **designed** means the contract exists without an implementation. Inheritance alone never counts as implementation.
 
@@ -160,6 +163,6 @@ That difference is evidence, not an embarrassment. The pattern is strongest wher
 ## See Also
 
 - [[guiding-principles]] — the same principles, stated domain-free.
-- [[the-diff]] — the substrate and extension decisions held side by side.
+- [[the-diff]] — the original two instances held side by side, then tested by the third.
 - [[anatomy-of-an-instance]] — the boundary between shared structure and domain machinery.
 - [[the-model]] — the parts these decisions configure.

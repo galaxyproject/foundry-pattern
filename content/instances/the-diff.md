@@ -1,8 +1,8 @@
 ---
 title: "The Diff: What Generalized"
-description: The second instance is the test — what stayed identical between the two Foundries is the pattern's substrate; what changed is what each domain builds on top of it.
+description: The original two-instance comparison that earned the abstraction, followed by what the third, more rigorous reference build changed.
 section: instances
-order: 3
+order: 4
 ---
 
 # The Diff: What Generalized
@@ -66,6 +66,10 @@ Line the two up and the **substrate** — the KB → cast → provenance machine
 
 So the pattern reduces to a clean claim: **an inspectable KB of deep domain knowledge, compiled into cast artifacts that carry provenance — a substrate each domain extends with the composition and checks its work demands.** A deterministic CLI is one domain's check; an empirical referee is another's; pipelines are one domain's composition and another's needless weight. The substrate is the constant; the extensions are the pattern being *applied*, not violated. (See [[the-model]] for the substrate and [[guiding-principles]] for the rules it obeys; [[anatomy-of-an-instance]] for the substrate-vs-extension split in full.)
 
-## What a third instance would test
+## The third instance arrived
 
-N=2 fixes a *line*; it can't yet tell a line from a curve. The clean prediction to falsify: a third Foundry — in a domain whose external check is neither a parser nor an empirical referee but a *human review queue*, or a *formal proof checker*, and whose work may or may not need pipeline-style composition — should again inherit the substrate unchanged and vary only in its domain knowledge and the extensions that knowledge demands. If a third instance forces a change to the source-of-truth model or the provenance contract to fit its domain, that part wasn't substrate after all, and the pattern shrinks to whatever still holds. Until then the claim stands exactly as far as the evidence: the substrate is the constant, and what each domain builds on it is free to differ.
+N=2 fixed a *line*; it could not tell a line from a curve. The [[topological-data-analysis-bioinformatics-foundry|TDA Bioinformatics Foundry]] is now the third test, and it did more than add another domain column. It was built explicitly as a falsification exercise for the abstractions the first two produced: reuse shared mechanisms, refuse copied infrastructure, and push every accidental difference back toward an explicit package boundary or an instance-owned policy.
+
+That pressure changed the direction of learning. The TDA instance did not inherit the Statistical Genomics Foundry as the canonical architecture. It re-derived its vocabulary from its own corpus, adopted the current shared packages directly, and became the more rigorous reference build; improvements are now backported from TDA into Statistical Genomics. Its corpus already spans typed methods, packages, reproducible environments, build recipes, papers, replication experiments, and an authored Mold, with generated manifests and build checks making those distinctions executable.
+
+The prediction therefore became measurable rather than hypothetical. The generated [[kind-catalog]] and [[tag-catalog]] on this site now include all three instances. A kind or facet counts as substrate only when every current instance declares it. Where the third instance narrows an earlier N=2 claim, the catalog narrows with it. That is not damage to the pattern; it is the pattern giving up a claim it had not yet earned.

@@ -19,7 +19,7 @@ import {
 // The catalog's cross-instance claims, checked.
 //
 // `kindRows`, `companionRows`, `shapeDifferences` and `sharedRequiredFields` decide what the
-// Kind Catalog asserts about the two foundries — which kinds are substrate, which companions
+// Kind Catalog asserts about the foundries — which kinds are substrate, which companions
 // transferred, where the layouts diverge. They were verified by reading the built page, which
 // is fine for what the corpus happens to contain and useless for what it does not: neither
 // instance declares the same companion at DIFFERENT levels today, so `identical` — the whole
@@ -277,9 +277,10 @@ describe('the vendored corpus', () => {
   const instances = loadInstances();
   const rows = kindRows(instances);
 
-  it('parses both manifests and stamps each with the revision it came from', () => {
+  it('parses all manifests in presentation order and stamps each with its source revision', () => {
     expect(instances.map((i) => i.slug)).toEqual([
       'galaxy-workflow-foundry',
+      'topological-data-analysis-bioinformatics-foundry',
       'statistical-genomics-foundry',
     ]);
     for (const one of instances) {
@@ -288,17 +289,15 @@ describe('the vendored corpus', () => {
     }
   });
 
-  // The claim under the catalog's "Same kind, different shape" banner. If a re-vendored manifest
-  // adds a second such kind the banner is still right and this test is wrong — which is the
-  // point: the prose beside it names `pattern` and would need rewriting too.
-  it('lays out exactly one kind differently, and it is `pattern`', () => {
-    expect(shapeDifferences(rows)).toEqual(['pattern']);
+  // The claim under the catalog's "Same kind, different shape" banner. The third instance adds
+  // a flat `paper` beside SGF's directory form; `pattern` remains the original two-way split.
+  it('keeps the corpus-pinned list of kinds with differing layouts', () => {
+    expect(shapeDifferences(rows)).toEqual(['paper', 'pattern']);
   });
 
-  // The strongest transfer evidence on the page: not two foundries using the word "mold", but
-  // two foundries independently putting the same two files beside one, at the same requirement
-  // and the same disposition. These are the rows the catalog highlights.
-  it('has both foundries declaring a Mold\'s eval and scenarios identically', () => {
+  // The strongest transfer evidence on the page: not three foundries using the word "mold", but
+  // all three putting the same two files beside one, at the same requirement and disposition.
+  it('has every foundry declaring a Mold\'s eval and scenarios identically', () => {
     const mold = rows.find((r) => r.kind === 'mold')!;
     expect(mold.shared).toBe(true);
     const identical = companionRows(mold).filter((c) => c.identical);

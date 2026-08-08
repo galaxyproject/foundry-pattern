@@ -10,18 +10,22 @@ It also makes a case: **agent skills should be a *packaging* format, not a *sour
 format.** The skill is a compile target cast from an inspectable knowledge base; the
 knowledge base — not the skill — is the source of record.
 
-The pattern is documented in the abstract because it now has two concrete instances, and
-abstraction earns itself at the diff between them — the **substrate** transfers, while each
-domain brings its own knowledge and the machinery its work demands:
+The pattern now has three concrete instances. It first earned its abstraction at the diff
+between the first two; the third is the active falsification and hardening exercise — narrowing
+the **substrate** to what actually transfers while improving shared contracts for the earlier
+instances:
 
 - **Instance #1 — the [Galaxy Workflow Foundry](https://galaxyproject.github.io/foundry/)**:
   extends with *pipelines* (sequential construction) and a deterministic CLI check
   (`gxwf` parses and validates) — *the rails*.
+- **Instance #3 — the [TDA Bioinformatics Foundry](https://jmchilton.github.io/bio-topo-foundry/)**:
+  the rigorous reference build, connecting frontier TDA research to reproducible environments,
+  replication evidence, packaging, and eventual Galaxy delivery while hardening the shared substrate.
 - **Instance #2 — the Statistical Genomics Foundry**: extends with an empirical referee
   check (`analyze → referee → revise`, *doing never self-certifies*) — *the gate*.
 
-Everything load-bearing — the knowledge base, Mold → Cast → provenance, the human-readable
-reading surface — is the same substrate. What varies is what each domain extends it with.
+The generated catalogs compute what is shared across all three rather than preserving an N=2
+claim by hand. What varies is what each domain extends the substrate with.
 
 ## Layout
 
@@ -34,7 +38,7 @@ content/
     story.md               why skills rot — the generalized motivation
     the-model.md           KB → Mold → Cast → Provenance, abstractly
     guiding-principles.md
-    principles-in-action.md     the principles incarnated in the two instances
+    principles-in-action.md     concrete implementation case studies
     anatomy-of-an-instance.md   the substrate vs the extension surface
     glossary.md
   case/            ← The Case: the argument
@@ -43,6 +47,7 @@ content/
     03-comparisons.md                 compile-time-with-provenance vs runtime
   instances/       ← thin profiles + link-out, and the diff that justifies the pattern
     galaxy-workflow-foundry.md
+    topological-data-analysis-bioinformatics-foundry.md
     statistical-genomics-foundry.md
     the-diff.md
   blog/            ← evidence, experiments, and anything dated

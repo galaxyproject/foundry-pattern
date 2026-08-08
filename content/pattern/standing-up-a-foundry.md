@@ -1,6 +1,6 @@
 ---
 title: "Build with the Astro Stack"
-description: Compose domain-owned knowledge, instance policy, Astro, and the shared Foundry packages into one concrete Foundry implementation.
+description: Compose domain-owned knowledge, instance policy, Astro, and the shared Foundry packages into one concrete implementation, pressure-tested across three Foundries.
 section: pattern
 order: 7
 instructions: pattern/standing-up-a-foundry.instructions.txt
@@ -17,6 +17,10 @@ GitHub Pages, TypeScript and Zod content contracts, Vitest validation, and share
 The page owns the **composition seam**: the repository layout, order of work, instance-supplied
 policy, and end-to-end checkpoints. `foundry-lib` owns package behavior and APIs. A concrete
 Foundry owns its domain knowledge, kinds, vocabularies, renderers, targets, and acceptance policy.
+All three current instances use this composition. The
+[[topological-data-analysis-bioinformatics-foundry|TDA Bioinformatics Foundry]] is the active
+reference build: it consumes these shared contracts directly and feeds hardening improvements
+back into the earlier instances, especially Statistical Genomics.
 
 <figure class="not-prose astro-build-architecture" aria-labelledby="astro-build-architecture-caption" data-pagefind-ignore>
   <div class="astro-build-node astro-build-source">
@@ -116,8 +120,10 @@ verdict without pretending Astro or a shared package can answer that domain ques
 - **Stack vocabulary:** `note`, `kind`, `shape`, `companion`, and `collection` belong to this
   implementation and are pinned in the [[astro-stack-glossary]], not the pattern [[glossary]].
 - **Running evidence:** compare the [[galaxy-workflow-foundry]], the
+  [[topological-data-analysis-bioinformatics-foundry|TDA Bioinformatics Foundry]], the
   [[statistical-genomics-foundry]], and [[the-diff]] rather than copying inventory claims into
-  this guide.
+  this guide. TDA's domain verdict is still evolving; its reproducible environments and
+  evidence-bearing replication are current teeth, not a substitute label for scientific correctness.
 
 ## How to use the checklist below
 

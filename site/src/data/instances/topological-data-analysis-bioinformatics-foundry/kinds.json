@@ -1,0 +1,447 @@
+{
+  "instance": "topological-data-analysis-bioinformatics-foundry",
+  "version": 1,
+  "kinds": [
+    {
+      "kind": "environment",
+      "title": "Environment",
+      "layer": "instance",
+      "summary": "A reproducible biopixi fixture that assembles packages and their dependencies into one runnable configuration, carrying a portability grade.",
+      "shape": "directory",
+      "companions": [
+        {
+          "file": "pixi.toml",
+          "requirement": "required",
+          "purpose": "Standalone pixi manifest; `pixi install` resolves it with biopixi nowhere in sight.",
+          "disposition": "bundled"
+        },
+        {
+          "file": "pixi.lock",
+          "requirement": "recommended",
+          "purpose": "Solved lockfile pinning the exact closure the manifest resolved to on a real platform.",
+          "disposition": "bundled"
+        }
+      ],
+      "locations": [
+        "environments"
+      ],
+      "doc": "# Environment\n\nAn Environment note is one runnable biopixi fixture: a directory whose `pixi.toml` assembles\npackages and their dependencies into a configuration that installs and runs. The note describes\nthat configuration. The upstream software it assembles is a Package, and the two are separate kinds\nbecause a Package is abstract — code to read, evaluate, and wrap — while an Environment is\ncomposite and actionable.\n\nThis is the first directory-shaped kind. The manifest is the note's companion, not its content, so\n`index.md` never restates what `pixi.toml` already declares.\n\nRequired fields:\n\n- `type: environment`\n- `title`: the fixture's display name, matching its directory\n- `summary`: short reader-facing description\n- `portability_grade`: the anticipated biopixi grade, `L0` through `L4`\n- `tags`: at least one registered domain facet tag\n\n`portability_grade` is *anticipated*, not declared: the grader derives a grade from the manifest,\nlockfile, and public channel metadata, so a note records what the fixture is expected to score and\nis corrected by running the grader. It grades packaging, never science — an L4 fixture is portable,\nwhich says nothing about whether the method inside it is sound.\n\nA grade ceiling and the route past it belong in prose, because they are arguments rather than\nfacts. \"L1 today, L3 once the recipe is on Bioconda\" is a claim about future packaging work, and it\nwould go stale silently in frontmatter.\n\nWhether a fixture is locked is not a field. `pixi.lock` is a declared companion, so its presence is\nread from the directory and can never disagree with the note. Which upstream Package a fixture\nassembles stays a body wiki link until a Mold actually resolves that dependency; a typed reference\nis what the Reference vocabulary is for, and no consumer needs one yet.",
+      "example": "---\ntype: environment\ntitle: example-tda-fixture\nsummary: A small example showing the minimum metadata required for one runnable biopixi fixture.\nportability_grade: L3\ntags:\n  - method/persistent-homology\n---\n\n# example-tda-fixture\n\nThe body says what the fixture makes runnable, why it grades where it does, and what a user should\nknow before trusting it. The manifest beside it stays the authority on versions and channels.",
+      "fields": [
+        {
+          "name": "portability_grade",
+          "required": true,
+          "type": "L0 | L1 | L2 | L3 | L4"
+        },
+        {
+          "name": "summary",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "tags",
+          "required": true,
+          "type": "string[]"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "required": true,
+          "type": "\"environment\""
+        }
+      ]
+    },
+    {
+      "kind": "meta",
+      "title": "Design Record",
+      "layer": "substrate",
+      "summary": "A record of why the Foundry itself is built the way it is — the rationale behind the machinery, not the domain.",
+      "shape": "file",
+      "companions": [],
+      "locations": [
+        "meta"
+      ],
+      "doc": "# Design Record\n\nA Design Record says why the Foundry is built the way it is. It is the only kind here whose subject\nis the Foundry itself rather than topological data analysis — every other kind describes a\ntechnique, a piece of upstream software, a fixture, a source, or a study.\n\nRequired fields:\n\n- `type: meta`\n- `title`: the record's display name, which is also its address in prose and on a card\n- `summary`: 20–160 characters, the card text on the design index\n- `record_kind`: which shelf the record sits on, `foundation` or `infrastructure`\n- `order`: reading order within that shelf\n- `status`, `created`, `revised`, `revision`: the lifecycle envelope\n- `tags`: at least one registered tag, in practice `meta`\n\nWhich records exist is the collection's answer, not this file's. The Foundry pattern\n[names a core set](https://galaxyproject.github.io/foundry-pattern/pattern/design-records/) —\narchitecture, guiding principles, molds, mold-spec, casting, corpus, code-architecture,\ncontent-model, build-and-validation, repository-layout — and a listing here would be a second,\nstaler copy of whatever `content/meta/` actually holds.\n\n## The two shelves\n\n`record_kind` is a voice contract before it is a sort key.\n\nA **foundation** record answers *why*. It carries rationale, may argue, and names the design\npressure a choice responds to along with what that choice costs. A reader works through it.\n\nAn **infrastructure** record answers *what, where, and when*. It is developer-facing, present\ntense, and contract-shaped: components and their dependencies, the frontmatter contract, the\ncommands and gates, the physical layout. It does not argue.\n\nA record whose voice fights its shelf is usually two records. The split is also why the shelves\nrender as separate sections rather than one list with a boundary the reader has to infer.\n\n## Why `order` is a field\n\nReading order within a shelf, and the one thing about a hand-written registry array that\nfrontmatter could not otherwise express. The sequence is pedagogical rather than chronological — a\nreader wants the content model before the build gates — so neither `created` nor the title sorts it\ncorrectly.\n\nIt is unique **within a shelf** only. The two shelves number independently, so `order` never sorts\nthem together, and the index selects a shelf before it sorts.\n\n## Why this kind carries dates when nothing else here does\n\nEvery other kind in this instance declined a lifecycle rather than backfill values it could not\nrecover: an upstream package's health, a paper's reading date, and a fixture's provenance are all\nfacts this Foundry would have had to invent. A design record is different because it is written\n*here*. Its `created`, `revised`, and `revision` come from its own git history, so they can be\npopulated truthfully, and that — not symmetry with the other instances — is the test they pass.\n\n`revised` before `created`, and a `revised` status on a `revision: 1` record, are both checked. Both\nare frontmatter errors that read as true forever.\n\n## Shape, and where the files sit\n\nA **flat file**, like `package`, `paper`, `method`, and `replication_experiment`. A design record\nhas nothing to put beside it, so a directory per record would be a container with one file in it\nforever.\n\nThe records live in `content/meta/`, which the pattern fixes, and route at `/design/`, which it does\nnot. This is the first collection in this instance whose key and base differ, and the difference is\nload-bearing: `meta` is the kind's name and the directory the pattern shares across instances,\n`design` is what a reader is looking for in the navigation. Route policy is instance-owned; the\ndirectory is not.\n\n## The glossary is not one of these\n\n`content/meta/glossary.md` shares the directory and is deliberately **not** a note of this kind. It\nis hand-curated, alphabetical, and rendered by its own page, so the collection excludes it by name\nin the routing table rather than in any one consumer — the corpus walk has to honour the exclusion\ntoo. Sharing a directory is a filing decision, not a typing one.\n\n## Substrate, and what is not yet converged\n\nThis kind is **substrate**: all three Foundry instances declare it, because every instance\naccumulates a design record and every one faces the same question of where it lives. `meta`,\n`foundation`/`infrastructure`, and `order` are identical across the three, and the `meta` tag is\ncarried verbatim rather than coined here.\n\nTwo differences are real and not yet resolved. The Galaxy Workflow Foundry puts `status` in its\nbase envelope, so its `meta` kind declares only `title`, `record_kind`, and `order`; the Statistical\nGenomics Foundry and this instance declare the whole lifecycle on the kind, because neither base\nenvelope has one. And this instance is the only one that checks the lifecycle's internal\nconsistency. A substrate kind whose required fields differ per instance is not quite one kind, so\nthese are convergence debts rather than local preferences — the direction being back-porting from\nhere.",
+      "example": "---\ntype: meta\ntitle: Example design record\nsummary: A small example showing the minimum metadata a record needs to take its place on a shelf.\nrecord_kind: infrastructure\norder: 1\nstatus: draft\ncreated: 2026-08-08\nrevised: 2026-08-08\nrevision: 1\ntags:\n  - meta\n---\n\n# Example design record\n\nThe body says one thing about the Foundry's own machinery, in the voice its shelf calls for: an\n`infrastructure` record describes what exists, where it sits, and when it runs, in the present\ntense and without argument. `order: 1` is its place among the infrastructure records, not among all\nrecords — the two shelves number independently.",
+      "fields": [
+        {
+          "name": "created",
+          "required": true,
+          "type": "date"
+        },
+        {
+          "name": "order",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "name": "record_kind",
+          "required": true,
+          "type": "foundation | infrastructure"
+        },
+        {
+          "name": "revised",
+          "required": true,
+          "type": "date"
+        },
+        {
+          "name": "revision",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "name": "status",
+          "required": true,
+          "type": "draft | reviewed | revised | stale | archived"
+        },
+        {
+          "name": "summary",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "tags",
+          "required": true,
+          "type": "string[]"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "required": true,
+          "type": "\"meta\""
+        }
+      ]
+    },
+    {
+      "kind": "method",
+      "title": "Method",
+      "layer": "instance",
+      "summary": "This Foundry's account of one TDA or topological deep learning technique: what it computes, when to reach for it, and what here implements it.",
+      "shape": "file",
+      "companions": [],
+      "locations": [
+        "methods"
+      ],
+      "doc": "# Method\n\nA Method note is this Foundry's account of one technique — what it computes, what it costs, when to\nreach for it, and which papers, packages, and environments here belong to it. It is the landing note\nfor one value of the `method` facet.\n\nRequired fields:\n\n- `type: method`\n- `title`: the note's display name\n- `summary`: short reader-facing description\n- `facet_tag`: the `method/` facet value this note anchors\n- `tags`: at least one registered domain facet tag, including `facet_tag` itself\n\n## What separates it from the neighbouring kinds\n\nA Paper note reviews **one external work** and is governed by that work's license: it carries\n`source_license` and a `derived` posture because it describes someone else's expression. A Package\nnote profiles **one upstream project**. A Method note describes **a technique**, which no one owns\nand no single paper exhausts — so it has no source, no license posture, and no repository. It is\nFoundry prose throughout, and the absence of those fields is the point rather than an omission.\n\nThe practical test: if the note would have to change when a specific paper is retracted or a\nspecific project is archived, it is a Paper or Package note. A Method note cites many sources and\nsurvives any one of them.\n\n## Why `facet_tag` is a field and not a convention\n\nThe obvious alternative is to match the note's filename against the tag's last segment, so that\n`methods/persistent-homology.md` implicitly anchors `method/persistent-homology`. That works right\nup until someone renames a file or a tag, at which point the link is silently gone and nothing\nfails. Declaring the tag makes it checkable, and it is checked twice: the value must belong to the\n`method` facet, and the note must carry it among its own `tags`.\n\nThe second check exists because its failure mode is the quiet one. A note whose `facet_tag` names a\ntag it does not itself carry is absent from the tag page it was written to head — every other note\nabout the technique is listed there, and the one explaining the technique is not.\n\n## What a Method note owes the reader\n\nA technique is worth a note here when the corpus already assumes it. The note should say what the\nmethod computes and what it discards, what it costs, what it needs from the data, how to tell it\napart from its nearest neighbour, and where the honest limits are — including which of its\nguarantees come from papers this corpus has not reviewed. Naming what is *not* settled is part of\nthe job; a method note that reads like an advertisement is not doing it.\n\nLinking is the other half. A Method note is the hub: it links up to the Paper notes that define and\nsurvey it, and down to the Package notes implementing it and the Environment fixtures that run\nthem. A tag page lists everything sharing a tag; the Method note explains why those things belong\ntogether.",
+      "example": "---\ntype: method\ntitle: Example technique\nsummary: A small example showing the minimum metadata required for the landing note of one method facet value.\nfacet_tag: method/persistent-homology\ntags:\n  - method/persistent-homology\n  - modality/point-cloud\n---\n\n# Example technique\n\nThe body says what the technique computes and what it throws away, what it costs, when to reach for\nit over its nearest neighbour, and where its guarantees stop. It links up to the Paper notes that\ndefine it and down to the Packages and Environments here that implement and run it.",
+      "fields": [
+        {
+          "name": "facet_tag",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "summary",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "tags",
+          "required": true,
+          "type": "string[]"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "required": true,
+          "type": "\"method\""
+        }
+      ]
+    },
+    {
+      "kind": "mold",
+      "title": "Mold",
+      "layer": "substrate",
+      "summary": "One abstract action whose typed reference manifest can be compiled into a runnable artifact.",
+      "shape": "directory",
+      "companions": [
+        {
+          "file": "eval.md",
+          "requirement": "recommended",
+          "purpose": "Properties that any successful cast of this Mold must satisfy.",
+          "disposition": "foundry-only"
+        },
+        {
+          "file": "scenarios.md",
+          "requirement": "recommended",
+          "purpose": "Concrete cases used to exercise the Mold against its evaluation properties.",
+          "disposition": "foundry-only"
+        }
+      ],
+      "locations": [
+        "molds"
+      ],
+      "doc": "# Mold\n\nA Mold describes one abstract action. Its body gives the procedure and its `references` manifest\nstates which Foundry notes a cast consumes, when it consumes them, and how they are carried.\n\nOnly `index.md` bears frontmatter. Two recommended, Foundry-only companions can sharpen the\ncontract without entering a cast bundle:\n\n- `eval.md` records the properties a successful cast must satisfy.\n- `scenarios.md` binds concrete cases to those properties.\n\nRequired fields:\n\n- `type: mold`\n- `name`: the stable slug used by routes, wiki links, and cast artifacts\n- `summary`: a reader-facing description between 20 and 160 characters\n- `tags`: at least one registered domain facet tag\n\n`references` is optional because an action can be named before its dependencies are known. Each\nentry draws its controlled terms from `reference_contract.yml` and the installed shared contract.\nAn `on-demand` reference requires a `trigger`; a `hypothesis` requires a `verification`; unknown\nfields are rejected.",
+      "example": "---\ntype: mold\nname: score-candidate-structures\nsummary: Rank candidate structures with a reproducible topological quality-assessment environment.\ntags:\n  - application/structure-qa\nreferences:\n  - kind: environment\n    ref: example-tda-fixture-environment\n    used_at: runtime\n    load: upfront\n    mode: verbatim\n    evidence: corpus-observed\n    purpose: Supplies the runnable scorer and its exact package closure.\n---\n\n# Score candidate structures\n\nValidate the input set, run every candidate through the declared environment, and return a ranked\ntable with failures kept visible.",
+      "fields": [
+        {
+          "name": "name",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "summary",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "tags",
+          "required": true,
+          "type": "string[]"
+        },
+        {
+          "name": "type",
+          "required": true,
+          "type": "\"mold\""
+        },
+        {
+          "name": "references",
+          "required": false,
+          "type": "object[]"
+        }
+      ]
+    },
+    {
+      "kind": "package",
+      "title": "Package",
+      "layer": "instance",
+      "summary": "A profile of one upstream TDA or topological deep learning software project and the code facts needed to evaluate and harden it.",
+      "shape": "file",
+      "companions": [],
+      "locations": [
+        "packages"
+      ],
+      "doc": "# Package\n\nA Package note profiles one upstream software project that the Foundry may evaluate, package, or\nexpose through Galaxy. The note describes the software; it is not the runnable Environment or the\nRecipe used to build it.\n\nRequired fields:\n\n- `type: package`\n- `title`: the project's display name\n- `summary`: short reader-facing description\n- `repository`: canonical upstream source repository\n- `languages`: one or more implementation languages\n- `software_license`: either a declared SPDX/custom license id or an explicit `missing` status\n- `tags`: at least one registered domain facet tag\n\nMethod relationships and upstream-health observations remain in prose for now. They become typed\nonly when a real Method collection and a consumer for time-sensitive health evidence exist.",
+      "example": "---\ntype: package\ntitle: Example TDA library\nsummary: A small example showing the minimum metadata required for an upstream software profile.\nrepository: https://github.com/example/tda-library\nlanguages:\n  - Python\nsoftware_license:\n  status: declared\n  id: Apache-2.0\ntags:\n  - method/persistent-laplacian\n---\n\n# Example TDA library\n\nThe body explains the package's purpose, architecture, evidence, limitations, and adoption guidance.",
+      "fields": [
+        {
+          "name": "languages",
+          "required": true,
+          "type": "string[]"
+        },
+        {
+          "name": "repository",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "software_license",
+          "required": true,
+          "type": "object"
+        },
+        {
+          "name": "summary",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "tags",
+          "required": true,
+          "type": "string[]"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "required": true,
+          "type": "\"package\""
+        }
+      ]
+    },
+    {
+      "kind": "paper",
+      "title": "Paper",
+      "layer": "instance",
+      "summary": "A source note reviewing one external TDA or topological deep learning paper or survey, linking to the work rather than reproducing it.",
+      "shape": "file",
+      "companions": [],
+      "locations": [
+        "papers"
+      ],
+      "doc": "# Paper\n\nA Paper note is this Foundry's review of one external paper or survey. It links to the source and\nreviews it; it does not reproduce it. The note describes someone else's scholarship, which is what\nseparates it from a Manuscript (research we author) and from a Package (our profile of external\nsoftware).\n\nRequired fields:\n\n- `type: paper`\n- `title`: the note's display name, which is ours and need not repeat the source's title\n- `summary`: short reader-facing description\n- `citation`: authors, source title, and identifier for the external work\n- `source_url`: canonical link to the external work\n- `source_license`: either a declared license id for the source or an explicit `missing` status\n- `derived`: the summary posture, `own-words-summary` or `license-aware-summary`\n- `tags`: at least one registered domain facet tag\n\n`source_license` is the license of the reviewed work, never of the software that may accompany it.\nAn article and its repository routinely differ, so a Package note's `software_license` and a Paper\nnote's `source_license` are separate facts even when both describe the same project.\n\n`derived` is checked against `source_license`, not merely recorded. A note may always summarize in\nits own words; it may only claim `license-aware-summary` when the source's row in the shared\nlicense-policy table permits carrying upstream expression. A missing license resolves\ndeny-by-default and therefore forecloses that posture.\n\nDOIs, venue, and publication dates stay in prose for now. They become typed when a citation or\nreference consumer needs them, on the same terms as the deferred Package fields.",
+      "example": "---\ntype: paper\ntitle: Example TDA survey\nsummary: A small example showing the minimum metadata required for a review of one external work.\ncitation: A. Author and B. Author, \"An example review of topological methods,\" arXiv:0000.00000 (2025).\nsource_url: https://arxiv.org/abs/0000.00000\nsource_license:\n  status: declared\n  id: CC-BY-4.0\nderived: own-words-summary\ntags:\n  - method/persistent-homology\n---\n\n# Example TDA survey\n\nThe body reviews the source: what it claims, what evidence it offers, where it is weak, and what a\nreader of this Foundry should take from it.",
+      "fields": [
+        {
+          "name": "citation",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "derived",
+          "required": true,
+          "type": "own-words-summary | license-aware-summary"
+        },
+        {
+          "name": "source_license",
+          "required": true,
+          "type": "object"
+        },
+        {
+          "name": "source_url",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "summary",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "tags",
+          "required": true,
+          "type": "string[]"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "required": true,
+          "type": "\"paper\""
+        }
+      ]
+    },
+    {
+      "kind": "recipe",
+      "title": "Recipe",
+      "layer": "instance",
+      "summary": "A rattler-build recipe in this repository that supplies a package the public conda channels do not, and the route by which it could leave.",
+      "shape": "file",
+      "companions": [],
+      "locations": [
+        "recipes"
+      ],
+      "doc": "# Recipe\n\nA Recipe note is one rattler-build recipe kept in this repository, under `recipes/<slug>/`. The\nrecipe exists because a public conda channel does not supply the package, and the note says which\ngap it closes, whether anyone has actually built it, and what stands between it and a channel.\n\nRequired fields:\n\n- `type: recipe`\n- `title`: the recipe's display name, matching its directory under `recipes/`\n- `summary`: short reader-facing description\n- `gap`: `absent` or `stale` — what the channels fail to supply\n- `build`: `{ status: verified, platforms: [...] }` or `{ status: unverified }`\n- `upstreaming`: `blocked`, `eligible`, `submitted`, or `published`\n- `tags`: at least one registered domain facet tag\n\n`submission` is a URL, and is required by exactly the two states that assert one exists.\n\n## Why the note is file-shaped\n\nEvery other packaging kind here is directory-shaped, and this one is not. The recipe's real files —\n`recipe.yaml`, `pixi.toml`, sometimes `variants.yaml` — live at `recipes/<slug>/`, outside\n`content/`, because a dozen fixture manifests reach them as `../../../recipes/<slug>` path\ndependencies. Companions describe a note's own directory, so declaring those files as companions\nwould describe a layout that does not exist. Copying them into `content/recipes/<slug>/` would\ncreate a second copy to drift.\n\nSo the note is `content/recipes/<slug>.md`, and its recipe is found by name. A test walks both\ndirections of that correspondence, which is what a companion declaration would have bought.\n\n## What the note does not restate\n\n`recipe.yaml` declares the package name, version, license, homepage, source URL, and every\ndependency. None of that is repeated here. A note that carried a version would be a second place to\nupdate it, and the one that got missed would be this one.\n\n`gap` is not derivable from the recipe file, which is why it is a field. `absent` means the package\nis on no public conda channel at all, which covers most of this set. `stale` means a channel does\ncarry it and the build there is too old to use — one recipe, `topometry`, where conda-forge stops\nat `0.2.1.1` and the published workflow needs the `1.1.0` API.\n\n## Verified means someone ran it\n\n`build.status` records whether `rattler-build` has actually produced a package, not whether the\nrecipe looks right. Three recipes are `unverified`, and that is the useful part: it makes \"which of\nthese has never been built?\" a query rather than an archaeology exercise.\n\n`platforms` lists where the build was exercised, not where the package works. A noarch package\nverified on `osx-arm64` runs everywhere; the field says what was tested, and the prose says what\nthat implies.\n\n## Upstreaming is a licence question first\n\n`blocked` is not a scheduling state. It means the licence forecloses publication, because\nconda-forge and Bioconda both require a bundled OSI licence and no amount of recipe work substitutes\nfor one. `petls` is the case: it declares no licence anywhere, so it is all rights reserved by\ndefault and its recipe will never leave this repository. A test ties this to the recipe file, so a\n`LicenseRef-` licence and an `eligible` claim cannot coexist.\n\n`eligible` is the ordinary state — redistributable, and nobody has opened the PR. `submitted` and\n`published` both assert something a reader would act on, so both must carry the link.",
+      "example": "---\ntype: recipe\ntitle: example-tda-package\nsummary: A small example showing the minimum metadata required for one in-repo build of a package the channels do not carry.\ngap: absent\nbuild:\n  status: verified\n  platforms:\n    - linux-64\nupstreaming: eligible\ntags:\n  - method/persistent-homology\n---\n\n# example-tda-package\n\nThe body says which gap the recipe closes, what was load-bearing about getting it to build, and\nwhat stands between it and a public channel. The `recipe.yaml` beside it stays the authority on\nthe version, the licence, and every dependency, so no note restates a pin.",
+      "fields": [
+        {
+          "name": "build",
+          "required": true,
+          "type": "object"
+        },
+        {
+          "name": "gap",
+          "required": true,
+          "type": "absent | stale"
+        },
+        {
+          "name": "summary",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "tags",
+          "required": true,
+          "type": "string[]"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "required": true,
+          "type": "\"recipe\""
+        },
+        {
+          "name": "upstreaming",
+          "required": true,
+          "type": "blocked | eligible | submitted | published"
+        },
+        {
+          "name": "submission",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "kind": "replication_experiment",
+      "title": "Replication experiment",
+      "layer": "instance",
+      "summary": "A bounded study this Foundry ran to test an external paper's claims, pinning the standalone repository that holds the evidence.",
+      "shape": "file",
+      "companions": [],
+      "locations": [
+        "replication-experiments"
+      ],
+      "doc": "# Replication experiment\n\nA Replication experiment note records a bounded study this Foundry ran to test claims made by an\nexternal paper or package. The executable experiment — code, protocol, inputs, results — lives in a\nstandalone repository. This note pins one revision of that repository, says what came out, and\nconnects the work to the packages, methods, and papers it touches.\n\nRequired fields:\n\n- `type: replication_experiment`\n- `title`: the study's display name\n- `summary`: short reader-facing description\n- `artifact`: the pinned repository, with `repository` and a full `revision`\n- `arc`: the stages actually run, drawn from `replicate`, `harden`, `extend`\n- `status`: `planned`, `running`, `complete`, `blocked`, or `superseded`\n- `redistribution`: `open`, `restricted`, `mixed`, or `noassertion`\n- `tags`: at least one registered domain facet tag\n\nOptional: `replication_outcome`, `environment`, `artifact.protocol`,\n`artifact.evidence_manifest` — with conditions, below.\n\nWorking practice for running these studies is a separate document:\n`content/meta/replication-experiments.md`.\n\n## What separates it from the neighbouring kinds\n\nA Paper note reviews someone else's work. A Package note profiles someone else's software. A\nReplication experiment reports **what happened when we ran it** — it is the only kind in the corpus\nwhose subject is this Foundry's own evidence.\n\nThat makes it the closest thing here to original scholarship, and it is deliberately not a\n`manuscript`. A manuscript advances a claim of ours; a replication tests a claim of theirs. The two\ndemand different things of the reader, and collapsing them would let \"we checked this\" quietly read\nas \"we found this.\"\n\nThe practical test: if the note's central content is a number *we produced*, it is a replication\nexperiment. If it is a number *they reported*, it belongs in the Paper or Package note.\n\n## Why the repository is pinned by full commit id\n\n`artifact.revision` must be a full 40-character commit id. Branch names move and abbreviations\ncollide, so a note pinned to `main` describes whatever that repository contains when the reader\narrives — which may be nothing like what produced the numbers above it. The design draft states the\nrule directly: moving branch names are not sufficient evidence identifiers. This is the one place\nin the note where a plausible-looking value silently destroys the note's whole purpose, so it is\nthe one place with a format check.\n\n## Why `status: complete` demands an environment\n\nA study is complete when the evidence has been produced *here*, through a biopixi fixture recorded\nin this Foundry — not when the upstream repository stops changing.\n\nThe distinction sounds pedantic and is not. All three of the studies in this corpus have finished\nupstream work and written-up findings, and none of them has been re-run through a fixture here.\nWithout the check, each would read as settled while the only thing that would make it reproducible\nfor a reader is precisely what is missing. So `environment` is optional in the schema and required\nby `complete`: a study whose fixture does not exist yet is unfinished, not invalid.\n\n`replication_outcome` is required by `complete` for the same reason — a finished study that never\nsays how it came out is not finished.\n\n## Relationships live in the body, not the frontmatter\n\nThe design draft's first sketch put `replicates[]`, `evaluates[]`, `uses[]`, and `informs[]` in\nfrontmatter as wiki-link arrays. They are carried as body links instead, for a mechanical reason:\nbody wiki-links are resolved and checked at build time, so a link to a note that does not exist\nfails; a frontmatter string is never resolved and would dangle silently. Moving the relationships\ninto prose makes them *more* checked, not less.\n\nThere is a content reason too. None of the three papers under test has a Paper note — each is\nreviewed inside its Package note — so a required `replicates[]` pointing at Paper notes would have\nbeen unsatisfiable on the day the kind landed. Add the typed fields when the notes they would point\nat exist, and when something other than a reader needs to traverse them.\n\n`arms[]` is left out on the same grounds: every study here has one arm per arc stage, so per-arm\nfrontmatter would encode structure the corpus does not yet have. The arc records which stages ran;\nthe body says what each one did.\n\n## What a note owes the reader\n\nSay what claim was tested and what came out, including the parts that did not reproduce. Name the\ndeviations from the paper's stated protocol, since those are usually where a gap comes from. State\nwhat is redistributable and what is not — code, data, and weights routinely differ, which is why\n`redistribution` summarizes the bundle rather than the code license. And say what would have to\nhappen for the study to be complete, because for now that is the most useful thing a reader can\nlearn from it.",
+      "example": "---\ntype: replication_experiment\ntitle: Example replication\nsummary: A small example showing the minimum metadata required to pin one replication study and its evidence.\nartifact:\n  repository: https://github.com/jmchilton/example-replication\n  # Quoted: an all-digit commit id is a YAML integer, and loses its leading zeros on the way in.\n  revision: \"0000000000000000000000000000000000000000\"\narc:\n  - replicate\nstatus: running\nredistribution: open\ntags:\n  - method/persistent-homology\n---\n\n# Example replication\n\nThe body names the claim under test, what came out, and where the numbers disagree with the paper.\nIt links to the Package and Method notes the study touches, and says what remains before the study\ncould be called complete — here, a biopixi fixture that re-runs the pinned repository.",
+      "fields": [
+        {
+          "name": "arc",
+          "required": true,
+          "type": "replicate | harden | extend[]"
+        },
+        {
+          "name": "artifact",
+          "required": true,
+          "type": "object"
+        },
+        {
+          "name": "redistribution",
+          "required": true,
+          "type": "open | restricted | mixed | noassertion"
+        },
+        {
+          "name": "status",
+          "required": true,
+          "type": "planned | running | complete | blocked | superseded"
+        },
+        {
+          "name": "summary",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "tags",
+          "required": true,
+          "type": "string[]"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "required": true,
+          "type": "\"replication_experiment\""
+        },
+        {
+          "name": "environment",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "replication_outcome",
+          "required": false,
+          "type": "reproduced | partially_reproduced | not_reproduced | inconclusive"
+        }
+      ]
+    }
+  ],
+  "source": {
+    "repo": "jmchilton/bio-topo-foundry",
+    "path": "site/src/types/kinds.generated.json",
+    "revision": "7fc30df"
+  }
+}

@@ -1,0 +1,44 @@
+version: 1
+facets:
+  method:
+    label: Method
+    description: The TDA or topological deep learning technique a note explains or implements.
+    values:
+      method/mapper: Mapper graphs and other nerve-based topological summaries.
+      method/multiparameter-persistence: Persistence along more than one filtration parameter.
+      method/persistent-homology: Barcodes and persistence diagrams read off a filtration.
+      method/persistent-laplacian: Persistent topological Laplacian methods and implementations.
+      method/simplicial-learning: Learning directly on simplicial complexes and their Hodge structure.
+      method/spectral-geometry: Geometry-aware spectral and diffusion scaffolds.
+      method/topological-deep-learning: Learning models built on topological representations.
+  application:
+    label: Application
+    description: The bioinformatics problem or analysis setting a note serves.
+    values:
+      application/molecular-sciences: Molecular, biomolecular, and drug-discovery analysis.
+      application/single-cell: Single-cell and cellular point-cloud analysis.
+      application/structure-qa: Quality assessment and ranking of predicted structures and interfaces.
+  modality:
+    label: Modality
+    description: The biological data modality a note consumes or describes.
+    values:
+      modality/graph: Graphs, networks, and higher-order complexes.
+      modality/high-dim-tabular: High-dimensional feature matrices such as single-cell count data.
+      modality/molecular-structure: Three-dimensional atomic structures of molecules and complexes.
+      modality/point-cloud: Generic point clouds and distance matrices, without a fixed biological source.
+      modality/sequence: Biological sequences, as reads, proteins, or nucleotide records.
+  # Last, because the three facets above describe what the corpus is about and this one describes
+  # the Foundry that holds it. Facet and member are carried verbatim from the other two instances
+  # rather than coined here: a design record is about machinery every instance has, so two
+  # instances independently inventing a word for it would be the drift this registry exists to
+  # prevent.
+  #
+  # `meta` is also the one member here with no slash, and it is the case that proves membership was
+  # never a prefix match — the registry declares each value, so a bare key is an ordinary member.
+  meta:
+    label: Meta
+    description: >-
+      Foundry-meta notes — about the Foundry's own design, machinery, or casting system rather
+      than about topological data analysis. The one facet whose member carries no slash.
+    values:
+      meta: Foundry-meta note — about the Foundry's own design, machinery, or casting system.

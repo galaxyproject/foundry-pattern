@@ -1,6 +1,6 @@
 ---
 title: Tag Catalog
-description: Both Foundries' controlled tag vocabularies, generated from their registries — the shared registry format, the facets each instance declares, and where a shared facet key hides two different meanings.
+description: All three Foundries' controlled tag vocabularies, generated from their registries — the shared format, each instance's facets, and where a shared key hides different meanings.
 section: pattern
 order: 10
 catalog: tags
@@ -17,7 +17,7 @@ The **format** is substrate, shared verbatim across instances and specified in P
 [[standing-up-a-foundry|Build with the Astro Stack]]. The **vocabulary** is not, and should not
 be: a domain's browse axes are the domain's.
 
-This page renders both registries as they actually stand, vendored from each instance's
+This page renders all three registries as they actually stand, vendored from each instance's
 `meta_tags.yml`.
 
 ## What the format buys, and why it is worth copying
@@ -36,16 +36,16 @@ Three rules do the work, and each exists because its absence caused a specific p
   "other" bucket structurally impossible rather than merely empty today.
 
 A fourth rule is about what tags are *for*: they are cross-cutting facets only. A note's kind
-is never copied into its tags. Both instances encoded kind-as-tag early, and both removed it —
+is never copied into its tags. The first two instances encoded kind-as-tag early, and both removed it —
 two encodings of one fact drift, and the one in `tags` is the one nothing validates against.
 
 ## How to read it
 
-**A shared facet key is not a shared meaning.** Both registries declare `topic`, and they mean
-different things — one groups pattern maps, the other sits beneath a `domain`. The facets both
-instances use are shown first with both descriptions side by side precisely so that collision
-is visible; it is exactly the kind of divergence that otherwise gets discovered by someone
-assuming a tag transfers.
+**A shared facet key is not a shared meaning.** The first two registries both declare `topic`,
+and they mean different things — one groups pattern maps, the other sits beneath a `domain`.
+The third instance does not declare it at all. Facets every instance uses are shown first with
+their descriptions side by side; partial overlaps remain visible in the per-instance views.
+That distinction is exactly what otherwise gets lost when someone assumes a key transfers.
 
 The per-instance vocabularies follow in full, with each facet's own description and every tag's
 gloss. A facet declared with no members yet is shown as such — the format permits it while a

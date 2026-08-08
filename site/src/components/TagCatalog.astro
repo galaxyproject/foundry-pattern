@@ -27,7 +27,7 @@ const values = (facet: { values?: Record<string, string> }) =>
   </div>
 
   <p class="mt-6 text-sm" style="color: var(--muted)">
-    Every facet is a <strong>closed enum</strong> with a gloss per tag, in both instances.
+    Every facet is a <strong>closed enum</strong> with a gloss per tag, in every instance.
     Membership is <em>declared</em> — a tag is valid because a facet lists it, never because
     its text starts with a facet name — so the slash is a naming convention and an "other"
     bucket is impossible rather than merely empty.
@@ -36,11 +36,11 @@ const values = (facet: { values?: Record<string, string> }) =>
   {shared.length > 0 && (
     <>
       <h2 class="mt-10 text-2xl font-bold" style="font-family: var(--font-display)">
-        Facet keys both instances use
+        Facet keys every instance uses
       </h2>
       <p class="mt-2 text-sm" style="color: var(--muted)">
-        A shared KEY is not a shared meaning. Read the two descriptions before assuming a tag
-        transfers — this is exactly where a vocabulary silently diverges.
+        A shared KEY is not automatically a shared meaning. Read every description before
+        assuming a tag transfers — this is exactly where a vocabulary silently diverges.
       </p>
       {shared.map((row) => (
         <section class="mt-6 rounded-lg border p-5" style="border-color: var(--rule)">
@@ -81,7 +81,7 @@ const values = (facet: { values?: Record<string, string> }) =>
               <span class="font-semibold text-sm">{row.by[instance.slug]!.label}</span>
               {!row.shared && (
                 <span class="text-xs uppercase" style="font-family: var(--font-display); letter-spacing: 0.1em; color: var(--muted)">
-                  this instance only
+                  not universal
                 </span>
               )}
             </div>

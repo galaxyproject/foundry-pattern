@@ -1,6 +1,6 @@
 ---
 title: Guiding Principles
-description: Commitments that keep a Foundry's knowledge grounded, actionable, legible, and durable as its domain and tooling change.
+description: Commitments that keep a Foundry's knowledge grounded, actionable, legible, and durable—now pressure-tested across three instances.
 section: pattern
 order: 3
 ---
@@ -8,6 +8,8 @@ order: 3
 # Guiding Principles
 
 A Foundry turns a body of working knowledge into something people can inspect and agents can act on. These principles keep that knowledge trustworthy as the domain, the corpus, and the surrounding tools change. Every Foundry inherits the same domain-free commitments and realizes them differently.
+The first two instances exposed the original contrast; the
+[[topological-data-analysis-bioinformatics-foundry|third]] now tests and hardens what survived it.
 
 <figure class="not-prose principles-loop" aria-labelledby="principles-loop-caption" data-pagefind-ignore>
   <div class="principles-loop-flow">

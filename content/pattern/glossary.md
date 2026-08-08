@@ -21,7 +21,7 @@ Grouped by theme.
 
 **The Foundry Pattern** — the design pattern this site documents: a [[the-model|Knowledge Base whose structure makes it executable]], compiled into frozen skill artifacts with provenance. A substrate each domain extends, never a single project. Capitalized.
 
-**A Foundry / an instance** — a concrete project applying the pattern. The pattern earns its abstraction at the *diff* between instances (N=2): what stayed identical is the **substrate**, what each domain adds on top is its **extension**. (e.g. the Galaxy Workflow Foundry, instance #1; the Statistical Genomics Foundry, instance #2.) Avoid bare "Foundry" when you mean the pattern. See [[anatomy-of-an-instance]].
+**A Foundry / an instance** — a concrete project applying the pattern. The pattern first earned its abstraction at the original N=2 *diff*; the third instance now tests and hardens that result. What survives every current instance is the **substrate**; what each domain adds on top is its **extension**. (The Galaxy Workflow Foundry, instance #1; the Statistical Genomics Foundry, instance #2; the TDA Bioinformatics Foundry, instance #3.) Avoid bare "Foundry" when you mean the pattern. See [[anatomy-of-an-instance]].
 
 ## The substrate (invariant across instances)
 
@@ -53,13 +53,15 @@ These terms describe what individual instances *add* to the substrate. They are 
 
 **Extension surface** — the parts of a Foundry each domain chooses rather than inherits: its domain knowledge, grounding corpus, target format(s), any composition layer, and the external check its notion of "correct" admits. The substrate is shared; the extension surface is where instances legitimately diverge. See [[anatomy-of-an-instance]].
 
-**The external check** — the thing external to the model that stands between authored knowledge and a *trusted* result, honoring the rule that the model must not be the sole judge of its own work. *What it is* differs completely by domain; the two realizations below are opposite ends, not a fixed menu.
+**The external check** — the thing external to the model that stands between authored knowledge and a *trusted* result, honoring the rule that the model must not be the sole judge of its own work. *What it is* differs completely by domain; the realizations below are examples, not a fixed menu.
 
 **Pipeline** *(Galaxy Workflow Foundry)* — an ordered sequence of Molds composing an end-to-end task; dual-purpose as a build artifact (the Molds a harness orchestrates) and a navigation primitive (the journey-surface view over the KB). Referenced content, not cast. A composition extension a domain reaches for when its work is sequential; instance #2 (Mold-primary) needs none.
 
 **The rails** *(Galaxy Workflow Foundry)* — that instance's external check: a deterministic CLI that mechanically parses and validates the artifact, catching failure modes prior-art skills could only enumerate as prose caveats. (e.g. a workflow validator that rejects hallucinated tool IDs or malformed state.) A parser you call.
 
 **The referee / the gate** *(Statistical Genomics Foundry)* — that instance's external check, used where no CLI can decide validity: *itself authored knowledge cast into a skill*, an `analyze → referee → revise` loop in which an analysis may not self-certify but must hand off to a referee whose verdict gates certification. A deliverable you construct, not a tool you call. "Knowing ≠ gating": a model may *mention* a caveat, but only an enforced check makes doing *not terminate* until it clears. The marquee example of a non-commodity domain extension (see [[the-two-assets]]).
+
+**Frontier → hardening → delivery** *(TDA Bioinformatics Foundry)* — that instance's maturation arc from research and methods, through packages, recipes, reproducible environments, and replication evidence, toward Galaxy tools, workflows, and training. An instance-specific spine, not a universal lifecycle. Its final scientific correctness check is still evolving.
 
 **Critique** *(referee sub-role — stat-gen)* — *reason about* validity against known invalidity patterns. Necessary but not sufficient: it is itself model reasoning, so the strong form also requires a Calibrate pass.
 

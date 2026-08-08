@@ -1,8 +1,8 @@
 ---
 title: Statistical Genomics Foundry
-description: Instance #2 — keeps an LLM doing statistical genomics both productive and honest behind an empirical referee gate.
+description: "Instance #2 — keeps an LLM doing statistical genomics both productive and honest behind an empirical referee gate."
 section: instances
-order: 2
+order: 3
 instance_number: 2
 check: empirical referee loop — "doing never self-certifies"
 upstream: https://github.com/jmchilton/statistical-genomics-foundry
@@ -38,4 +38,4 @@ The source is organized to cast into portable skill artifacts, but no caster or 
 
 ---
 
-Compare against instance #1 in [[the-diff]] — this instance inherits the substrate and brings a different domain's extensions to it. For the shared substrate beneath both, see [[anatomy-of-an-instance]].
+Compare with the [[topological-data-analysis-bioinformatics-foundry|TDA Bioinformatics Foundry]], whose stricter reference architecture is now being backported here, and with instance #1 in [[the-diff]]. For the substrate tested across all three, see [[anatomy-of-an-instance]].
