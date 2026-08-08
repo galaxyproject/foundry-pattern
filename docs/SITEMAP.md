@@ -17,6 +17,8 @@ Home  ............................. the bet in one breath + three doors
 │   │   ├── The Model ............. KB → Mold → Cast → Provenance, abstractly
 │   │   ├── Guiding Principles .... the disciplines that keep a Foundry trustworthy
 │   │   └── Principles in Action .. how current instances realize those principles
+│   ├── Domain profile
+│   │   └── Foundries for Bioinformatics  typed scientific knowledge + reproducible, portable, audited evidence
 │   ├── Build one
 │   │   ├── What a Foundry Needs .. the substrate and the extension boundary
 │   │   ├── Plan Your Foundry ..... a stack-neutral route through domain decisions
@@ -59,6 +61,11 @@ only one arguing for a *reader*, so the KB's "read and learned by a
 human" clause is defended rather than asserted. **Comparisons** carries the one dated survey as its Part B —
 a periodically-refreshed landscape snapshot — kept in The Case, not the Pattern, so the
 *spec* never carries a date even though the argument's landscape reading does.
+
+**Foundries for Bioinformatics** is the Pattern's one applied domain profile and appears as a
+callout between the recommended route and implementation guidance. It keeps source identity,
+executable computation, packaging portability, and scientific validity as separate receipts; its
+concrete technologies illustrate an extension without redefining the substrate.
 
 ## Pull-through map (old foundry → here)
 

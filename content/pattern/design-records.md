@@ -2,7 +2,7 @@
 title: Design Records
 description: How a Foundry keeps its own design inside the knowledge base — the content/meta contract, expected records, ownership boundaries, and change-routing index.
 section: pattern
-order: 11
+order: 12
 ---
 
 # Design Records

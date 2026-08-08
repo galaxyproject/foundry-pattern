@@ -2,7 +2,7 @@
 title: "Astro-Stack Glossary"
 description: The vocabulary an instance inherits from the Astro reference stack — note, kind, shape, companion, collection — pinned separately from the pattern's own terms because it describes an implementation, not the pattern.
 section: pattern
-order: 8
+order: 9
 ---
 
 # Astro-Stack Glossary

@@ -39,6 +39,7 @@ content/
     the-model.md           KB → Mold → Cast → Provenance, abstractly
     guiding-principles.md
     principles-in-action.md     concrete implementation case studies
+    foundries-for-bioinformatics.md  applied domain profile for scientific infrastructure
     anatomy-of-an-instance.md   the substrate vs the extension surface
     glossary.md
   case/            ← The Case: the argument
@@ -58,9 +59,9 @@ site/              ← Astro app
 
 ## Status
 
-Drafted and standing. 14 content pages across the four sections, plus a working
-Astro site (`site/`) — wiki-link resolution, prev/next, and Pagefind full-text
-search; `npm test`, `npm run build` and `npm run typecheck` are clean. See `docs/SITEMAP.md`
+Drafted and standing, with a working Astro site (`site/`) — wiki-link resolution, prev/next,
+and Pagefind full-text search; `npm test`, `npm run build` and `npm run typecheck` are clean.
+See `docs/SITEMAP.md`
 for the information architecture and `docs/CANON.md` for the authoring contract.
 
 Hosted on GitHub Pages at

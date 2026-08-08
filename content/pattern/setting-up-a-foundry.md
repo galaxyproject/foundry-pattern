@@ -2,7 +2,7 @@
 title: Plan Your Foundry
 description: A stack-neutral route from the shared Foundry substrate to the decisions and domain knowledge a working instance needs.
 section: pattern
-order: 6
+order: 7
 ---
 
 # Plan Your Foundry

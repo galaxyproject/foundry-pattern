@@ -2,7 +2,7 @@
 title: Tag Catalog
 description: All three Foundries' controlled tag vocabularies, generated from their registries — the shared format, each instance's facets, and where a shared key hides different meanings.
 section: pattern
-order: 10
+order: 11
 catalog: tags
 ---
 

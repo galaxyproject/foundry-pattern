@@ -8,7 +8,11 @@ or editing any content page. It is an internal authoring doc, not a reader-facin
 
 An **abstract** site that explains *the Foundry Pattern* — the design pattern behind three
 concrete projects: the Galaxy Workflow Foundry, the Statistical Genomics Foundry, and the
-TDA Bioinformatics Foundry. It is deliberately domain-free. The concrete projects are
+TDA Bioinformatics Foundry. Its core specification is deliberately domain-free. The
+reader-facing **Foundries for Bioinformatics** page is the one applied domain profile: it shows
+how the stable pattern composes with scientific sources, executable environments, packaging,
+citation evidence, and domain checks without promoting those choices into universal substrate.
+The concrete projects are
 "instances"; this site is the pattern they share. The pattern first earned its abstraction
 at the original N=2 **diff**. The third instance is the active falsification and hardening
 exercise: what survives all three is the **substrate**, while each domain's additions are its
@@ -73,6 +77,17 @@ pattern vocabulary.** In particular:
 - **The frontier → hardening → delivery arc belongs to the TDA Bioinformatics Foundry.** It
   connects research to reproducible software and eventual Galaxy delivery; it is not a universal
   Foundry lifecycle.
+
+The **Foundries for Bioinformatics** domain profile may be concrete while remaining timeless.
+Its boundaries are load-bearing:
+
+- biopixi grades packaging portability, never scientific correctness.
+- Citation auditing checks that an identifier names the described work, never that the work
+  supports the surrounding claim.
+- Pixi/conda environments make computation rerunnable and transferable; they do not replace the
+  domain's external check.
+- Kinds and metadata are examples derived from the bioinformatics corpus. Share their contract
+  machinery, not one instance's taxonomy.
 
 **The external check** is the role every mature instance must fill (honoring "deterministic tools do
 deterministic work" / don't let the model grade itself), but *what it is* differs completely
@@ -213,6 +228,8 @@ file storage; LLM self-critique.
 - Concise; sacrifice grammar for concision where it sharpens.
 - Prefer the abstract noun ("the target format", "the grounding corpus") over instance
   specifics ("gxformat2", "IWC") *in Pattern pages*; use concrete instances only as
-  illustration. The Case and Instances pages may be concrete.
+  illustration. The **Foundries for Bioinformatics** domain profile is the named exception: its
+  purpose is to compose the abstract pattern with concrete research-software infrastructure while
+  preserving the substrate/extension boundary. The Case and Instances pages may be concrete.
 - Wiki-link related pages with `[[slug]]`.
 - Markdown, KaTeX allowed for math.
