@@ -907,6 +907,14 @@ formats, the loaders and the inherited vocabularies are installed (see "The shar
   `tags` min(1) so every note carries at least one facet. The package ships no vocabulary and
   decides nothing about what a tag MEANS for a note. Seed corpus-first from the tags your first
   notes actually use.
+  If a Foundry designates one note as the landing note for each value of a facet, declare that
+  relationship in frontmatter rather than infer it from the note's filename. The note schema checks
+  that the value belongs to the intended facet and that the note carries the tag it claims to lead.
+  The whole-corpus drift check then holds the relationship in both directions: every declared value
+  has exactly one landing note, and no value has two. Ordinary tag coverage is not enough — another
+  kind may carry the tag while its landing note is absent. Render the landing note distinctly on
+  the tag page, and derive a built-page assertion from the declared relationships so “landing note”
+  remains a reader-visible role rather than only metadata.
 - LICENSES/  — vendored verbatim SPDX texts the policy's `license_file` rows point at, plus a
   README. The table travels with the dependency; the texts a cast hashes are in YOUR tree.
 
@@ -987,6 +995,9 @@ Validator — vitest, one command, running the SAME schema the build uses:
   evidence) are deliberately complete, so unused terms there are inheritance, not drift. The
   exception is a group you NARROWED — narrowing makes it authored, so it rejoins this check.
   Dead vocabulary is drift the schema's one-way membership check cannot report.
+  For any facet with designated landing notes, compare the facet's complete declared value set with
+  those notes' declared anchor fields and reject duplicates. Do not substitute the set of tags
+  carried anywhere in the corpus; membership and ownership answer different questions.
   Assert here too that the raw meta_tags.yml declares no facet key the format does not define.
   An unrecognized `open: true` is a silent no-op and reading the accessor cannot catch it. Read the
   raw file for this assertion.
