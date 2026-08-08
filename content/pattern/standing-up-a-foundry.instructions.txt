@@ -196,11 +196,12 @@ have either a dependency dictating your domain or a copy that drifts:
   site-kit            Ships the shared MARKUP, behavior-critical component styles and the rules
                       inside them — active navigation, pre-paint theme state, Pagefind body
                       coverage, overflow behavior, the invariant ContentNote frame, TagChips, the
-                      reference-contract view, and deployment base handling. You keep the
-                      IDENTITY: both names, the description, the repository, the list of
-                      destinations, and how many of them fit on the bar before the rest go under
-                      "More". That last one is set by measuring this instance's wordmark and links,
-                      not by copying another site's count.
+                      reference-contract view, deployment base handling, and SPECIMENS: named
+                      props for every case its components claim to handle, with the surface each
+                      case may render on. You keep the IDENTITY: both names, the description, the
+                      repository, the list of destinations, and how many of them fit on the bar
+                      before the rest go under "More". That last one is set by measuring this
+                      instance's wordmark and links, not by copying another site's count.
                       Ships no complete GLOBAL THEME. It writes Tailwind utility classes, carries
                       structural styles beside the components that need them, and NAMES custom
                       properties and global classes your stylesheet defines. The palette is the
@@ -429,6 +430,29 @@ that a note is well-formed.
   it names custom properties and global classes your stylesheet defines. A token you forget
   renders as an unstyled element rather than an error, so use the package's style-gap helpers on
   emitted CSS.
+- ACCEPT THE READING SURFACE VISUALLY with a component gallery when the instance has a real theme
+  or local visual components. Import `SPECIMENS` from `@galaxy-foundry/site-kit/specimens`; do not
+  copy the props cases from the reference app or a sibling Foundry. Render the inline groups on an
+  instance-owned page through the ordinary Base layout, so the package's components wear the same
+  palette, typography and classes as the corpus. Use `sharesPage(group)` to separate groups that
+  need a route of their own: `isolated` components carry document-unique ids, while `document`
+  components emit their own `<html>`. Give both real static routes and frame those routes from the
+  index. Two headers written directly onto one page build clean and leave the second one's controls
+  half-dead; `surface` exists because that failure is invisible to Astro.
+    Add instance components and vocabulary cases as local `SpecimenGroup`s in the SAME address
+  space. Their `id`, not their component name, is the route prefix and anchor. Derive vocabulary
+  cases from the registry they demonstrate — for example every reference kind from the built
+  contract — rather than making the gallery a second hand-kept kind list. Keep the gallery frame,
+  prose, renderer imports and route placement local: those are the presentation choices that make
+  two instances' galleries different. The package owns the cases and the constraints, not a page
+  that would impose a visual system on its consumers.
+    ASSERT THE BUILT GALLERY, not only the source: every shared and local specimen renders; every
+  non-inline specimen has an emitted route; every iframe points to one of those routes; every new
+  package group fails until a renderer is wired; the gallery has an inbound link; and standalone
+  component documents are explicitly included in or excluded from search. Run the same emitted-CSS
+  style-gap checks over the result. The current executable example, including minimum and designed
+  themes, lives at:
+    https://jmchilton.github.io/foundry-lib/#/development/component-gallery
 - Use site-kit's `ContentNote` for the invariant note frame and `TagChips` for tag markup. The frame
   owns back navigation, metadata/badge/reference slots, tag placement, optional heading and
   summary, and the article boundary. Pass a based `tagBase` only after the instance has a tag route;
