@@ -105,7 +105,7 @@ page is canonical for what those packages can truthfully own.
   </table>
 </div>
 
-The domain's external check remains instance-owned. Part 7 asks what can produce an independent
+The domain's external check remains instance-owned. Part 8 asks what can produce an independent
 verdict without pretending Astro or a shared package can answer that domain question.
 
 ## Keep the handoffs explicit

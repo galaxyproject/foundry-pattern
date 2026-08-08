@@ -72,15 +72,15 @@ The payoff is one surface serving both readers a Foundry has. A human reads the 
 
 **Produce.** Choose one representative decision-and-handoff unit and author a [[the-model|Mold]] for it. Declare every dependency by kind, along with its load policy and placement mode. Keep facts, schemas, examples, prompts, and rationale as references rather than duplicating them into the procedure.
 
-**Done when.** The Mold describes one coherent action — neither an entire journey nor a dust of fragments — and every declared reference resolves and validates. Someone should be able to explain why each dependency is present and why it loads when it does. Let the boundary be corrected by the first real use before multiplying it into a taxonomy.
+**Done when.** The Mold describes one coherent action — neither an entire journey nor a dust of fragments — and every declared reference resolves and validates. Someone should be able to explain why each dependency is present and why it loads when it does. The reference contract should contain only kinds the current Mold corpus uses and only placement modes an implemented target can perform. It need not contain cast strategy yet: a reader-only instance should reject configuration no installed caster reads. Let the boundary be corrected by the first real use before multiplying it into a taxonomy.
 
 ## 5. Choose one target and set up casting
 
 **Goal.** Prove that the structured source can become a frozen, usable artifact without becoming a second source of truth.
 
-**Produce.** Select one target format and implement its deterministic casting rules: how each reference kind resolves, what is inlined or bundled, and how target-specific files are laid out. Emit provenance beside the artifact, including the Mold and target identities, resolved references, hashes, placement, and cast-time checks.
+**Produce.** Select one target format and implement its deterministic casting rules: how each reference kind resolves, what is inlined or bundled, and how target-specific files are laid out. Pass the same Kind layout used by validation into casting. Fixed companion membership belongs there: a `bundled` companion travels with a resolved note, while `foundry-only` and `cast-input` companions do not. Do not repeat that decision in note frontmatter, reference-kind configuration, or target exclusions. Emit provenance beside the artifact, including the Mold and target identities, resolved references, hashes, placement, and cast-time checks.
 
-**Done when.** The same source, Mold, and target reproduce the same bytes; links back into the KB have been resolved away; the artifact is self-contained for its intended runtime; and a reviewer can trace packaged material back to its source. When the artifact is wrong, the repair happens in the Mold, its references, or the target rules — never by hand-editing the cast.
+**Done when.** The same source, Mold, and target reproduce the same bytes; a check run is inert; links back into the KB have been resolved away; the artifact is self-contained for its intended runtime; and a reviewer can trace every packaged note and companion back to its source. Missing required companions fail, absent recommended companions do not become phantom references, and no companion outside the Kind's eligible layout can be smuggled in by note metadata. When the artifact is wrong, the repair happens in the Mold, its references, its Kind, or the target rules — never by hand-editing the cast.
 
 ## 6. Build the external check
 
